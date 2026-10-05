@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #ffffff;
+    --foreground: #09090b;
+  }
+
+  body {
+    color: var(--foreground);
+    background-color: var(--background);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+}
+
+/* 40% White, 40% Maroon, 10% Black, 10% Green Theme Utilities */
+.maroon-card {
+  background: #ffffff;
+  border: 1px solid #fad0d7;
+  box-shadow: 0 4px 20px -2px rgba(128, 0, 32, 0.06);
+}
+
+.maroon-card:hover {
+  border-color: #800020;
+  box-shadow: 0 16px 36px -8px rgba(128, 0, 32, 0.14);
+}
+
+.payment-trust-badge {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
