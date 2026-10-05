@@ -6,6 +6,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { siteConfig } from "@/config/site";
 import { CheckCircle2, Clock, ArrowRight, Home, Mail, MessageCircle, Sparkles } from "lucide-react";
+import { PrintReceiptButton } from "@/components/payment/PrintReceiptButton";
 
 export const metadata: Metadata = {
   title: "Registration & Admission Status",
@@ -150,6 +151,7 @@ export default async function RegisterSuccessPage({ searchParams }: SuccessPageP
                 <Home className="w-4 h-4" />
                 <span>Back to Home</span>
               </Link>
+              <PrintReceiptButton />
             </div>
           </div>
         </div>

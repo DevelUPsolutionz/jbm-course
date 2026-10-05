@@ -18,7 +18,7 @@ export async function sendRegistrationReceivedEmail(params: {
   amount: number;
 }) {
   const resend = getResendClient();
-  const fromEmail = process.env.EMAIL_FROM || "admissions@apexacademy.edu";
+  const fromEmail = process.env.EMAIL_FROM || "hello.johannabrightmentors@gmail.com";
 
   const emailHtml = `
     <!DOCTYPE html>
@@ -79,6 +79,7 @@ export async function sendRegistrationReceivedEmail(params: {
   try {
     const data = await resend.emails.send({
       from: fromEmail,
+      replyTo: process.env.ADMIN_EMAIL || "hello.johannabrightmentors@gmail.com",
       to: params.email,
       subject: `Registration Confirmed: ${params.courseTitle} [${params.registrationReference}]`,
       html: emailHtml,
@@ -100,7 +101,7 @@ export async function sendPaymentConfirmedEmail(params: {
   paymentId: string;
 }) {
   const resend = getResendClient();
-  const fromEmail = process.env.EMAIL_FROM || "admissions@apexacademy.edu";
+  const fromEmail = process.env.EMAIL_FROM || "hello.johannabrightmentors@gmail.com";
 
   const emailHtml = `
     <!DOCTYPE html>
@@ -162,6 +163,7 @@ export async function sendPaymentConfirmedEmail(params: {
   try {
     const data = await resend.emails.send({
       from: fromEmail,
+      replyTo: process.env.ADMIN_EMAIL || "hello.johannabrightmentors@gmail.com",
       to: params.email,
       subject: `Payment Receipt: ${params.courseTitle} [${params.registrationReference}]`,
       html: emailHtml,

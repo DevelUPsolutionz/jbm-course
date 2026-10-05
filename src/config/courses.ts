@@ -16,7 +16,8 @@ export const COURSES: Course[] = [
     duration: "30 Days (Live Online + Hands-on Labs)",
     level: "Beginner to Advanced",
     introVideoUrl: "https://www.youtube.com/watch?v=JMUxmLyrhSk",
-    thumbnailUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=80",
+    headerImageUrl: "/images/courses/ai-banner.png",
+    thumbnailUrl: "/images/courses/ai-banner.png",
     posterUrl: "/images/courses/ai-poster.jpg",
     isActive: true,
     syllabus: [
@@ -119,7 +120,8 @@ export const COURSES: Course[] = [
     duration: "40 Days (Interactive Live Workshops)",
     level: "Beginner to Advanced",
     introVideoUrl: "https://www.youtube.com/watch?v=juKd26qkNAw",
-    thumbnailUrl: "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=1200&q=80",
+    headerImageUrl: "/images/courses/english-banner.png",
+    thumbnailUrl: "/images/courses/english-banner.png",
     posterUrl: "/images/courses/english-poster.jpg",
     isActive: true,
     syllabus: [
@@ -213,7 +215,8 @@ export const COURSES: Course[] = [
     duration: "30 Days (Hands-on Labs + Live Mentorship)",
     level: "Beginner to Intermediate",
     introVideoUrl: "https://www.youtube.com/watch?v=inWWhr5tnEA",
-    thumbnailUrl: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80",
+    headerImageUrl: "/images/courses/cyber-security-banner.png",
+    thumbnailUrl: "/images/courses/cyber-security-banner.png",
     posterUrl: "/images/courses/cyber-security-poster.jpg",
     isActive: true,
     syllabus: [

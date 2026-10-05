@@ -19,6 +19,7 @@ export interface Course {
   introVideoUrl: string;
   thumbnailUrl: string;
   posterUrl?: string; // High-res course flyer poster
+  headerImageUrl?: string; // Official wide landscape course header banner
   isActive: boolean;
   syllabus: SyllabusModule[];
   learningOutcomes: string[];

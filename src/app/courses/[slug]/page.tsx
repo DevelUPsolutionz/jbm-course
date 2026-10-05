@@ -78,12 +78,26 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
 
       <main className="flex-grow">
         {/* ==================================================================== */}
-        {/* COURSE HERO SECTION (ZenEd Style: Maroon & White) */}
+        {/* COURSE HERO SECTION (With Official Header Banner)                    */}
         {/* ==================================================================== */}
-        <section className="relative pt-16 pb-16 sm:pt-20 sm:pb-20 border-b border-slate-200 bg-gradient-to-b from-maroon-50/40 via-white to-white overflow-hidden">
+        <section className="relative pt-6 pb-16 sm:pt-8 sm:pb-20 border-b border-slate-200 bg-gradient-to-b from-maroon-50/40 via-white to-white overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[750px] h-[320px] bg-maroon-100/40 blur-[100px] rounded-full pointer-events-none" />
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            {/* 1. Official Course Page Header Banner */}
+            {course.headerImageUrl && (
+              <div className="mb-10 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200 shadow-xl bg-slate-950 group relative">
+                <Image
+                  src={course.headerImageUrl}
+                  alt={`${course.title} Official Course Header Banner`}
+                  width={1600}
+                  height={600}
+                  className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.01]"
+                  priority
+                />
+              </div>
+            )}
+
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
               {/* Left Column: Details */}
               <div className="lg:col-span-7 space-y-6">
@@ -137,17 +151,17 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
 
                   <div className="flex flex-wrap items-center gap-3">
                     <Link
-                      href={`/register?course=${course.slug}`}
+                      href={`/courses/${course.slug}/enroll`}
                       className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold text-white bg-maroon-800 hover:bg-maroon-900 shadow-lg shadow-maroon-900/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                     >
-                      <span>Enroll in This Cohort</span>
+                      <span>Enroll</span>
                       <ArrowUpRight className="w-4 h-4" />
                     </Link>
                     <a
                       href={whatsappLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-5 py-4 rounded-2xl text-sm font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-all"
+                      className="inline-flex items-center gap-2 px-5 py-4 rounded-2xl text-sm font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-all hover:scale-105"
                     >
                       <MessageCircle className="w-4 h-4 text-emerald-600" />
                       <span>WhatsApp Mentor</span>
@@ -175,44 +189,72 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
         </section>
 
         {/* ==================================================================== */}
-        {/* OFFICIAL FLYER POSTER SHOWCASE */}
+        {/* OFFICIAL FLYER POSTER SHOWCASE — Full View Without Any Cropping     */}
         {/* ==================================================================== */}
         {course.posterUrl && (
-          <section className="py-12 bg-white border-b border-slate-200">
+          <section className="py-14 bg-white border-b border-slate-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="p-6 sm:p-8 rounded-3xl bg-slate-50 border border-slate-200 flex flex-col md:flex-row items-center gap-8">
-                <div className="w-full md:w-1/3 max-w-xs relative aspect-[3/4] rounded-2xl overflow-hidden border border-slate-300 shadow-lg group">
-                  <Image
-                    src={course.posterUrl}
-                    alt={`${course.title} Official Brochure Poster`}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+              <div className="p-6 sm:p-10 rounded-[2.5rem] bg-slate-50 border border-slate-200 flex flex-col lg:flex-row items-center gap-10">
+                {/* Full Uncropped High-Res Poster Frame */}
+                <div className="w-full lg:w-5/12 max-w-md bg-white p-3 rounded-3xl border-2 border-slate-200 shadow-xl group">
+                  <div className="relative w-full rounded-2xl overflow-hidden bg-slate-950/5 flex items-center justify-center">
+                    <Image
+                      src={course.posterUrl}
+                      alt={`${course.title} Official Brochure Poster`}
+                      width={800}
+                      height={1200}
+                      className="w-full h-auto object-contain rounded-xl transition-transform duration-300 group-hover:scale-[1.02]"
+                      priority
+                    />
+                  </div>
+                  <div className="pt-3 text-center">
+                    <a
+                      href={course.posterUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-maroon-800 hover:text-maroon-900 hover:underline"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Click to Open Full High-Res Flyer in New Tab</span>
+                    </a>
+                  </div>
                 </div>
-                <div className="w-full md:w-2/3 space-y-4">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold text-maroon-800 bg-maroon-50 border border-maroon-200">
+
+                <div className="w-full lg:w-7/12 space-y-5">
+                  <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold text-maroon-800 bg-maroon-50 border border-maroon-200 shadow-sm">
                     <FileText className="w-3.5 h-3.5 text-maroon-800" />
                     <span>Official JBM Program Brochure</span>
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900">
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
                     Structured Curriculum from Johanna Bright Mentors
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                     This certification follows the verified curriculum structured by JBM faculty, featuring practical labs, portfolio projects, and direct doubt clearing on WhatsApp and live webinars.
                   </p>
+
                   <div className="pt-2 flex flex-wrap gap-4">
-                    <div className="p-3.5 rounded-xl bg-white border border-slate-200 text-xs">
+                    <div className="p-4 rounded-2xl bg-white border border-slate-200 text-xs shadow-sm">
                       <span className="text-slate-400 block font-semibold">Standard Tuition:</span>
-                      <span className="font-bold text-slate-800 line-through">
+                      <span className="font-bold text-slate-800 line-through text-sm">
                         {course.actualFee ? formatCurrency(course.actualFee, course.currency) : "—"}
                       </span>
                     </div>
-                    <div className="p-3.5 rounded-xl bg-maroon-50 border border-maroon-200 text-xs">
+                    <div className="p-4 rounded-2xl bg-maroon-50 border border-maroon-200 text-xs shadow-sm">
                       <span className="text-maroon-800 block font-bold">Limited Inaugural Offer:</span>
-                      <span className="font-extrabold text-maroon-900 text-sm">
+                      <span className="font-black text-maroon-900 text-base">
                         {formatCurrency(course.fee, course.currency)}
                       </span>
                     </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <Link
+                      href={`/courses/${course.slug}/enroll`}
+                      className="inline-flex items-center gap-2 px-8 py-3.5 rounded-2xl text-xs sm:text-sm font-bold text-white bg-maroon-800 hover:bg-maroon-900 shadow-md transition-all hover:scale-105"
+                    >
+                      <span>Enroll</span>
+                      <ArrowUpRight className="w-4 h-4" />
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -363,10 +405,10 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                   </div>
 
                   <Link
-                    href={`/register?course=${course.slug}`}
-                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl text-sm font-bold text-white bg-maroon-800 hover:bg-maroon-900 shadow-md shadow-maroon-900/25 transition-all text-center"
+                    href={`/courses/${course.slug}/enroll`}
+                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl text-sm font-bold text-white bg-maroon-800 hover:bg-maroon-900 shadow-md shadow-maroon-900/25 transition-all text-center hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    <span>Register for Cohort</span>
+                    <span>Enroll</span>
                     <ArrowUpRight className="w-4 h-4" />
                   </Link>
 
