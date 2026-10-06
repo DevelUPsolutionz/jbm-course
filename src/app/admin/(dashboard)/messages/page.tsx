@@ -1,14 +1,12 @@
 import React from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { getAdminClient } from '@/lib/supabase/admin';
 import { format } from 'date-fns';
 import { Mail, Phone, Calendar, Tag, Inbox } from 'lucide-react';
 
 export const revalidate = 0; // Disable cache to always fetch latest messages
 
 export default async function AdminMessagesPage() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  const supabase = getAdminClient();
 
   // Fetch messages, ordered by newest first
   const { data: messages, error } = await supabase
