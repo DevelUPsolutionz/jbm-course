@@ -7,8 +7,17 @@ import { Mail, Phone, MapPin, Clock, Sparkles } from "lucide-react";
 import { ContactForm } from "@/components/forms/ContactForm";
 
 export const metadata: Metadata = {
-  title: "Contact & Admissions Inquiries",
-  description: `Get in touch with ${siteConfig.name} admissions counselors for queries regarding course registrations.`,
+  title: "Contact Admissions & Helpline (Coimbatore)",
+  description: `Get in touch with ${siteConfig.name} admissions counselors in Coimbatore, Tamil Nadu. Connect via WhatsApp (+91 87785 78437) or email for course queries and batch dates.`,
+  alternates: {
+    canonical: `${siteConfig.url}/contact`,
+  },
+  openGraph: {
+    title: `Contact Admissions | ${siteConfig.name}`,
+    description: `Speak directly with a JBM mentor or counselor regarding course admissions and prerequisites.`,
+    url: `${siteConfig.url}/contact`,
+    images: [{ url: siteConfig.ogImage }],
+  },
 };
 
 export default function ContactPage() {

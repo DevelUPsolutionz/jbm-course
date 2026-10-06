@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyWebhookSignature } from "@/lib/razorpay";
 import { getAdminClient } from "@/lib/supabase/admin";
-import { sendPaymentConfirmedEmail } from "@/lib/email/send";
+import { sendPaymentConfirmedEmail, sendAdminPaymentReceivedAlert } from "@/lib/email/send";
 
 export async function POST(req: NextRequest) {
   try {
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
                 .eq("provider_order_id", orderId);
             }
 
-            // Send confirmation email
+            // Send confirmation emails to Student & Admin
             sendPaymentConfirmedEmail({
               fullName: reg.full_name,
               email: reg.email,
@@ -90,7 +90,16 @@ export async function POST(req: NextRequest) {
               registrationReference: reg.registration_reference,
               amount: reg.amount,
               paymentId: paymentId || "ONLINE_PAYMENT",
-            }).catch((err) => console.error("Webhook email notification error:", err));
+            }).catch((err) => console.error("Webhook student email notification error:", err));
+
+            sendAdminPaymentReceivedAlert({
+              fullName: reg.full_name,
+              email: reg.email,
+              courseTitle: reg.course_title,
+              registrationReference: reg.registration_reference,
+              amount: reg.amount,
+              paymentId: paymentId || "ONLINE_PAYMENT",
+            }).catch((err) => console.error("Webhook admin payment notification error:", err));
           }
         } catch (dbErr: any) {
           console.error("Webhook database update failed:", dbErr);

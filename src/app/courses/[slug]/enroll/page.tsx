@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { COURSES, getCourseBySlug } from "@/config/courses";
+import { getDynamicCourseBySlug } from "@/lib/course-pricing";
 import { siteConfig } from "@/config/site";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -31,22 +32,34 @@ export async function generateMetadata({ params }: CourseEnrollPageProps): Promi
     };
   }
 
+  const enrollUrl = `${siteConfig.url}/courses/${course.slug}/enroll`;
+
   return {
-    title: `Enroll in ${course.title} — ${siteConfig.name}`,
-    description: `Complete your official admission and payment for ${course.title}.`,
+    title: `Enroll in ${course.title} (Live Batch Admission)`,
+    description: `Complete your official admission and secure online fee payment for ${course.title} at ${siteConfig.name}.`,
+    alternates: {
+      canonical: enrollUrl,
+    },
+    openGraph: {
+      title: `Enroll in ${course.title} | ${siteConfig.name}`,
+      description: `Complete your admission for ${course.title}. Live mentorship and practical hands-on labs.`,
+      url: enrollUrl,
+      images: [{ url: course.headerImageUrl || course.thumbnailUrl }],
+    },
   };
 }
 
 export default async function CourseEnrollPage({ params }: CourseEnrollPageProps) {
   const { slug } = await params;
-  const course = getCourseBySlug(slug);
+  const dynamicCourse = await getDynamicCourseBySlug(slug);
+  const course = dynamicCourse || getCourseBySlug(slug);
 
   if (!course) {
     notFound();
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900 selection:bg-maroon-800 selection:text-white">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-[#FFF5F7] via-[#FFFDFB] to-white text-slate-900 selection:bg-maroon-800 selection:text-white">
       <Header />
 
       <main className="flex-grow py-12 sm:py-16 relative overflow-hidden">

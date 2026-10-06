@@ -1,4 +1,15 @@
+# ==============================================================================
+# Johanna Bright Mentors (JBM) - Robots.txt
+# Strict White-Hat Crawling Directives
+# ==============================================================================
+
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /jbmlogin
+Disallow: /jbmadmin
+Disallow: /superadmin
 Disallow: /api/
+
+# Official XML Sitemap
+Sitemap: https://www.johannabrightmentors.com/sitemap.xml

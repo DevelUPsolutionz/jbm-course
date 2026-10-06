@@ -3,12 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Lock, Mail, ShieldAlert, ArrowRight } from "lucide-react";
-
-// ─── Static Admin Credentials ────────────────────────────────────────────────
-// These are static-only. Do NOT surface this route in any public UI.
-const STATIC_USERNAME = "jbmadmin@jbm.edu";
-const STATIC_PASSWORD = "JBM@Admin2025!";
+import { Eye, EyeOff, Lock, Mail, ShieldAlert, ArrowRight, ShieldCheck } from "lucide-react";
 
 export default function JbmHiddenLogin() {
   const router = useRouter();
@@ -23,29 +18,40 @@ export default function JbmHiddenLogin() {
     setError("");
     setLoading(true);
 
-    // Simulate slight delay for UX
-    await new Promise((r) => setTimeout(r, 600));
+    try {
+      const res = await fetch("/api/admin/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim(),
+          password: password,
+        }),
+      });
 
-    if (
-      email.trim().toLowerCase() === STATIC_USERNAME.toLowerCase() &&
-      password === STATIC_PASSWORD
-    ) {
-      // Set a session cookie so admin pages know we are authenticated
-      document.cookie = "jbm_admin_auth=true; path=/; max-age=86400; SameSite=Strict";
-      router.push("/admin/dashboard");
-    } else {
-      setError("Invalid credentials. Please try again.");
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        router.push(data.redirectTo || "/admin/dashboard");
+        router.refresh();
+      } else {
+        setError(data.error || "Authentication failed. Access denied.");
+        setLoading(false);
+      }
+    } catch (err: any) {
+      setError("Network or server connection error. Please try again.");
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center px-4">
-      {/* Hidden — no branding in page title or H1 that would reveal this route */}
-      <div className="w-full max-w-md space-y-8">
-        {/* Logo + header */}
+    <div className="min-h-screen bg-slate-900/95 flex flex-col items-center justify-center px-4 selection:bg-maroon-700 selection:text-white">
+      {/* Background ambient lighting */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-maroon-900/30 via-slate-950 to-black pointer-events-none" />
+
+      <div className="w-full max-w-md space-y-8 relative z-10">
+        {/* Logo + Header */}
         <div className="flex flex-col items-center space-y-3 text-center">
-          <div className="relative w-16 h-16 rounded-2xl bg-white border border-slate-200 shadow-md p-2 flex items-center justify-center">
+          <div className="relative w-16 h-16 rounded-2xl bg-white border border-slate-700/50 shadow-2xl p-2.5 flex items-center justify-center">
             <Image
               src="/images/jbm-logo.png"
               alt="JBM"
@@ -56,33 +62,26 @@ export default function JbmHiddenLogin() {
             />
           </div>
           <div>
-            <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
-              Admin Access Portal
+            <h1 className="text-2xl font-black text-white tracking-tight">
+              Administrative Control Portal
             </h1>
-            <p className="text-xs text-slate-500 mt-1">
-              Authorized personnel only. All access is logged.
+            <p className="text-xs text-slate-400 mt-1 flex items-center justify-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Cryptographically Verified Access • 256-Bit SSL</span>
             </p>
           </div>
         </div>
 
         {/* Login Card */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-xl p-8 space-y-6">
-          {/* Security badge */}
-          <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-maroon-50 border border-maroon-200">
-            <ShieldAlert className="w-4 h-4 text-maroon-800 flex-shrink-0" />
-            <span className="text-xs font-semibold text-maroon-800">
-              Secure Administrative Login — JBM Internal
-            </span>
-          </div>
-
+        <div className="bg-slate-800/80 backdrop-blur-xl rounded-3xl border border-slate-700 shadow-2xl p-8 space-y-6">
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email field */}
             <div className="space-y-1.5">
               <label
                 htmlFor="email"
-                className="block text-xs font-bold text-slate-700 uppercase tracking-wider"
+                className="block text-xs font-bold text-slate-300 uppercase tracking-wider"
               >
-                Admin Email
+                Administrator Email
               </label>
               <div className="relative">
                 <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -94,7 +93,7 @@ export default function JbmHiddenLogin() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="admin@jbm.edu"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 bg-slate-50 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:border-transparent transition-all"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-600 bg-slate-900/70 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-maroon-600 focus:border-transparent transition-all"
                 />
               </div>
             </div>
@@ -103,9 +102,9 @@ export default function JbmHiddenLogin() {
             <div className="space-y-1.5">
               <label
                 htmlFor="password"
-                className="block text-xs font-bold text-slate-700 uppercase tracking-wider"
+                className="block text-xs font-bold text-slate-300 uppercase tracking-wider"
               >
-                Password
+                Security Key / Password
               </label>
               <div className="relative">
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -117,12 +116,12 @@ export default function JbmHiddenLogin() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••••••"
-                  className="w-full pl-10 pr-12 py-3 rounded-xl border border-slate-300 bg-slate-50 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-maroon-800 focus:border-transparent transition-all"
+                  className="w-full pl-10 pr-12 py-3 rounded-xl border border-slate-600 bg-slate-900/70 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-maroon-600 focus:border-transparent transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPw(!showPw)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors"
                   aria-label={showPw ? "Hide password" : "Show password"}
                 >
                   {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -130,24 +129,24 @@ export default function JbmHiddenLogin() {
               </div>
             </div>
 
-            {/* Error */}
+            {/* Error Message */}
             {error && (
-              <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-xs font-semibold text-red-700 flex items-center gap-2">
-                <ShieldAlert className="w-4 h-4 flex-shrink-0" />
-                {error}
+              <div className="px-4 py-3 rounded-xl bg-red-950/60 border border-red-500/40 text-xs font-semibold text-red-200 flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 flex-shrink-0 text-red-400" />
+                <span>{error}</span>
               </div>
             )}
 
-            {/* Submit */}
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="group w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl text-sm font-bold text-white bg-maroon-800 hover:bg-maroon-900 shadow-lg shadow-maroon-900/25 disabled:opacity-60 disabled:cursor-not-allowed transition-all hover:scale-[1.01] active:scale-[0.99]"
+              className="group w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl text-sm font-bold text-white bg-maroon-700 hover:bg-maroon-800 shadow-xl shadow-maroon-900/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-[1.01] active:scale-[0.99]"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Authenticating…
+                  Verifying Cryptographic Credentials…
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
@@ -159,9 +158,9 @@ export default function JbmHiddenLogin() {
           </form>
         </div>
 
-        <p className="text-center text-[10px] text-slate-400">
-          This page is for authorized JBM administrators only.
-          Unauthorized access attempts are logged and reported.
+        <p className="text-center text-[11px] text-slate-400">
+          This portal is protected by rate limiting and end-to-end audit logging.
+          Unauthorized intrusion attempts are recorded.
         </p>
       </div>
     </div>

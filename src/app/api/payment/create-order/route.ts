@@ -1,45 +1,68 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCourseBySlug } from "@/config/courses";
+import { getDynamicCourseBySlug } from "@/lib/course-pricing";
 import { createRazorpayOrder } from "@/lib/razorpay";
 import { getAdminClient } from "@/lib/supabase/admin";
 import { calculateDiscountedPrice } from "@/config/coupons";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    // 1. Rate Limiting: 10 requests per minute per IP
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || "127.0.0.1";
+    const { success } = rateLimit(`create-order:${ip}`, 10, 60000);
+
+    if (!success) {
+      return NextResponse.json(
+        { error: "Too many payment order requests. Please wait a moment before trying again." },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const { registrationReference, courseSlug, couponCode } = body;
 
-    if (!registrationReference || !courseSlug) {
+    // Strict input type & format validation
+    if (
+      !registrationReference ||
+      !courseSlug ||
+      typeof registrationReference !== "string" ||
+      typeof courseSlug !== "string"
+    ) {
       return NextResponse.json(
-        { error: "Missing registration reference or course identifier." },
+        { error: "Missing or invalid registration reference or course identifier." },
         { status: 400 }
       );
     }
 
-    // 1. Server-side price lookup & coupon discount verification
-    const course = getCourseBySlug(courseSlug);
+    // Sanitize reference to alphanumeric and safe hyphens
+    const cleanReference = registrationReference.trim().replace(/[^a-zA-Z0-9_-]/g, "");
+
+    // 2. Server-side dynamic price lookup & coupon discount verification
+    const dynamicCourse = await getDynamicCourseBySlug(courseSlug.trim());
+    const course = dynamicCourse || getCourseBySlug(courseSlug.trim());
     if (!course) {
       return NextResponse.json(
-        { error: "Invalid course program." },
+        { error: "Invalid course program specified." },
         { status: 400 }
       );
     }
 
     const { finalPrice, discountAmount, appliedCoupon } = calculateDiscountedPrice(
       course.fee,
-      couponCode
+      typeof couponCode === "string" ? couponCode.trim() : undefined
     );
 
-    // If 100% discount referral coupon is applied, amount is 0, handle free VIP pass
+    // If 100% discount referral coupon is applied, handle free VIP pass
     if (finalPrice === 0) {
       const supabase = getAdminClient();
       try {
         await supabase
           .from("registrations")
           .update({ payment_status: "paid" })
-          .eq("registration_reference", registrationReference);
+          .eq("registration_reference", cleanReference);
       } catch (e) {
-        console.warn("VIP Referral registration mark paid:", e);
+        console.warn("VIP Referral registration mark paid notice:", e);
       }
 
       return NextResponse.json({
@@ -53,27 +76,27 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // 2. Create Razorpay order with verified discounted price
+    // 3. Create Razorpay order with server-calculated price
     const order = await createRazorpayOrder({
       amount: finalPrice,
       currency: course.currency,
-      receipt: registrationReference,
+      receipt: cleanReference,
       notes: {
-        registrationReference,
+        registrationReference: cleanReference,
         courseSlug: course.slug,
         courseTitle: course.title,
         couponCode: appliedCoupon?.code || "NONE",
       },
     });
 
-    // 3. Persist order to payments table in Supabase
+    // 4. Persist order to payments table in Supabase
     try {
       const supabase = getAdminClient();
-      
+
       const { data: reg } = await supabase
         .from("registrations")
         .select("id")
-        .eq("registration_reference", registrationReference)
+        .eq("registration_reference", cleanReference)
         .single();
 
       if (reg) {
@@ -91,7 +114,10 @@ export async function POST(req: NextRequest) {
       console.warn("Payment order record notice:", err.message);
     }
 
-    const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID || "rzp_test_placeholder";
+    const keyId =
+      process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ||
+      process.env.RAZORPAY_KEY_ID ||
+      "rzp_test_placeholder";
 
     return NextResponse.json({
       success: true,

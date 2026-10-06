@@ -1,11 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
+import { usePathname } from "next/navigation";
 import { MessageCircle, X } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
 export function WhatsAppWidget() {
+  const pathname = usePathname();
   const [showBubble, setShowBubble] = useState(true);
+
+  // Do not show WhatsApp widget inside admin dashboard or admin login
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/jbmlogin")) {
+    return null;
+  }
 
   const phoneClean = siteConfig.contact.phone.replace(/[^0-9]/g, "");
   const defaultMessage = encodeURIComponent(

@@ -151,7 +151,13 @@ export default async function RegisterSuccessPage({ searchParams }: SuccessPageP
                 <Home className="w-4 h-4" />
                 <span>Back to Home</span>
               </Link>
-              <PrintReceiptButton />
+              {isConfirmedPaid && (
+                <PrintReceiptButton
+                  registrationReference={ref}
+                  isPaid={isConfirmedPaid}
+                  paymentId={payment_id}
+                />
+              )}
             </div>
           </div>
         </div>

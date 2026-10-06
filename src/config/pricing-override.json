@@ -1,0 +1,20 @@
+{
+  "artificial-intelligence": {
+    "slug": "artificial-intelligence",
+    "actualFee": 23000,
+    "discountPercent": 50,
+    "fee": 11500
+  },
+  "english": {
+    "slug": "english",
+    "actualFee": 20000,
+    "discountPercent": 50,
+    "fee": 10000
+  },
+  "cyber-security": {
+    "slug": "cyber-security",
+    "actualFee": 21000,
+    "discountPercent": 50,
+    "fee": 10500
+  }
+}

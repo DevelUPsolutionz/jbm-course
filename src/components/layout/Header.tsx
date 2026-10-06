@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import { Sparkles, Menu, X, ArrowUpRight, Phone, MessageSquare, ArrowRight } from "lucide-react";
 
@@ -32,6 +33,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeHash, setActiveHash] = useState("");
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -89,99 +91,142 @@ export function Header() {
         {/* Subtle Top Ceiling Accent Line */}
         <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-maroon-800/25 to-transparent pointer-events-none z-20" />
 
-        {/* 1. DESKTOP FULL-WIDTH SEAMLESS CURVED & STRAIGHT CANOPY (lg:flex) */}
-        <div className="hidden lg:flex w-full items-start justify-center relative">
-          {/* Left Straight Bar along the top ceiling (Auto-adjusts width with flex-1) */}
-          <div className="flex-1 h-[12px] bg-white/95 backdrop-blur-xl border-b border-slate-200" />
+        {/* 1. DESKTOP HEADER (lg:flex) */}
+        {pathname === "/" ? (
+          /* HOMEPAGE: FULL-WIDTH SEAMLESS CURVED & STRAIGHT CANOPY */
+          <div className="hidden lg:flex w-full items-start justify-center relative">
+            {/* Left Straight Bar along the top ceiling (Auto-adjusts width with flex-1) */}
+            <div className="flex-1 h-[12px] bg-white/95 backdrop-blur-xl border-b border-slate-200" />
 
-          {/* Left S-Curve Transition Wing: Sweeps from 12px straight rail down into 68px center dock */}
-          <div className="w-20 h-[68px] -mr-[1px] relative flex-shrink-0 pointer-events-none">
-            <svg viewBox="0 0 80 68" preserveAspectRatio="none" className="w-full h-full block">
-              <path d="M 0 0 L 80 0 L 80 68 C 44 68 36 12 0 12 Z" fill="rgba(255, 255, 255, 0.95)" />
-              <path d="M 0 12 C 36 12 44 68 80 68" fill="none" stroke="#E2E8F0" strokeWidth="1.2" />
-            </svg>
-          </div>
+            {/* Left S-Curve Transition Wing: Sweeps from 12px straight rail down into 68px center dock */}
+            <div className="w-20 h-[84px] -mr-[1px] relative flex-shrink-0 pointer-events-none">
+              <svg viewBox="0 0 80 84" preserveAspectRatio="none" className="w-full h-full block">
+                <path d="M 0 0 L 80 0 L 80 84 C 44 84 36 12 0 12 Z" fill="rgba(255, 255, 255, 0.95)" />
+                <path d="M 0 12 C 36 12 44 84 80 84" fill="none" stroke="#E2E8F0" strokeWidth="1.2" />
+              </svg>
+            </div>
 
-          {/* Central Curved Navigation Dock: Holds Logo, Menu, and Action Button */}
-          <div className="h-[68px] flex-shrink-0 flex items-center justify-between px-6 xl:px-8 bg-white/95 backdrop-blur-xl border-b border-slate-200 min-w-[800px] xl:min-w-[1000px] 2xl:min-w-[1120px]">
-            {/* Brand Logo & Name */}
-            <Link
-              href="/"
-              className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-maroon-800 rounded-xl flex-shrink-0"
-            >
-              <div className="relative w-14 h-14 rounded-xl bg-white border border-slate-200/90 p-1 flex items-center justify-center shadow-sm group-hover:border-maroon-300 group-hover:shadow-md transition-all">
-                <Image
-                  src="/images/jbm-logo.png"
-                  alt={siteConfig.name}
-                  width={56}
-                  height={56}
-                  className="object-contain w-full h-full group-hover:scale-105 transition-transform"
-                  priority
-                />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[15px] xl:text-base font-extrabold text-slate-900 tracking-tight group-hover:text-maroon-800 transition-colors">
-                  {siteConfig.name}
-                </span>
-                <span className="text-[9.5px] font-bold text-maroon-800 tracking-wider uppercase flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                  {siteConfig.slogan}
-                </span>
-              </div>
-            </Link>
-
-            {/* Desktop Navigation Links (Floating Pill Dock) */}
-            <nav
-              className="flex items-center gap-1 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/80 shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]"
-              aria-label="Main Navigation"
-            >
-              {siteConfig.nav.map((item) => {
-                const isActive = activeHash === item.href || (item.href === "/" && activeHash === "/");
-                return (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className={`text-xs font-semibold transition-all duration-200 rounded-full px-4 py-1.5 ${
-                      isActive
-                        ? "bg-maroon-800 text-white shadow-[0_2px_8px_rgba(128,0,32,0.3)]"
-                        : "text-slate-600 hover:text-maroon-900 hover:bg-white/90"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-
-            {/* Right Action CTA */}
-            <div className="flex items-center gap-3 flex-shrink-0">
+            {/* Central Curved Navigation Dock: Holds Logo, Menu, and Action Button */}
+            <div className="h-[84px] flex-shrink-0 flex items-center justify-between px-6 xl:px-8 bg-white/95 backdrop-blur-xl border-b border-slate-200 min-w-[800px] xl:min-w-[1000px] 2xl:min-w-[1120px]">
+              {/* Brand Logo & Name */}
               <Link
-                href="/#courses"
-                className="relative inline-flex items-center gap-1.5 px-6 py-2.5 rounded-full text-xs font-bold text-white bg-gradient-to-r from-maroon-800 via-maroon-900 to-maroon-800 hover:from-maroon-700 hover:to-maroon-900 shadow-[0_4px_14px_rgba(128,0,32,0.3)] hover:shadow-[0_6px_20px_rgba(128,0,32,0.4)] transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] overflow-hidden group"
+                href="/"
+                className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-maroon-800 rounded-xl flex-shrink-0"
               >
-                {/* Shimmer light bar */}
-                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent pointer-events-none" />
-                <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
-                <span>Enroll</span>
-                <ArrowUpRight className="w-3.5 h-3.5 opacity-90 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <div className="relative w-14 h-14 rounded-xl bg-white border border-slate-200/90 p-1 flex items-center justify-center shadow-sm group-hover:border-maroon-300 group-hover:shadow-md transition-all">
+                  <Image
+                    src="/images/jbm-logo.png"
+                    alt={siteConfig.name}
+                    width={56}
+                    height={56}
+                    className="object-contain w-full h-full group-hover:scale-105 transition-transform"
+                    priority
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[15px] xl:text-base font-extrabold text-slate-900 tracking-tight group-hover:text-maroon-800 transition-colors">
+                    {siteConfig.name}
+                  </span>
+                  <span className="text-[9.5px] font-bold text-maroon-800 tracking-wider uppercase flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                    {siteConfig.slogan}
+                  </span>
+                </div>
               </Link>
+
+              {/* Desktop Navigation Links (Floating Pill Dock) */}
+              <nav
+                className="flex items-center gap-1 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/80 shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]"
+                aria-label="Main Navigation"
+              >
+                {siteConfig.nav.map((item) => {
+                  const isActive = activeHash === item.href || (item.href === "/" && activeHash === "/");
+                  return (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className={`text-xs font-semibold transition-all duration-200 rounded-full px-4 py-1.5 ${
+                        isActive
+                          ? "bg-maroon-800 text-white shadow-[0_2px_8px_rgba(128,0,32,0.3)]"
+                          : "text-slate-600 hover:text-maroon-900 hover:bg-white/90"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+
+            {/* Right S-Curve Transition Wing: Sweeps from 68px center dock up into 12px straight rail */}
+            <div className="w-20 h-[84px] -ml-[1px] relative flex-shrink-0 pointer-events-none">
+              <svg viewBox="0 0 80 84" preserveAspectRatio="none" className="w-full h-full block">
+                <path d="M 0 0 L 80 0 L 80 12 C 44 12 36 84 0 84 Z" fill="rgba(255, 255, 255, 0.95)" />
+                <path d="M 0 84 C 36 84 44 12 80 12" fill="none" stroke="#E2E8F0" strokeWidth="1.2" />
+              </svg>
+            </div>
+
+            {/* Right Straight Bar along the top ceiling (Auto-adjusts width with flex-1) */}
+            <div className="flex-1 h-[12px] bg-white/95 backdrop-blur-xl border-b border-slate-200" />
+          </div>
+        ) : (
+          /* COURSE & OTHER PAGES: FULL-WIDTH CLEAN DESKTOP NAVBAR (No 12px rail cutouts) */
+          <div className="hidden lg:flex w-full h-20 bg-white/95 backdrop-blur-xl border-b border-slate-200 items-center justify-between px-6 xl:px-12 shadow-sm">
+            <div className="max-w-7xl w-full mx-auto flex items-center justify-between">
+              {/* Brand Logo & Name */}
+              <Link
+                href="/"
+                className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-maroon-800 rounded-xl flex-shrink-0"
+              >
+                <div className="relative w-12 h-12 rounded-xl bg-white border border-slate-200/90 p-1 flex items-center justify-center shadow-sm group-hover:border-maroon-300 group-hover:shadow-md transition-all">
+                  <Image
+                    src="/images/jbm-logo.png"
+                    alt={siteConfig.name}
+                    width={48}
+                    height={48}
+                    className="object-contain w-full h-full group-hover:scale-105 transition-transform"
+                    priority
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[15px] xl:text-base font-extrabold text-slate-900 tracking-tight group-hover:text-maroon-800 transition-colors">
+                    {siteConfig.name}
+                  </span>
+                  <span className="text-[9.5px] font-bold text-maroon-800 tracking-wider uppercase flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                    {siteConfig.slogan}
+                  </span>
+                </div>
+              </Link>
+
+              {/* Desktop Navigation Links */}
+              <nav
+                className="flex items-center gap-1 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/80 shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]"
+                aria-label="Main Navigation"
+              >
+                {siteConfig.nav.map((item) => {
+                  const isActive = pathname === item.href;
+                  return (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className={`text-xs font-semibold transition-all duration-200 rounded-full px-4 py-1.5 ${
+                        isActive
+                          ? "bg-maroon-800 text-white shadow-[0_2px_8px_rgba(128,0,32,0.3)]"
+                          : "text-slate-600 hover:text-maroon-900 hover:bg-white/90"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </nav>
             </div>
           </div>
-
-          {/* Right S-Curve Transition Wing: Sweeps from 68px center dock up into 12px straight rail */}
-          <div className="w-20 h-[68px] -ml-[1px] relative flex-shrink-0 pointer-events-none">
-            <svg viewBox="0 0 80 68" preserveAspectRatio="none" className="w-full h-full block">
-              <path d="M 0 0 L 80 0 L 80 12 C 44 12 36 68 0 68 Z" fill="rgba(255, 255, 255, 0.95)" />
-              <path d="M 0 68 C 36 68 44 12 80 12" fill="none" stroke="#E2E8F0" strokeWidth="1.2" />
-            </svg>
-          </div>
-
-          {/* Right Straight Bar along the top ceiling (Auto-adjusts width with flex-1) */}
-          <div className="flex-1 h-[12px] bg-white/95 backdrop-blur-xl border-b border-slate-200" />
-        </div>
+        )}
 
         {/* 2. MOBILE / TABLET COMPACT HEADER (lg:hidden) */}
-        <div className="lg:hidden w-full flex items-center justify-between px-4 sm:px-6 h-16 bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm">
+        <div className="lg:hidden w-full flex items-center justify-between px-4 sm:px-6 h-20 bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm">
           <Link href="/" className="flex items-center gap-2.5">
             <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 p-1 flex items-center justify-center shadow-sm">
               <Image
@@ -203,13 +248,7 @@ export function Header() {
             </div>
           </Link>
 
-          <div className="flex items-center gap-2.5">
-            <Link
-              href="/#courses"
-              className="px-3.5 py-1.5 text-xs font-bold text-white bg-maroon-800 rounded-full shadow-sm hover:bg-maroon-900 transition-all"
-            >
-              Enroll
-            </Link>
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}

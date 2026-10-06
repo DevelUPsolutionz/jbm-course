@@ -11,6 +11,7 @@ export const COURSES: Course[] = [
     description:
       "From Curiosity to Career: A comprehensive 30-day practical immersion into modern Artificial Intelligence. Master essential AI tools (ChatGPT, Gemini, Copilot, Claude, Canva AI, Notion AI), build AI-powered workflows, develop applications with AI assistants, and complete hands-on career capstone projects with full mentor guidance.",
     actualFee: 23000,
+    discountPercent: 50,
     fee: 11500,
     currency: "INR",
     duration: "30 Days (Live Online + Hands-on Labs)",
@@ -115,6 +116,7 @@ export const COURSES: Course[] = [
     description:
       "Fluent. Confident. Career Ready: Master spoken fluency, executive email writing, board presentations, and STAR method interview techniques. Designed specifically for college students, job seekers, and working professionals who want to eliminate hesitation and speak with natural authority.",
     actualFee: 20000,
+    discountPercent: 50,
     fee: 10000,
     currency: "INR",
     duration: "40 Days (Interactive Live Workshops)",
@@ -210,6 +212,7 @@ export const COURSES: Course[] = [
     description:
       "From Basics to Real World Security: A complete 30-day technical mastery program covering networking fundamentals, routing & switching, core network protocols, firewall hardening, VPN security, Wireshark packet analysis, and live attack detection scenarios.",
     actualFee: 21000,
+    discountPercent: 50,
     fee: 10500,
     currency: "INR",
     duration: "30 Days (Hands-on Labs + Live Mentorship)",

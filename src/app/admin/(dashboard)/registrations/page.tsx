@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getAdminClient } from "@/lib/supabase/admin";
 import { RegistrationsTable } from "@/components/admin/RegistrationsTable";
 import { RegistrationRecord } from "@/types";
+import { validateReferralCode } from "@/config/coupons";
 
 export const metadata: Metadata = {
   title: "Registrations Management | Admin",
@@ -21,23 +22,36 @@ export default async function AdminRegistrationsPage() {
       .order("created_at", { ascending: false });
 
     if (data) {
-      records = data.map((r: any) => ({
-        id: r.id,
-        registrationReference: r.registration_reference,
-        fullName: r.full_name,
-        email: r.email,
-        phone: r.phone,
-        courseId: r.course_id,
-        courseSlug: r.course_slug,
-        courseTitle: r.course_title,
-        amount: r.amount,
-        currency: r.currency,
-        message: r.message,
-        paymentStatus: r.payment_status,
-        termsAccepted: r.terms_accepted,
-        createdAt: r.created_at,
-        updatedAt: r.updated_at,
-      }));
+      records = data.map((r: any) => {
+        let refCode: string | null = null;
+        if (r.message) {
+          const match = r.message.match(/\[(?:Referral|Coupon):\s*([A-Za-z0-9]+)\]/i);
+          if (match && match[1] && match[1].toUpperCase() !== "NONE") {
+            refCode = match[1].toUpperCase();
+          }
+        }
+        const refInfo = refCode ? validateReferralCode(refCode) : null;
+
+        return {
+          id: r.id,
+          registrationReference: r.registration_reference,
+          fullName: r.full_name,
+          email: r.email,
+          phone: r.phone,
+          courseId: r.course_id,
+          courseSlug: r.course_slug,
+          courseTitle: r.course_title,
+          amount: r.amount,
+          currency: r.currency,
+          referralCode: refCode,
+          counselorName: refInfo?.staffName || null,
+          message: r.message,
+          paymentStatus: r.payment_status,
+          termsAccepted: r.terms_accepted,
+          createdAt: r.created_at,
+          updatedAt: r.updated_at,
+        };
+      });
     }
   } catch (err) {
     console.warn("Registrations fetch error in admin table:", err);

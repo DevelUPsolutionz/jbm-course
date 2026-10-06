@@ -9,8 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
+        sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["var(--font-jakarta)", "ui-sans-serif", "system-ui", "sans-serif"],
+        heading: ["var(--font-jakarta)", "ui-sans-serif", "system-ui", "sans-serif"],
+        accent: ["var(--font-sora)", "ui-sans-serif", "system-ui", "sans-serif"],
         sora: ["var(--font-sora)", "ui-sans-serif", "system-ui", "sans-serif"],
-        sans: ["var(--font-sora)", "ui-sans-serif", "system-ui", "sans-serif"],
+        jakarta: ["var(--font-jakarta)", "ui-sans-serif", "system-ui", "sans-serif"],
+        inter: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
+        serif: ["var(--font-serif)", "Georgia", "Cambria", '"Times New Roman"', "Times", "serif"],
+        editorial: ["var(--font-serif)", "Georgia", "Cambria", '"Times New Roman"', "Times", "serif"],
       },
       colors: {
         background: "#ffffff",

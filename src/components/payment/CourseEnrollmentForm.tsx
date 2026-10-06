@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Course } from "@/types";
 import { formatCurrency } from "@/lib/utils";
-import { validateCoupon, calculateDiscountedPrice, Coupon } from "@/config/coupons";
+import { validateReferralCode, calculateDiscountedPrice, ReferralCode } from "@/config/coupons";
 import { siteConfig } from "@/config/site";
 import {
   ShieldCheck,
@@ -24,6 +24,7 @@ import {
   X,
   Phone,
   MessageCircle,
+  Clock,
 } from "lucide-react";
 
 declare global {
@@ -48,7 +49,7 @@ export function CourseEnrollmentForm({ course }: CourseEnrollmentFormProps) {
   });
 
   const [couponInput, setCouponInput] = useState("");
-  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+  const [appliedCoupon, setAppliedCoupon] = useState<ReferralCode | null>(null);
   const [couponError, setCouponError] = useState<string | null>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,9 +66,9 @@ export function CourseEnrollmentForm({ course }: CourseEnrollmentFormProps) {
       return;
     }
 
-    const validated = validateCoupon(couponInput.trim());
+    const validated = validateReferralCode(couponInput.trim());
     if (!validated) {
-      setCouponError(`Coupon code "${couponInput.toUpperCase()}" is invalid or expired.`);
+      setCouponError(`Invalid Referral Code "${couponInput.toUpperCase()}".`);
       setAppliedCoupon(null);
     } else {
       setAppliedCoupon(validated);
@@ -189,6 +190,25 @@ export function CourseEnrollmentForm({ course }: CourseEnrollmentFormProps) {
         },
         theme: {
           color: "#800020",
+        },
+        config: {
+          display: {
+            hide: [
+              { method: "emi" },
+              { method: "paylater" },
+            ],
+            preferences: {
+              show_default_blocks: true,
+            },
+          },
+        },
+        method: {
+          netbanking: true,
+          card: true,
+          upi: true,
+          wallet: true,
+          emi: false,
+          paylater: false,
         },
         handler: async function (response: {
           razorpay_payment_id: string;
@@ -329,15 +349,15 @@ export function CourseEnrollmentForm({ course }: CourseEnrollmentFormProps) {
             </div>
           </div>
 
-          {/* Referral / Coupon Code */}
+          {/* Referral Code */}
           <div className="pt-2">
             <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
-              Have a Referral or Discount Coupon?
+              Referral Code
             </label>
             <div className="flex gap-2">
               <input
                 type="text"
-                placeholder="e.g. JBM50K2L"
+                placeholder=""
                 value={couponInput}
                 onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
                 disabled={!!appliedCoupon}
@@ -371,38 +391,15 @@ export function CourseEnrollmentForm({ course }: CourseEnrollmentFormProps) {
               <div className="mt-2.5 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
                   <Check className="w-4 h-4 text-emerald-600" />
-                  <span>Coupon "{appliedCoupon.code}" applied! You save {formatCurrency(priceCalc.discountAmount, course.currency)}.</span>
+                  <span>✓ Referral Code "{appliedCoupon.code}" applied! (Attributed to {appliedCoupon.staffName})</span>
                 </span>
                 <span className="text-emerald-700 uppercase tracking-wider text-[10px] bg-emerald-100 px-2 py-0.5 rounded">
-                  Active
+                  Verified
                 </span>
               </div>
             )}
           </div>
 
-          {/* Supported Razorpay Methods Preview */}
-          <div className="pt-2">
-            <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block mb-3">
-              Payment Methods (Integrated with Razorpay)
-            </span>
-            <div className="grid grid-cols-3 gap-3 text-center">
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 space-y-1">
-                <Smartphone className="w-5 h-5 text-maroon-800 mx-auto" />
-                <span className="text-xs font-bold block">UPI & QR</span>
-                <span className="text-[10px] text-slate-500 block">GPay, PhonePe, Paytm</span>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 space-y-1">
-                <CreditCard className="w-5 h-5 text-maroon-800 mx-auto" />
-                <span className="text-xs font-bold block">Debit & Credit</span>
-                <span className="text-[10px] text-slate-500 block">Visa, Mastercard, RuPay</span>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 space-y-1">
-                <Building2 className="w-5 h-5 text-maroon-800 mx-auto" />
-                <span className="text-xs font-bold block">Net Banking</span>
-                <span className="text-[10px] text-slate-500 block">50+ Indian Banks</span>
-              </div>
-            </div>
-          </div>
 
           {/* Terms Agreement Checkbox */}
           <div className="pt-2">
@@ -446,11 +443,6 @@ export function CourseEnrollmentForm({ course }: CourseEnrollmentFormProps) {
               )}
             </button>
           </div>
-
-          <div className="flex items-center justify-center gap-2 text-xs text-slate-500 font-medium pt-1">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Official Razorpay Payment Gateway • 256-Bit SSL Encrypted</span>
-          </div>
         </form>
       </div>
 
@@ -460,30 +452,28 @@ export function CourseEnrollmentForm({ course }: CourseEnrollmentFormProps) {
       <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
         <div className="p-5 sm:p-7 rounded-3xl bg-white border border-slate-200 shadow-lg shadow-slate-200/50 space-y-5 sm:space-y-6">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-maroon-50 text-maroon-800 border border-maroon-200">
-              <Sparkles className="w-3.5 h-3.5 text-maroon-800" />
-              <span>COHORT SUMMARY</span>
-            </span>
-            <span className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full">
+            <span className="text-xs font-bold text-maroon-800 bg-maroon-50 border border-maroon-200 px-3 py-1 rounded-full inline-flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-maroon-800" />
               {course.duration}
             </span>
           </div>
 
-          {/* Course Title & Thumbnail */}
+          {/* Course Title & Full-View Thumbnail Banner */}
           <div className="space-y-3">
-            <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-900">
+            <div className="w-full rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-950 p-1 flex items-center justify-center">
               <Image
                 src={course.thumbnailUrl}
                 alt={course.title}
-                fill
-                className="object-cover"
+                width={600}
+                height={340}
+                className="w-full h-auto object-contain rounded-xl"
               />
             </div>
             <h3 className="text-xl font-extrabold text-slate-900 leading-snug">
               {course.title}
             </h3>
             {course.tagline && (
-              <p className="text-xs text-maroon-800 font-bold">
+              <p className="text-xs font-serif italic text-maroon-800 font-semibold tracking-wide">
                 {course.tagline}
               </p>
             )}
@@ -511,7 +501,7 @@ export function CourseEnrollmentForm({ course }: CourseEnrollmentFormProps) {
           {/* Detailed Price Calculation Box */}
           <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
             <div className="flex items-center justify-between text-xs text-slate-600">
-              <span>Standard Tuition Fee:</span>
+              <span>Standard Course Fee:</span>
               <span className="font-semibold text-slate-400 line-through">
                 {course.actualFee ? formatCurrency(course.actualFee, course.currency) : "—"}
               </span>

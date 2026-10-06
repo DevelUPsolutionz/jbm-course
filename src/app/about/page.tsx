@@ -21,14 +21,23 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Johanna Bright Mentors (JBM)",
+  title: "About Us — Practical Tech Mentorship & Mission",
   description:
-    "Learn about Johanna Bright Mentors (JBM) — empowering learners with skills for the real world through structured learning, live mentorship, and hands-on practice.",
+    "Learn about Johanna Bright Mentors (JBM) — empowering learners with industry-aligned skills in Artificial Intelligence, Cyber Security, and Communication through structured learning and live mentorship.",
+  alternates: {
+    canonical: `${siteConfig.url}/about`,
+  },
+  openGraph: {
+    title: `About Johanna Bright Mentors (JBM) | ${siteConfig.slogan}`,
+    description: "Empowering learners with real-world skills through mentorship and practical lab training.",
+    url: `${siteConfig.url}/about`,
+    images: [{ url: siteConfig.ogImage }],
+  },
 };
 
 export default function AboutPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-white text-slate-900 selection:bg-maroon-700 selection:text-white font-sora">
+    <div className="flex flex-col min-h-screen bg-white text-slate-900 selection:bg-maroon-700 selection:text-white font-sans">
       <Header />
 
       <main className="flex-grow py-14 sm:py-20 relative overflow-hidden bg-gradient-to-b from-[#F5EEFB]/40 via-white to-white">

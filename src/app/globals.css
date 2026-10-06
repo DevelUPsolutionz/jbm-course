@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --background: #ffffff;
-    --foreground: #09090b;
+    --foreground: #0f172a;
   }
 
   body {
@@ -14,7 +14,14 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-jakarta), var(--font-sora), system-ui, sans-serif;
+    letter-spacing: -0.025em;
+    font-weight: 700;
   }
 }
 
@@ -70,4 +77,10 @@ html {
 
 .animate-bounce-slow {
   animation: bounceSlow 3.5s ease-in-out infinite;
+}
+
+/* Hide native password reveal eye in Edge/Chrome */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
 }

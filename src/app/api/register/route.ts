@@ -3,9 +3,10 @@ import { registrationSchema } from "@/lib/validations/registration";
 import { getCourseBySlug } from "@/config/courses";
 import { generateRegistrationReference } from "@/lib/utils";
 import { getAdminClient } from "@/lib/supabase/admin";
-import { sendRegistrationReceivedEmail } from "@/lib/email/send";
+import { sendRegistrationReceivedEmail, sendAdminNewRegistrationAlert } from "@/lib/email/send";
 import { rateLimit } from "@/lib/rate-limit";
-import { calculateDiscountedPrice } from "@/config/coupons";
+import { validateReferralCode } from "@/config/coupons";
+import { sanitizeText } from "@/lib/security/sanitize";
 
 export async function POST(req: NextRequest) {
   try {
@@ -41,29 +42,42 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 3. Calculate discounted price if coupon applied
-    const { finalPrice, discountAmount, appliedCoupon } = calculateDiscountedPrice(
-      course.fee,
-      data.couponCode
-    );
+    // 3. Validate Referral Code if provided
+    let appliedReferralCode: string | null = null;
+    if (data.couponCode && data.couponCode.trim()) {
+      const codeClean = data.couponCode.trim().toUpperCase();
+      const validRef = validateReferralCode(codeClean);
+      if (!validRef) {
+        return NextResponse.json(
+          { error: `Invalid Referral Code "${codeClean}". Please check with your counselor or leave it blank.` },
+          { status: 400 }
+        );
+      }
+      appliedReferralCode = validRef.code;
+    }
 
     // 4. Generate unique reference
     const registrationReference = generateRegistrationReference(data.courseSlug);
 
-    // 5. Save to Supabase
+    // 5. Save to Supabase (Referral code recorded in message tag and note)
     const supabase = getAdminClient();
     try {
+      const referralTag = appliedReferralCode ? `[Referral: ${appliedReferralCode}]` : "";
+      const rawMessage = [referralTag, data.message].filter(Boolean).join(" ").trim() || null;
+      const cleanMessage = rawMessage ? sanitizeText(rawMessage) : null;
+      const cleanFullName = sanitizeText(data.fullName);
+
       const { error: dbError } = await supabase.from("registrations").insert({
         registration_reference: registrationReference,
-        full_name: data.fullName,
-        email: data.email,
-        phone: data.phone,
+        full_name: cleanFullName,
+        email: data.email.toLowerCase().trim(),
+        phone: data.phone.trim(),
         course_id: course.id,
         course_slug: course.slug,
         course_title: course.title,
-        amount: finalPrice,
+        amount: course.fee,
         currency: course.currency,
-        message: data.message ? `[Coupon: ${data.couponCode || "None"}] ${data.message}` : (data.couponCode ? `Coupon Applied: ${data.couponCode}` : null),
+        message: cleanMessage,
         payment_status: "pending",
         terms_accepted: data.termsAccepted,
       });
@@ -75,14 +89,25 @@ export async function POST(req: NextRequest) {
       console.warn("Database insert skipped or failed:", err.message);
     }
 
-    // 6. Send registration received email
+    // 6. Send emails to Student and Admin
     sendRegistrationReceivedEmail({
       fullName: data.fullName,
       email: data.email,
       courseTitle: course.title,
       registrationReference: registrationReference,
-      amount: finalPrice,
-    }).catch((err) => console.error("Email send error:", err));
+      amount: course.fee,
+    }).catch((err) => console.error("Student email send error:", err));
+
+    sendAdminNewRegistrationAlert({
+      fullName: data.fullName,
+      email: data.email,
+      phone: data.phone,
+      courseTitle: course.title,
+      registrationReference: registrationReference,
+      amount: course.fee,
+      referralCode: appliedReferralCode,
+      message: data.message,
+    }).catch((err) => console.error("Admin alert email send error:", err));
 
     return NextResponse.json({
       success: true,
@@ -91,9 +116,9 @@ export async function POST(req: NextRequest) {
         title: course.title,
         slug: course.slug,
         originalFee: course.fee,
-        fee: finalPrice,
-        discountAmount,
-        couponCode: appliedCoupon?.code || null,
+        fee: course.fee,
+        discountAmount: 0,
+        couponCode: appliedReferralCode,
         currency: course.currency,
       },
     });

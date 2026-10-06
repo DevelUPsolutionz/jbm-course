@@ -7,8 +7,17 @@ import { siteConfig } from "@/config/site";
 import { ShieldCheck, CheckCircle2, Lock, Headphones, Sparkles, Smartphone, CreditCard, Building2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Course Registration & Admission",
-  description: `Register online for ${siteConfig.name} live training cohorts.`,
+  title: "Course Registration & Admission Portal",
+  description: `Register online for ${siteConfig.name} live training cohorts in Cyber Security, Artificial Intelligence, and English Communication. Instant coupon verification and secure admission.`,
+  alternates: {
+    canonical: `${siteConfig.url}/register`,
+  },
+  openGraph: {
+    title: `Student Admission & Course Registration | ${siteConfig.name}`,
+    description: `Reserve your seat in upcoming tech and professional cohorts. Fast online enrollment.`,
+    url: `${siteConfig.url}/register`,
+    images: [{ url: siteConfig.ogImage }],
+  },
 };
 
 interface RegisterPageProps {

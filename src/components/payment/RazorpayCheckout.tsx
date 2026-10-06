@@ -73,6 +73,25 @@ export function RazorpayCheckout({ orderData }: RazorpayCheckoutProps) {
       theme: {
         color: "#800020",
       },
+      config: {
+        display: {
+          hide: [
+            { method: "emi" },
+            { method: "paylater" },
+          ],
+          preferences: {
+            show_default_blocks: true,
+          },
+        },
+      },
+      method: {
+        netbanking: true,
+        card: true,
+        upi: true,
+        wallet: true,
+        emi: false,
+        paylater: false,
+      },
       handler: async function (response: {
         razorpay_payment_id: string;
         razorpay_order_id: string;

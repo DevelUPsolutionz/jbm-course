@@ -49,9 +49,14 @@ export function CourseCard({ course }: CourseCardProps) {
           </div>
 
           {/* Course Title */}
-          <h3 className="text-lg font-bold text-slate-900 leading-snug mb-3 group-hover:text-maroon-800 transition-colors line-clamp-2">
+          <h3 className="text-lg font-bold text-slate-900 leading-snug mb-1 group-hover:text-maroon-800 transition-colors line-clamp-2">
             {course.title}
           </h3>
+          {course.tagline && (
+            <p className="text-xs font-serif italic text-maroon-800 mb-2.5 font-semibold line-clamp-1">
+              {course.tagline}
+            </p>
+          )}
           
           {/* Description */}
           <p className="text-xs text-slate-600 line-clamp-2 mb-4 leading-relaxed">
@@ -72,10 +77,15 @@ export function CourseCard({ course }: CourseCardProps) {
             {/* Price & Action */}
             <div className="flex items-center justify-between pt-4 border-t border-slate-100">
               <div className="flex flex-col">
-                {course.actualFee && (
-                  <span className="text-[11px] font-semibold text-slate-400 line-through">
-                    {formatCurrency(course.actualFee, course.currency)}
-                  </span>
+                {course.actualFee && course.actualFee > course.fee && (
+                  <div className="flex items-center gap-1.5 mb-0.5">
+                    <span className="text-[11px] font-semibold text-slate-400 line-through">
+                      {formatCurrency(course.actualFee, course.currency)}
+                    </span>
+                    <span className="text-[10px] font-black text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                      {course.discountPercent || Math.round(((course.actualFee - course.fee) / course.actualFee) * 100)}% OFF
+                    </span>
+                  </div>
                 )}
                 <span className="text-lg font-black text-slate-900">
                   {formatCurrency(course.fee, course.currency)}

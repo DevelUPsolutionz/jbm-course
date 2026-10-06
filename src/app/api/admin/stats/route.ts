@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminClient } from "@/lib/supabase/admin";
 import { COURSES } from "@/config/courses";
+import { ADMIN_COOKIE_NAME, verifyAdminSessionToken } from "@/lib/auth/admin-session";
 
 export async function GET(req: NextRequest) {
   try {
+    const sessionToken = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
+    const session = await verifyAdminSessionToken(sessionToken);
+    const sbToken = req.cookies.get("sb-access-token")?.value;
+
+    if (!session && !sbToken) {
+      return NextResponse.json({ error: "Unauthorized access: Admin session required" }, { status: 401 });
+    }
+
     const supabase = getAdminClient();
     const { data: registrations, error } = await supabase
       .from("registrations")

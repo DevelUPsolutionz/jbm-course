@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Course } from "@/types";
 import { formatCurrency } from "@/lib/utils";
+import { validateReferralCode } from "@/config/coupons";
 import {
   CreditCard,
   ShieldCheck,
@@ -66,6 +67,14 @@ export function DirectEnrollModal({
     if (!fullName.trim() || !email.trim() || !phone.trim()) {
       setErrorMessage("Please enter your name, email, and phone number.");
       return;
+    }
+
+    if (couponCode.trim()) {
+      const validRef = validateReferralCode(couponCode.trim());
+      if (!validRef) {
+        setErrorMessage(`Invalid Referral Code "${couponCode.trim().toUpperCase()}".`);
+        return;
+      }
     }
 
     setIsSubmitting(true);
@@ -138,6 +147,25 @@ export function DirectEnrollModal({
         },
         theme: {
           color: "#800020",
+        },
+        config: {
+          display: {
+            hide: [
+              { method: "emi" },
+              { method: "paylater" },
+            ],
+            preferences: {
+              show_default_blocks: true,
+            },
+          },
+        },
+        method: {
+          netbanking: true,
+          card: true,
+          upi: true,
+          wallet: true,
+          emi: false,
+          paylater: false,
         },
         handler: async function (response: {
           razorpay_payment_id: string;
@@ -311,41 +339,17 @@ export function DirectEnrollModal({
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">
-                  Referral / Coupon Code (Optional)
+                  Referral Code
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. JBM50K2L"
+                  placeholder=""
                   value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value)}
+                  onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                   className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-maroon-700 focus:border-transparent text-slate-900 uppercase bg-slate-50/50"
                 />
               </div>
 
-              {/* Payment Methods Supported Strip */}
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
-                <div className="flex items-center justify-between text-[11px] font-bold text-slate-600 mb-2">
-                  <span className="flex items-center gap-1.5">
-                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                    Official Razorpay Checkout
-                  </span>
-                  <span className="text-emerald-700">Instant Verification</span>
-                </div>
-                <div className="grid grid-cols-3 gap-2 text-center text-[11px] font-semibold text-slate-700">
-                  <div className="p-2 rounded-lg bg-white border border-slate-200 flex items-center justify-center gap-1.5">
-                    <Smartphone className="w-3.5 h-3.5 text-maroon-800" />
-                    <span>UPI & QR</span>
-                  </div>
-                  <div className="p-2 rounded-lg bg-white border border-slate-200 flex items-center justify-center gap-1.5">
-                    <CreditCard className="w-3.5 h-3.5 text-maroon-800" />
-                    <span>Cards</span>
-                  </div>
-                  <div className="p-2 rounded-lg bg-white border border-slate-200 flex items-center justify-center gap-1.5">
-                    <Building2 className="w-3.5 h-3.5 text-maroon-800" />
-                    <span>NetBanking</span>
-                  </div>
-                </div>
-              </div>
 
               {/* Submit Button */}
               <div className="pt-2">

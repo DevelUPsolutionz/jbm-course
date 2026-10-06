@@ -12,6 +12,7 @@ export interface Course {
   shortDescription: string;
   description: string;
   actualFee: number; // Original crossed-out price
+  discountPercent?: number; // Discount percentage (e.g. 50%)
   fee: number; // Offer price
   currency: string;
   duration: string;
@@ -56,6 +57,8 @@ export interface RegistrationRecord {
   amount: number;
   currency: string;
   couponCode?: string | null;
+  referralCode?: string | null;
+  counselorName?: string | null;
   discountAmount?: number;
   message?: string | null;
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';

@@ -1,65 +1,99 @@
-export interface Coupon {
+export interface ReferralCode {
   code: string;
-  discountPercentage: number;
+  staffName: string;
+  staffRole: string;
   description: string;
-  isReferral?: boolean;
 }
 
-export const JBM_COUPONS: Record<string, Coupon> = {
+export type Coupon = ReferralCode & {
+  discountPercentage: number;
+  isReferral?: boolean;
+};
+
+// ─── 10 Official Staff / Counselor Referral Codes ───────────────────────────
+// These codes are strictly for lead tracking and counselor attribution.
+// They do NOT alter or discount the course price.
+export const JBM_REFERRAL_CODES: Record<string, ReferralCode> = {
   JBM10X7K: {
     code: "JBM10X7K",
-    discountPercentage: 10,
-    description: "10% Special Student Discount",
+    staffName: "Counselor 01",
+    staffRole: "Admissions Specialist",
+    description: "Official JBM Counselor Referral - 01",
   },
   JBM20A9P: {
     code: "JBM20A9P",
-    discountPercentage: 20,
-    description: "20% Early Bird Scholar Discount",
+    staffName: "Counselor 02",
+    staffRole: "Admissions Specialist",
+    description: "Official JBM Counselor Referral - 02",
   },
   JBM30M4Q: {
     code: "JBM30M4Q",
-    discountPercentage: 30,
-    description: "30% Fast Track Enrollment Discount",
+    staffName: "Counselor 03",
+    staffRole: "Academic Mentor",
+    description: "Official JBM Counselor Referral - 03",
   },
   JBM40R8T: {
     code: "JBM40R8T",
-    discountPercentage: 40,
-    description: "40% Merit Achiever Discount",
+    staffName: "Counselor 04",
+    staffRole: "Academic Mentor",
+    description: "Official JBM Counselor Referral - 04",
   },
   JBM50K2L: {
     code: "JBM50K2L",
-    discountPercentage: 50,
-    description: "50% Mega Flash Season Discount",
+    staffName: "Counselor 05",
+    staffRole: "Lead Outreach Partner",
+    description: "Official JBM Counselor Referral - 05",
   },
   JBM60N7V: {
     code: "JBM60N7V",
-    discountPercentage: 60,
-    description: "60% Super Scholar Privilege Discount",
+    staffName: "Counselor 06",
+    staffRole: "Senior Counselor",
+    description: "Official JBM Counselor Referral - 06",
   },
   JBM70C5X: {
     code: "JBM70C5X",
-    discountPercentage: 70,
-    description: "70% Executive Skill Builder Discount",
+    staffName: "Counselor 07",
+    staffRole: "Senior Counselor",
+    description: "Official JBM Counselor Referral - 07",
   },
   JBM80H3D: {
     code: "JBM80H3D",
-    discountPercentage: 80,
-    description: "80% Leadership Grant Discount",
+    staffName: "Counselor 08",
+    staffRole: "Career Advisor",
+    description: "Official JBM Counselor Referral - 08",
   },
   JBM90P6W: {
     code: "JBM90P6W",
-    discountPercentage: 90,
-    description: "90% Prime Ambassador Scholarship",
+    staffName: "Counselor 09",
+    staffRole: "Career Advisor",
+    description: "Official JBM Counselor Referral - 09",
   },
   JBM100Z4F: {
     code: "JBM100Z4F",
-    discountPercentage: 100,
-    description: "100% Full VIP Referral & Scholarship Pass",
-    isReferral: true,
+    staffName: "Counselor 10",
+    staffRole: "Executive Admissions Lead",
+    description: "Official JBM Counselor Referral - 10",
   },
 };
 
+export const JBM_COUPONS: Record<string, Coupon> = Object.fromEntries(
+  Object.entries(JBM_REFERRAL_CODES).map(([code, ref]) => [
+    code,
+    {
+      ...ref,
+      discountPercentage: 0, // No discount, pure referral tracking
+    },
+  ])
+);
+
+export function validateReferralCode(code: string): ReferralCode | null {
+  if (!code) return null;
+  const normalized = code.trim().toUpperCase();
+  return JBM_REFERRAL_CODES[normalized] || null;
+}
+
 export function validateCoupon(code: string): Coupon | null {
+  if (!code) return null;
   const normalized = code.trim().toUpperCase();
   return JBM_COUPONS[normalized] || null;
 }
@@ -73,17 +107,15 @@ export function calculateDiscountedPrice(originalPrice: number, couponCode?: str
     return { finalPrice: originalPrice, discountAmount: 0, appliedCoupon: null };
   }
 
-  const coupon = validateCoupon(couponCode);
-  if (!coupon) {
+  const referral = validateCoupon(couponCode);
+  if (!referral) {
     return { finalPrice: originalPrice, discountAmount: 0, appliedCoupon: null };
   }
 
-  const discountAmount = Math.round((originalPrice * coupon.discountPercentage) / 100);
-  const finalPrice = Math.max(0, originalPrice - discountAmount);
-
+  // Referral code does not reduce price; 100% of course fee is retained
   return {
-    finalPrice,
-    discountAmount,
-    appliedCoupon: coupon,
+    finalPrice: originalPrice,
+    discountAmount: 0,
+    appliedCoupon: referral,
   };
 }
