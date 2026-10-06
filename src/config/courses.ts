@@ -17,9 +17,9 @@ export const COURSES: Course[] = [
     duration: "30 Days (Live Online + Hands-on Labs)",
     level: "Beginner to Advanced",
     introVideoUrl: "https://www.youtube.com/watch?v=JMUxmLyrhSk",
-    headerImageUrl: "/images/courses/ai-banner.png",
-    thumbnailUrl: "/images/courses/ai-banner.png",
-    posterUrl: "/images/courses/ai-poster.jpg",
+    headerImageUrl: "/images/courses/ai-banner.webp",
+    thumbnailUrl: "/images/courses/ai-banner.webp",
+    posterUrl: "/images/courses/ai-poster.webp",
     isActive: true,
     syllabus: [
       {
@@ -103,7 +103,7 @@ export const COURSES: Course[] = [
       name: "Johanna Bright Mentors — AI Faculty",
       role: "Lead Generative AI & Automation Mentor",
       bio: "Industry practitioners specializing in Generative AI implementation, enterprise automation, and applied machine learning solutions.",
-      avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+      avatarUrl: "/images/avatars/instructor-ai.webp",
     },
   },
   {
@@ -122,9 +122,9 @@ export const COURSES: Course[] = [
     duration: "40 Days (Interactive Live Workshops)",
     level: "Beginner to Advanced",
     introVideoUrl: "https://www.youtube.com/watch?v=juKd26qkNAw",
-    headerImageUrl: "/images/courses/english-banner.png",
-    thumbnailUrl: "/images/courses/english-banner.png",
-    posterUrl: "/images/courses/english-poster.jpg",
+    headerImageUrl: "/images/courses/english-banner.webp",
+    thumbnailUrl: "/images/courses/english-banner.webp",
+    posterUrl: "/images/courses/english-poster.webp",
     isActive: true,
     syllabus: [
       {
@@ -199,7 +199,7 @@ export const COURSES: Course[] = [
       name: "Johanna Bright Mentors — English Faculty",
       role: "Senior Corporate Communication Specialist",
       bio: "Master corporate vocal coaches with 15+ years guiding candidates across IT, banking, and multinational placements.",
-      avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80",
+      avatarUrl: "/images/avatars/instructor-english.webp",
     },
   },
   {
@@ -218,9 +218,9 @@ export const COURSES: Course[] = [
     duration: "30 Days (Hands-on Labs + Live Mentorship)",
     level: "Beginner to Intermediate",
     introVideoUrl: "https://www.youtube.com/watch?v=inWWhr5tnEA",
-    headerImageUrl: "/images/courses/cyber-security-banner.png",
-    thumbnailUrl: "/images/courses/cyber-security-banner.png",
-    posterUrl: "/images/courses/cyber-security-poster.jpg",
+    headerImageUrl: "/images/courses/cyber-security-banner.webp",
+    thumbnailUrl: "/images/courses/cyber-security-banner.webp",
+    posterUrl: "/images/courses/cyber-security-poster.webp",
     isActive: true,
     syllabus: [
       {
@@ -313,7 +313,7 @@ export const COURSES: Course[] = [
       name: "Johanna Bright Mentors — Security Faculty",
       role: "Principal Network & Cyber Security Mentor",
       bio: "CISSP & CEH certified network defense specialists with 12+ years securing cloud infrastructure and critical enterprise perimeters.",
-      avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+      avatarUrl: "/images/avatars/instructor-cyber.webp",
     },
   },
 ];

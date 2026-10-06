@@ -119,7 +119,7 @@ export default function HomePage() {
                   {/* Portrait Card */}
                   <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden border-4 border-white shadow-xl bg-slate-100">
                     <Image
-                      src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=600&q=80"
+                      src="/images/hero/hero-student-1.webp"
                       alt="JBM Student"
                       fill
                       className="object-cover"
@@ -153,7 +153,7 @@ export default function HomePage() {
                   {/* Portrait Card */}
                   <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden border-4 border-white shadow-xl bg-slate-100 z-10">
                     <Image
-                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80"
+                      src="/images/hero/hero-student-2.webp"
                       alt="JBM Learner"
                       fill
                       className="object-cover"
@@ -457,7 +457,7 @@ export default function HomePage() {
                   {/* Main Mentor Image */}
                   <div className="relative aspect-[4/3] rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white bg-slate-100 z-10">
                     <Image
-                      src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80"
+                      src="/images/sections/mentor-guidance.webp"
                       alt="JBM Mentor Guidance and Code Review"
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -677,22 +677,22 @@ export default function HomePage() {
                 <div className="flex items-center -space-x-2.5">
                   <img
                     className="w-8 h-8 rounded-full border-2 border-white object-cover"
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                    src="/images/avatars/avatar-1.webp"
                     alt="Learner"
                   />
                   <img
                     className="w-8 h-8 rounded-full border-2 border-white object-cover"
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
+                    src="/images/avatars/avatar-2.webp"
                     alt="Learner"
                   />
                   <img
                     className="w-8 h-8 rounded-full border-2 border-white object-cover"
-                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80"
+                    src="/images/avatars/avatar-3.webp"
                     alt="Learner"
                   />
                   <img
                     className="w-8 h-8 rounded-full border-2 border-white object-cover"
-                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80"
+                    src="/images/avatars/avatar-4.webp"
                     alt="Learner"
                   />
                 </div>
@@ -812,7 +812,7 @@ export default function HomePage() {
 
                     <div className="relative aspect-[4/3] rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white bg-slate-100 z-10">
                       <Image
-                        src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80"
+                        src="/images/sections/practical-learning.webp"
                         alt="Internships & Practical Learning"
                         fill
                         className="object-cover hover:scale-105 transition-transform duration-500"
@@ -915,7 +915,7 @@ export default function HomePage() {
                     </div>
 
                     <MouseBlobImage
-                      src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80"
+                      src="/images/sections/workshops-blob.webp"
                       alt="Workshops & Training"
                       blobColor="#D1C4E9"
                     />
@@ -1265,7 +1265,7 @@ export default function HomePage() {
           {/* Image Background with Rich Maroon Overlay */}
           <div className="absolute inset-0 z-0">
             <Image 
-              src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=2000&q=80" 
+              src="/images/institution/campus-hero-bg.webp" 
               alt="University Campus" 
               fill 
               className="object-cover"
@@ -1350,7 +1350,7 @@ export default function HomePage() {
 
                 <div className="relative aspect-[4/3] rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-slate-700/80 bg-slate-800">
                   <Image
-                    src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80"
+                    src="/images/institution/campus-workshop.webp"
                     alt="University training workshop"
                     fill
                     className="object-cover hover:scale-105 transition-transform duration-700"
@@ -1394,7 +1394,7 @@ export default function HomePage() {
               {/* Card 1: Workshops */}
               <div className="p-6 rounded-[2rem] bg-white border border-purple-200/80 shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group flex flex-col justify-start">
                 <div className="relative w-full h-40 mb-5 rounded-[1.5rem] overflow-hidden bg-purple-50">
-                  <Image src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?auto=format&fit=crop&w=600&q=80" alt="Workshops" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <Image src="/images/institution/program-workshops.webp" alt="Workshops" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
                   <span>— Workshops</span>
@@ -1407,7 +1407,7 @@ export default function HomePage() {
               {/* Card 2: Training Programs */}
               <div className="p-6 rounded-[2rem] bg-white border border-sky-200/80 shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group flex flex-col justify-start">
                 <div className="relative w-full h-40 mb-5 rounded-[1.5rem] overflow-hidden bg-sky-50">
-                  <Image src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=600&q=80" alt="Training Programs" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <Image src="/images/institution/program-training.webp" alt="Training Programs" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
                   <span>— Training Programs</span>
@@ -1420,7 +1420,7 @@ export default function HomePage() {
               {/* Card 3: Career Guidance */}
               <div className="p-6 rounded-[2rem] bg-white border border-rose-200/80 shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group flex flex-col justify-start">
                 <div className="relative w-full h-40 mb-5 rounded-[1.5rem] overflow-hidden bg-rose-50">
-                  <Image src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=600&q=80" alt="Career Guidance" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <Image src="/images/institution/program-career.webp" alt="Career Guidance" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
                   <span>— Career Guidance</span>
@@ -1433,7 +1433,7 @@ export default function HomePage() {
               {/* Card 4: Internships */}
               <div className="p-6 rounded-[2rem] bg-white border border-emerald-200/80 shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group flex flex-col justify-start">
                 <div className="relative w-full h-40 mb-5 rounded-[1.5rem] overflow-hidden bg-emerald-50">
-                  <Image src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80" alt="Internships" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <Image src="/images/institution/program-internships.webp" alt="Internships" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
                   <span>— Internships</span>
@@ -1446,7 +1446,7 @@ export default function HomePage() {
               {/* Card 5: Faculty Development */}
               <div className="p-6 rounded-[2rem] bg-white border border-amber-200/80 shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group flex flex-col justify-start">
                 <div className="relative w-full h-40 mb-5 rounded-[1.5rem] overflow-hidden bg-amber-50">
-                  <Image src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=600&q=80" alt="Faculty Development" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <Image src="/images/institution/program-faculty.webp" alt="Faculty Development" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
                   <span>— Faculty Development</span>
@@ -1459,7 +1459,7 @@ export default function HomePage() {
               {/* Card 6: Customized Programs */}
               <div className="p-6 rounded-[2rem] bg-white border border-indigo-200/80 shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group flex flex-col justify-start">
                 <div className="relative w-full h-40 mb-5 rounded-[1.5rem] overflow-hidden bg-indigo-50">
-                  <Image src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=600&q=80" alt="Customized Programs" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <Image src="/images/institution/program-customized.webp" alt="Customized Programs" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
                   <span>— Customized Programs</span>
@@ -1615,7 +1615,7 @@ export default function HomePage() {
                     {/* Central Vertical Pill Image */}
                     <div className="absolute top-[5%] left-[30%] w-[40%] h-[90%] rounded-[4rem] overflow-hidden border-8 border-white shadow-xl z-20">
                       <Image
-                        src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80"
+                        src="/images/mosaic/students-collab.webp"
                         alt="Students collaborating"
                         fill
                         className="object-cover hover:scale-105 transition-transform duration-700"
@@ -1625,7 +1625,7 @@ export default function HomePage() {
                     {/* Left Floating Pill Image */}
                     <div className="absolute top-[30%] left-0 w-[35%] h-[40%] rounded-[3rem] overflow-hidden border-[6px] border-white shadow-lg z-10">
                       <Image
-                        src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=400&q=80"
+                        src="/images/mosaic/student-floating-left.webp"
                         alt="Student"
                         fill
                         className="object-cover hover:scale-105 transition-transform duration-700"
@@ -1635,7 +1635,7 @@ export default function HomePage() {
                     {/* Right Floating Pill Image */}
                     <div className="absolute top-[20%] right-[5%] w-[35%] h-[45%] rounded-[3rem] overflow-hidden border-[6px] border-white shadow-lg z-10">
                       <Image
-                        src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=400&q=80"
+                        src="/images/mosaic/developer-floating-right.webp"
                         alt="Developer"
                         fill
                         className="object-cover hover:scale-105 transition-transform duration-700"
@@ -1645,7 +1645,7 @@ export default function HomePage() {
                     {/* Floating Avatars / Accents */}
                     <div className="absolute bottom-[20%] left-[10%] w-20 h-20 rounded-full overflow-hidden border-[5px] border-emerald-400 z-30 shadow-md animate-float">
                       <Image
-                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"
+                        src="/images/avatars/avatar-3.webp"
                         alt="Avatar"
                         fill
                         className="object-cover"
@@ -1653,7 +1653,7 @@ export default function HomePage() {
                     </div>
                     <div className="absolute top-[15%] right-[15%] w-16 h-16 rounded-full overflow-hidden border-[5px] border-amber-400 z-30 shadow-md animate-float" style={{ animationDelay: '1.5s' }}>
                       <Image
-                        src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=200&q=80"
+                        src="/images/avatars/avatar-5.webp"
                         alt="Avatar"
                         fill
                         className="object-cover"
