@@ -703,49 +703,83 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Genuine Pill Marquee using 100% real PDF offerings */}
-          <div className="w-full flex flex-col gap-4 overflow-hidden py-3 px-4 select-none">
-            {/* Row 1 */}
-            <div className="flex items-center justify-center gap-4 flex-nowrap min-w-max mx-auto translate-x-6">
-              <div className="flex items-center gap-2.5 px-8 py-4 bg-[#F8BBD0] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-sm text-slate-900">
-                <Sparkles className="w-4 h-4 text-maroon-700" />
-                <span>Industry-Focused Training Programs</span>
-              </div>
+          {/* Genuine Pill Marquee using 100% real PDF offerings - Infinite Continuous Smooth Flow */}
+          <div className="w-full flex flex-col gap-3 sm:gap-4 overflow-hidden py-3 select-none">
+            {/* Row 1 - Flowing Left */}
+            <div className="flex overflow-hidden">
+              <div className="animate-marquee-left flex items-center gap-3 sm:gap-4">
+                {/* Set 1 */}
+                <div className="flex items-center gap-2 px-5 py-3 sm:px-8 sm:py-4 bg-[#F8BBD0] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-xs sm:text-sm text-slate-900 whitespace-nowrap">
+                  <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-maroon-700" />
+                  <span>Industry-Focused Training Programs</span>
+                </div>
+                <div className="flex items-center justify-center px-6 py-3 sm:px-10 sm:py-4 bg-[#E1F5FE] rounded-full shadow-sm hover:scale-105 transition-transform border border-sky-200 whitespace-nowrap">
+                  <span className="text-xl sm:text-3xl font-black text-slate-900">100+</span>
+                  <span className="text-xs font-bold text-sky-900 ml-2">Students Impacted</span>
+                </div>
+                <div className="flex items-center gap-2 px-5 py-3 sm:px-8 sm:py-4 bg-[#FFE082] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-xs sm:text-sm text-slate-900 whitespace-nowrap">
+                  <Laptop className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-800" />
+                  <span>Practical Learning Experience</span>
+                </div>
+                <div className="flex items-center gap-2 px-5 py-3 sm:px-8 sm:py-4 bg-[#D1C4E9] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-xs sm:text-sm text-slate-900 whitespace-nowrap">
+                  <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-800" />
+                  <span>Career-Focused Guidance & Mentorship</span>
+                </div>
 
-              <div className="flex items-center justify-center px-10 py-4 bg-[#E1F5FE] rounded-full shadow-sm hover:scale-105 transition-transform border border-sky-200">
-                <span className="text-2xl sm:text-3xl font-black text-slate-900">100+</span>
-                <span className="text-xs font-bold text-sky-900 ml-2">Students Impacted</span>
-              </div>
-
-              <div className="flex items-center gap-2.5 px-8 py-4 bg-[#FFE082] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-sm text-slate-900">
-                <Laptop className="w-4 h-4 text-amber-800" />
-                <span>Practical Learning Experience</span>
-              </div>
-
-              <div className="flex items-center gap-2.5 px-8 py-4 bg-[#D1C4E9] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-sm text-slate-900">
-                <Briefcase className="w-4 h-4 text-purple-800" />
-                <span>Career-Focused Guidance & Mentorship</span>
+                {/* Set 2 (Duplicate for seamless loop) */}
+                <div className="flex items-center gap-2 px-5 py-3 sm:px-8 sm:py-4 bg-[#F8BBD0] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-xs sm:text-sm text-slate-900 whitespace-nowrap">
+                  <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-maroon-700" />
+                  <span>Industry-Focused Training Programs</span>
+                </div>
+                <div className="flex items-center justify-center px-6 py-3 sm:px-10 sm:py-4 bg-[#E1F5FE] rounded-full shadow-sm hover:scale-105 transition-transform border border-sky-200 whitespace-nowrap">
+                  <span className="text-xl sm:text-3xl font-black text-slate-900">100+</span>
+                  <span className="text-xs font-bold text-sky-900 ml-2">Students Impacted</span>
+                </div>
+                <div className="flex items-center gap-2 px-5 py-3 sm:px-8 sm:py-4 bg-[#FFE082] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-xs sm:text-sm text-slate-900 whitespace-nowrap">
+                  <Laptop className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-800" />
+                  <span>Practical Learning Experience</span>
+                </div>
+                <div className="flex items-center gap-2 px-5 py-3 sm:px-8 sm:py-4 bg-[#D1C4E9] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-xs sm:text-sm text-slate-900 whitespace-nowrap">
+                  <Briefcase className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-800" />
+                  <span>Career-Focused Guidance & Mentorship</span>
+                </div>
               </div>
             </div>
 
-            {/* Row 2 */}
-            <div className="flex items-center justify-center gap-4 flex-nowrap min-w-max mx-auto -translate-x-6">
-              <div className="flex items-center gap-2.5 px-8 py-4 bg-[#E0E0E0] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-sm text-slate-900">
-                <Code className="w-4 h-4 text-slate-700" />
-                <span>AI & Productivity Program</span>
-              </div>
+            {/* Row 2 - Flowing Right */}
+            <div className="flex overflow-hidden">
+              <div className="animate-marquee-right flex items-center gap-3 sm:gap-4">
+                {/* Set 1 */}
+                <div className="flex items-center gap-2 px-5 py-3 sm:px-8 sm:py-4 bg-[#E0E0E0] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-xs sm:text-sm text-slate-900 whitespace-nowrap">
+                  <Code className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-700" />
+                  <span>AI & Productivity Program</span>
+                </div>
+                <div className="flex items-center justify-center px-6 py-3 sm:px-10 sm:py-4 bg-[#C8E6C9] rounded-full shadow-sm hover:scale-105 transition-transform border border-emerald-200 font-extrabold text-slate-900 text-sm sm:text-lg whitespace-nowrap">
+                  <span>Networking in Cyber Security</span>
+                </div>
+                <div className="flex items-center gap-2 px-5 py-3 sm:px-8 sm:py-4 bg-[#B3E5FC] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-xs sm:text-sm text-slate-900 whitespace-nowrap">
+                  <Users2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-800" />
+                  <span>Professional English & Communication</span>
+                </div>
+                <div className="flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 bg-[#FFCC80] rounded-full shadow-sm hover:scale-105 transition-transform border border-amber-200 font-bold text-xs sm:text-sm text-slate-900 whitespace-nowrap">
+                  <span>Learn • Practice • Build • Grow</span>
+                </div>
 
-              <div className="flex items-center justify-center px-10 py-4 bg-[#C8E6C9] rounded-full shadow-sm hover:scale-105 transition-transform border border-emerald-200 font-black text-slate-900 text-lg sm:text-xl">
-                <span>Networking in Cyber Security</span>
-              </div>
-
-              <div className="flex items-center gap-2.5 px-8 py-4 bg-[#B3E5FC] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-sm text-slate-900">
-                <Users2 className="w-4 h-4 text-sky-800" />
-                <span>Professional English & Communication</span>
-              </div>
-
-              <div className="flex items-center justify-center px-8 py-4 bg-[#FFCC80] rounded-full shadow-sm hover:scale-105 transition-transform border border-amber-200 font-bold text-sm text-slate-900">
-                <span>Learn • Practice • Build • Grow</span>
+                {/* Set 2 (Duplicate for seamless loop) */}
+                <div className="flex items-center gap-2 px-5 py-3 sm:px-8 sm:py-4 bg-[#E0E0E0] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-xs sm:text-sm text-slate-900 whitespace-nowrap">
+                  <Code className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-700" />
+                  <span>AI & Productivity Program</span>
+                </div>
+                <div className="flex items-center justify-center px-6 py-3 sm:px-10 sm:py-4 bg-[#C8E6C9] rounded-full shadow-sm hover:scale-105 transition-transform border border-emerald-200 font-extrabold text-slate-900 text-sm sm:text-lg whitespace-nowrap">
+                  <span>Networking in Cyber Security</span>
+                </div>
+                <div className="flex items-center gap-2 px-5 py-3 sm:px-8 sm:py-4 bg-[#B3E5FC] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-xs sm:text-sm text-slate-900 whitespace-nowrap">
+                  <Users2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-800" />
+                  <span>Professional English & Communication</span>
+                </div>
+                <div className="flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 bg-[#FFCC80] rounded-full shadow-sm hover:scale-105 transition-transform border border-amber-200 font-bold text-xs sm:text-sm text-slate-900 whitespace-nowrap">
+                  <span>Learn • Practice • Build • Grow</span>
+                </div>
               </div>
             </div>
           </div>

@@ -146,7 +146,7 @@ export default function JbmHiddenLogin() {
               {loading ? (
                 <span className="flex items-center gap-2">
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Verifying Cryptographic Credentials…
+                  Verifying…
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
@@ -157,11 +157,6 @@ export default function JbmHiddenLogin() {
             </button>
           </form>
         </div>
-
-        <p className="text-center text-[11px] text-slate-400">
-          This portal is protected by rate limiting and end-to-end audit logging.
-          Unauthorized intrusion attempts are recorded.
-        </p>
       </div>
     </div>
   );

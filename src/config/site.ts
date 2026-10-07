@@ -7,9 +7,9 @@ export const siteConfig = {
   description:
     "At Johanna Bright Mentors (JBM), we help learners develop practical, career-focused skills through structured learning, live mentorship, hands-on practice and real-world projects. Explore our programs in Artificial Intelligence, Professional Communication and Cyber Security.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.johannabrightmentors.com",
-  logo: "/images/jbm-logo.png",
+  logo: "/images/jbm-logo-with-bg.png",
   logoWithBg: "/images/jbm-logo-with-bg.png",
-  ogImage: "/images/jbm-logo-with-bg.png",
+  ogImage: "/images/jbm-og-banner.png",
   contact: {
     phone: "87785 78437",
     formattedPhone: "+91 87785 78437",

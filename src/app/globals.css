@@ -50,9 +50,14 @@ html {
 }
 
 /* Senior UI/UX Live Animation Utilities */
-@keyframes marquee {
+@keyframes marqueeLeft {
   0% { transform: translateX(0%); }
-  100% { transform: translateX(-100%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marqueeRight {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
 }
 
 @keyframes spinSlow {
@@ -65,10 +70,21 @@ html {
   50% { transform: translateY(-5px); }
 }
 
-.animate-marquee {
+.animate-marquee-left {
   display: flex;
-  flex-shrink: 0;
-  animation: marquee 32s linear infinite;
+  width: max-content;
+  animation: marqueeLeft 30s linear infinite;
+}
+
+.animate-marquee-right {
+  display: flex;
+  width: max-content;
+  animation: marqueeRight 30s linear infinite;
+}
+
+.animate-marquee-left:hover,
+.animate-marquee-right:hover {
+  animation-play-state: paused;
 }
 
 .animate-spin-slow {
