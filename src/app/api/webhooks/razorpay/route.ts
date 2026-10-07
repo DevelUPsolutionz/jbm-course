@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyWebhookSignature } from "@/lib/razorpay";
 import { getAdminClient } from "@/lib/supabase/admin";
 import { sendPaymentConfirmedEmail, sendAdminPaymentReceivedAlert } from "@/lib/email/send";
+import { generateReceiptPDF } from "@/lib/pdf/generateReceipt";
 
 export async function POST(req: NextRequest) {
   try {
@@ -64,10 +65,53 @@ export async function POST(req: NextRequest) {
             .single();
 
           if (reg && reg.payment_status !== "paid") {
-            // Update registration to paid
+            
+            // 1. Generate PDF
+            const paymentDate = new Date().toLocaleDateString("en-IN", {
+              day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Kolkata"
+            });
+            
+            let pdfBuffer;
+            let receiptPath = null;
+            
+            try {
+              pdfBuffer = await generateReceiptPDF({
+                invoiceNo: `JBM-${new Date().getFullYear()}-${reg.registration_reference.slice(-4)}`,
+                date: paymentDate,
+                studentName: reg.full_name,
+                phone: reg.phone,
+                email: reg.email,
+                courseName: reg.course_title,
+                feeAmount: reg.amount,
+                paymentMode: "Razorpay Secure Gateway",
+                transactionId: paymentId || "ONLINE_PAYMENT"
+              });
+
+              // 2. Upload to Supabase Storage
+              const fileName = `JBM_Invoice_${reg.registration_reference}.pdf`;
+              const { data: uploadData, error: uploadError } = await supabase.storage
+                .from("invoices")
+                .upload(fileName, pdfBuffer, {
+                  contentType: 'application/pdf',
+                  upsert: true
+                });
+                
+              if (!uploadError && uploadData) {
+                receiptPath = uploadData.path; // Store the storage path
+              } else {
+                console.error("Failed to upload invoice to Supabase:", uploadError);
+              }
+            } catch (pdfErr) {
+              console.error("Failed to generate PDF:", pdfErr);
+            }
+
+            // 3. Update registration to paid and set receipt_url
             await supabase
               .from("registrations")
-              .update({ payment_status: "paid" })
+              .update({ 
+                payment_status: "paid",
+                receipt_url: receiptPath
+              })
               .eq("id", reg.id);
 
             // Update payments table
@@ -90,6 +134,7 @@ export async function POST(req: NextRequest) {
               registrationReference: reg.registration_reference,
               amount: reg.amount,
               paymentId: paymentId || "ONLINE_PAYMENT",
+              receiptBuffer: pdfBuffer,
             }).catch((err) => console.error("Webhook student email notification error:", err));
 
             sendAdminPaymentReceivedAlert({

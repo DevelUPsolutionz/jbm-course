@@ -27,16 +27,17 @@ export function PrintReceiptButton({
     );
   }
 
-  const invoiceUrl = `/invoice/${registrationReference}?pay=${isPaid ? "confirmed" : "pending"}${paymentId ? `&payment_id=${paymentId}` : ""}`;
+  const downloadUrl = `/api/invoice/download?ref=${registrationReference}`;
 
   return (
-    <Link
-      href={invoiceUrl}
+    <a
+      href={downloadUrl}
       target="_blank"
+      rel="noopener noreferrer"
       className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-xs font-bold text-white bg-maroon-800 hover:bg-maroon-900 shadow-md shadow-maroon-900/20 transition-all print:hidden"
     >
       <FileText className="w-4 h-4" />
-      <span>📄 Official Tax Invoice (PDF)</span>
-    </Link>
+      <span>📄 Download Receipt (PDF)</span>
+    </a>
   );
 }

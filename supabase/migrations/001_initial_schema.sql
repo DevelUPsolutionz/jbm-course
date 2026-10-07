@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS public.registrations (
     message TEXT,
     payment_status VARCHAR(50) NOT NULL DEFAULT 'pending', -- 'pending', 'paid', 'failed', 'refunded'
     terms_accepted BOOLEAN NOT NULL DEFAULT true,
+    receipt_url VARCHAR(1000), -- Storing the Supabase Storage URL for invoices
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

@@ -426,15 +426,15 @@ export function RegistrationsTable({ initialRegistrations }: RegistrationsTableP
 
             <div className="pt-4 border-t border-slate-100 flex justify-between items-center gap-3">
               {selectedRecord.paymentStatus === "paid" ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    window.open(`/invoice/${selectedRecord.registrationReference}?pay=confirmed`, "_blank");
-                  }}
+                <a
+                  href={`/api/invoice/download?ref=${selectedRecord.registrationReference}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="px-3.5 py-2 rounded-lg text-xs font-bold text-white bg-maroon-800 hover:bg-maroon-900 border border-maroon-950 flex items-center gap-1.5 transition cursor-pointer shadow-sm"
                 >
-                  <span>📄 View / Print Official Tax Invoice</span>
-                </button>
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download PDF Receipt</span>
+                </a>
               ) : (
                 <div className="text-[11px] font-semibold text-amber-800 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200">
                   <span>⏳ Official Invoice unlocks after payment is received</span>
