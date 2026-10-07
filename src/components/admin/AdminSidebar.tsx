@@ -47,7 +47,6 @@ export function AdminSidebar() {
     { label: "Registrations", href: "/admin/registrations", icon: Users },
     { label: "Referral Codes", href: "/admin/referrals", icon: Tag },
     { label: "Messages", href: "/admin/messages", icon: MessageSquare },
-    { label: "Email Preview", href: "/email-preview", icon: MessageSquare },
   ];
 
   return (

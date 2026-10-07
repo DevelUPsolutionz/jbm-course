@@ -6,22 +6,22 @@ import { Mail, Phone, Calendar, Tag, Inbox } from 'lucide-react';
 export const revalidate = 0; // Disable cache to always fetch latest messages
 
 export default async function AdminMessagesPage() {
-  const supabase = getAdminClient();
+  let messages: any[] = [];
 
-  // Fetch messages, ordered by newest first
-  const { data: messages, error } = await supabase
-    .from('contact_messages')
-    .select('*')
-    .order('created_at', { ascending: false });
+  try {
+    const supabase = getAdminClient();
+    const { data, error } = await supabase
+      .from('contact_messages')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-  if (error) {
-    return (
-      <div className="p-8 text-center text-red-500 font-medium">
-        Error loading messages. Ensure the contact_messages table is created in Supabase.
-        <br />
-        Details: {error.message}
-      </div>
-    );
+    if (!error && data) {
+      messages = data;
+    } else if (error) {
+      console.warn("Notice: contact_messages table query note:", error.message);
+    }
+  } catch (err: any) {
+    console.warn("Messages page database fetch note:", err);
   }
 
   return (
