@@ -65,7 +65,8 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
   // AutoTable: Student Details
   doc.autoTable({
     startY: 65,
-    head: [['STUDENT DETAILS']],
+    margin: { left: 20, right: 20 },
+    head: [[{ content: 'STUDENT DETAILS', colSpan: 2 }]],
     body: [
       ['Name', data.studentName],
       ['Phone Number', data.phone],
@@ -75,13 +76,14 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
     headStyles: { fillColor: primaryColor as [number, number, number], textColor: 255, fontStyle: 'bold' },
     bodyStyles: { textColor: 50 },
     columnStyles: { 0: { cellWidth: 50, fontStyle: 'bold' } },
-    styles: { cellPadding: 4, fontSize: 10 },
+    styles: { cellPadding: 3, fontSize: 10 },
   });
 
   // AutoTable: Course Details
   doc.autoTable({
-    startY: doc.lastAutoTable.finalY + 10,
-    head: [['COURSE DETAILS']],
+    startY: doc.lastAutoTable.finalY + 8,
+    margin: { left: 20, right: 20 },
+    head: [[{ content: 'COURSE DETAILS', colSpan: 2 }]],
     body: [
       ['Course Name', data.courseName],
     ],
@@ -89,13 +91,14 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
     headStyles: { fillColor: primaryColor as [number, number, number], textColor: 255, fontStyle: 'bold' },
     bodyStyles: { textColor: 50 },
     columnStyles: { 0: { cellWidth: 50, fontStyle: 'bold' } },
-    styles: { cellPadding: 4, fontSize: 10 },
+    styles: { cellPadding: 3, fontSize: 10 },
   });
 
   // AutoTable: Payment Details
   doc.autoTable({
-    startY: doc.lastAutoTable.finalY + 10,
-    head: [['PAYMENT DETAILS']],
+    startY: doc.lastAutoTable.finalY + 8,
+    margin: { left: 20, right: 20 },
+    head: [[{ content: 'PAYMENT DETAILS', colSpan: 2 }]],
     body: [
       ['Total Course Fee', `INR ${data.feeAmount.toLocaleString()}`],
       ['Amount Paid', `INR ${data.feeAmount.toLocaleString()}`],
@@ -107,7 +110,7 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
     headStyles: { fillColor: primaryColor as [number, number, number], textColor: 255, fontStyle: 'bold' },
     bodyStyles: { textColor: 50 },
     columnStyles: { 0: { cellWidth: 50, fontStyle: 'bold' } },
-    styles: { cellPadding: 4, fontSize: 10 },
+    styles: { cellPadding: 3, fontSize: 10 },
   });
 
   // Footer success message
