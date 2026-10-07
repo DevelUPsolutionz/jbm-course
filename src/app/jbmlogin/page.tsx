@@ -44,20 +44,20 @@ export default function JbmHiddenLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900/95 flex flex-col items-center justify-center px-4 selection:bg-maroon-700 selection:text-white">
+    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center px-4 selection:bg-maroon-700 selection:text-white">
       {/* Background ambient lighting */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-maroon-900/30 via-slate-950 to-black pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-black pointer-events-none" />
 
       <div className="w-full max-w-md space-y-8 relative z-10">
         {/* Logo + Header */}
-        <div className="flex flex-col items-center space-y-3 text-center">
-          <div className="relative w-16 h-16 rounded-2xl bg-white border border-slate-700/50 shadow-2xl p-2.5 flex items-center justify-center">
+        <div className="flex flex-col items-center space-y-4 text-center">
+          <div className="relative flex items-center justify-center">
             <Image
               src="/images/jbm-logo.png"
               alt="JBM"
-              width={48}
-              height={48}
-              className="object-contain"
+              width={80}
+              height={80}
+              className="object-contain drop-shadow-xl"
               priority
             />
           </div>
