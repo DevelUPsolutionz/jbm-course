@@ -39,13 +39,13 @@ const steps = [
 export function AnimatedProcess() {
   const [activeStep, setActiveStep] = useState(0);
 
-  // Auto-advance every 2 seconds, resets timer if user manually clicks a step
+  // Auto-advance every 5 seconds, smooth timer without rapid re-render layout shifts
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveStep((prev) => (prev + 1) % steps.length);
-    }, 2000);
+    }, 5000);
     return () => clearInterval(interval);
-  }, [activeStep]);
+  }, []);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center max-w-6xl mx-auto">

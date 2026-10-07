@@ -1,5 +1,8 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import fs from 'fs';
+import path from 'path';
 
 // Type definitions for jspdf-autotable to avoid TS errors
 declare module 'jspdf' {
@@ -24,16 +27,127 @@ export interface ReceiptData {
 }
 
 export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
-  // Create a new PDF document (A4, portrait)
+  const templatePath = path.join(process.cwd(), 'public', 'invoice_template.pdf');
+
+  // 1. Try filling official template PDF if present
+  if (fs.existsSync(templatePath)) {
+    try {
+      const templateBytes = fs.readFileSync(templatePath);
+      const pdfDoc = await PDFDocument.load(templateBytes);
+      const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+      const page = pdfDoc.getPages()[0];
+      const { width, height } = page.getSize();
+
+      const textColor = rgb(0.1, 0.1, 0.1);
+      const maroonColor = rgb(0.5, 0, 0.125);
+
+      // Coordinates mapped relative to 768 x 1152 point canvas
+      const scaleX = width / 768;
+      const scaleY = height / 1152;
+      const sx = (x: number) => x * scaleX;
+      const sy = (y: number) => height - (y * scaleY);
+
+      // Invoice Meta (Top Right)
+      page.drawText(data.invoiceNo, {
+        x: sx(515),
+        y: sy(165),
+        size: 12,
+        font: fontBold,
+        color: maroonColor,
+      });
+
+      page.drawText(data.date, {
+        x: sx(515),
+        y: sy(195),
+        size: 11,
+        font: fontRegular,
+        color: textColor,
+      });
+
+      // Student Details Section
+      page.drawText(data.studentName, {
+        x: sx(250),
+        y: sy(340),
+        size: 11,
+        font: fontBold,
+        color: textColor,
+      });
+
+      page.drawText(data.phone, {
+        x: sx(250),
+        y: sy(380),
+        size: 11,
+        font: fontRegular,
+        color: textColor,
+      });
+
+      page.drawText(data.email, {
+        x: sx(250),
+        y: sy(420),
+        size: 11,
+        font: fontRegular,
+        color: textColor,
+      });
+
+      // Course Details Section
+      page.drawText(data.courseName, {
+        x: sx(250),
+        y: sy(540),
+        size: 11,
+        font: fontBold,
+        color: textColor,
+      });
+
+      // Payment Details Section
+      page.drawText(`INR ${data.feeAmount.toLocaleString()}`, {
+        x: sx(250),
+        y: sy(660),
+        size: 11,
+        font: fontBold,
+        color: textColor,
+      });
+
+      page.drawText(`INR ${data.feeAmount.toLocaleString()}`, {
+        x: sx(250),
+        y: sy(700),
+        size: 11,
+        font: fontBold,
+        color: maroonColor,
+      });
+
+      page.drawText(data.paymentMode, {
+        x: sx(250),
+        y: sy(740),
+        size: 11,
+        font: fontRegular,
+        color: textColor,
+      });
+
+      page.drawText(data.transactionId, {
+        x: sx(250),
+        y: sy(780),
+        size: 11,
+        font: fontRegular,
+        color: textColor,
+      });
+
+      const pdfBytes = await pdfDoc.save();
+      return Buffer.from(pdfBytes);
+    } catch (err) {
+      console.error("Error overlaying text onto invoice_template.pdf:", err);
+    }
+  }
+
+  // 2. Clean fallback generation using jsPDF if template file is missing/unreadable
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
     format: 'a4',
   });
 
-  // Basic styling configurations
-  const primaryColor = [128, 0, 0]; // Maroon
-  const lightBgColor = [240, 240, 240];
+  const primaryColor = [128, 0, 0];
 
   // Header Title
   doc.setFontSize(24);
@@ -128,7 +242,6 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
   doc.setFontSize(10);
   doc.text("Thank you for choosing Johanna Bright Mentors. We are excited to have you with us!", 25, finalY + 18);
 
-  // Return the PDF document as a Buffer (suitable for Supabase upload and Resend attachment)
   const arrayBuffer = doc.output('arraybuffer');
   return Buffer.from(arrayBuffer);
 }

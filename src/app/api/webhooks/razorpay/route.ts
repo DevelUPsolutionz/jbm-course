@@ -66,7 +66,21 @@ export async function POST(req: NextRequest) {
 
           if (reg && reg.payment_status !== "paid") {
             
-            // 1. Generate PDF
+            // 1. Calculate dynamic sequential invoice number: e.g., JBM-2026-0001, JBM-2026-0002...
+            const currentYear = new Date().getFullYear();
+            const yearStart = `${currentYear}-01-01T00:00:00.000Z`;
+            const yearEnd = `${currentYear + 1}-01-01T00:00:00.000Z`;
+
+            const { count } = await supabase
+              .from("registrations")
+              .select("id", { count: "exact", head: true })
+              .eq("payment_status", "paid")
+              .gte("created_at", yearStart)
+              .lt("created_at", yearEnd);
+
+            const seqNum = ((count || 0) + 1).toString().padStart(4, "0");
+            const dynamicInvoiceNo = `JBM-${currentYear}-${seqNum}`;
+
             const paymentDate = new Date().toLocaleDateString("en-IN", {
               day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Kolkata"
             });
@@ -76,7 +90,7 @@ export async function POST(req: NextRequest) {
             
             try {
               pdfBuffer = await generateReceiptPDF({
-                invoiceNo: `JBM-${new Date().getFullYear()}-${reg.registration_reference.slice(-4)}`,
+                invoiceNo: dynamicInvoiceNo,
                 date: paymentDate,
                 studentName: reg.full_name,
                 phone: reg.phone,

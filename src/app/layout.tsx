@@ -8,29 +8,24 @@ import "./globals.css";
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-jakarta",
-  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
-  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
 const sora = Sora({
   subsets: ["latin"],
   variable: "--font-sora",
-  weight: ["400", "600", "700", "800"],
   display: "swap",
 });
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-serif",
-  weight: ["400", "500", "600", "700", "800"],
-  style: ["normal", "italic"],
   display: "swap",
 });
 
