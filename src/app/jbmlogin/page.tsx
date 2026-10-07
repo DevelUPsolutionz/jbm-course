@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { EyeOff, Lock, ShieldAlert, ShieldCheck, User } from "lucide-react";
+import { EyeOff, Lock, ShieldAlert, User } from "lucide-react";
 
 export default function JbmHiddenLogin() {
   const router = useRouter();
@@ -50,55 +50,45 @@ export default function JbmHiddenLogin() {
       <div className="absolute -top-32 -right-32 w-96 h-96 bg-maroon-700/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-maroon-50/50 to-transparent pointer-events-none" />
 
-      {/* Top Logo */}
-      <div className="relative z-10 mb-8 flex flex-col items-center space-y-2">
-        <Image
-          src="/images/jbm-logo.png"
-          alt="JBM Logo"
-          width={64}
-          height={64}
-          className="object-contain drop-shadow-sm"
-          priority
-        />
-        <h1 className="text-xl font-black text-slate-800 tracking-tight uppercase">
-          Johanna Bright Mentors
-        </h1>
-      </div>
-
       {/* Main Wide Card */}
-      <div className="relative z-10 w-full max-w-4xl bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden flex flex-col md:flex-row">
+      <div className="relative z-10 w-full max-w-4xl bg-white rounded-3xl shadow-[0_12px_40px_rgba(0,0,0,0.06)] border border-slate-100 overflow-hidden flex flex-col md:flex-row min-h-[460px]">
         
-        {/* Left Column - Illustration area */}
-        <div className="hidden md:flex flex-col items-center justify-center w-1/2 p-12 bg-slate-50/50 border-r border-slate-100 relative">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-maroon-50 via-transparent to-transparent opacity-60" />
+        {/* Left Column - Brand Logo & Name */}
+        <div className="flex flex-col items-center justify-center w-full md:w-1/2 p-8 md:p-12 bg-slate-50/70 border-b md:border-b-0 md:border-r border-slate-100 relative">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-maroon-50/80 via-transparent to-transparent opacity-80 pointer-events-none" />
           
-          <div className="relative z-10 flex flex-col items-center text-center space-y-6">
-            <div className="relative w-48 h-48 bg-white rounded-full shadow-sm flex items-center justify-center border border-slate-100">
-               {/* Composed Icon Graphic */}
-               <ShieldCheck className="w-24 h-24 text-maroon-700 drop-shadow-sm" strokeWidth={1.5} />
-               <div className="absolute -bottom-2 -right-2 bg-white p-3 rounded-full shadow-md border border-slate-100">
-                  <User className="w-6 h-6 text-slate-600" />
-               </div>
+          <div className="relative z-10 flex flex-col items-center text-center space-y-4">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 bg-white rounded-3xl shadow-md p-3 flex items-center justify-center border border-slate-100">
+              <Image
+                src="/images/jbm-logo.png"
+                alt="Johanna Bright Mentors Logo"
+                width={88}
+                height={88}
+                className="object-contain drop-shadow-sm w-full h-full"
+                priority
+              />
             </div>
             
-            <div className="space-y-2">
-              <h2 className="text-xl font-bold text-slate-800">Secure Access</h2>
-              <p className="text-sm text-slate-500 max-w-xs leading-relaxed">
-                Administrative control portal. Cryptographically verified access with 256-Bit SSL encryption.
+            <div className="space-y-1">
+              <h1 className="text-xl sm:text-2xl font-black text-maroon-800 tracking-tight uppercase">
+                Johanna Bright Mentors
+              </h1>
+              <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">
+                Skill Development & Mentorship
               </p>
             </div>
           </div>
         </div>
 
-        {/* Right Column - Form area */}
+        {/* Right Column - Form Area */}
         <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-          <div className="space-y-8">
+          <div className="space-y-6">
             <div>
-              <div className="w-8 h-1 bg-maroon-700 rounded-full mb-4" />
+              <div className="w-8 h-1 bg-maroon-700 rounded-full mb-3" />
               <h2 className="text-2xl font-bold text-slate-800">Login as a Admin User</h2>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email field */}
               <div className="space-y-1">
                 <div className="relative">
@@ -142,7 +132,7 @@ export default function JbmHiddenLogin() {
 
               {/* Error Message */}
               {error && (
-                <div className="px-4 py-3 rounded-lg bg-red-50 border border-red-100 text-xs font-semibold text-red-600 flex items-center gap-2">
+                <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-100 text-xs font-semibold text-red-600 flex items-center gap-2">
                   <ShieldAlert className="w-4 h-4 flex-shrink-0" />
                   <span>{error}</span>
                 </div>
@@ -152,7 +142,7 @@ export default function JbmHiddenLogin() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-full text-sm font-bold text-white bg-maroon-700 hover:bg-maroon-800 shadow-lg shadow-maroon-700/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-[1.02] active:scale-[0.98] mt-2"
+                className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-full text-sm font-bold text-white bg-maroon-700 hover:bg-maroon-800 shadow-lg shadow-maroon-700/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-[1.01] active:scale-[0.99] mt-2 cursor-pointer"
               >
                 {loading ? (
                   <span className="flex items-center gap-2">
@@ -164,21 +154,6 @@ export default function JbmHiddenLogin() {
                 )}
               </button>
             </form>
-
-            <div className="pt-6 text-center space-y-2">
-              <p className="text-xs text-slate-500">
-                Forget your password?
-              </p>
-              <p className="text-xs font-semibold text-maroon-700 hover:text-maroon-800 cursor-pointer transition-colors">
-                Get help Signed in.
-              </p>
-            </div>
-            
-            <div className="pt-8 text-center">
-              <p className="text-[10px] text-slate-400">
-                Terms of use. Privacy policy
-              </p>
-            </div>
           </div>
         </div>
       </div>
