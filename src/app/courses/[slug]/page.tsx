@@ -175,7 +175,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
         <section className="relative pt-4 pb-12 sm:pt-6 sm:pb-16 border-b border-slate-200/80 overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[750px] h-[320px] bg-maroon-100/40 blur-[100px] rounded-full pointer-events-none" />
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             {/* Back Navigation Button */}
             <div className="mb-4 sm:mb-5">
               <Link
@@ -187,9 +187,9 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
               </Link>
             </div>
 
-            {/* 1. Official Course Page Header Banner (Compact & Ultra-Crisp) */}
+            {/* 1. Official Course Page Header Banner (Compact, Ultra-Crisp & Centered) */}
             {course.headerImageUrl && (
-              <div className="mb-6 sm:mb-8 max-w-4xl rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-lg bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 group relative">
+              <div className="mb-6 sm:mb-8 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-lg bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 group relative">
                 <Image
                   src={course.headerImageUrl}
                   alt={`${course.title} Official Course Header Banner`}
@@ -203,9 +203,9 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
               </div>
             )}
 
-            {/* Course Hero Details (Full View Without Video) */}
-            <div className="max-w-4xl space-y-6">
-              <div className="flex flex-wrap items-center gap-3">
+            {/* Course Hero Details (Centered Layout on Desktop & Mobile) */}
+            <div className="w-full space-y-5 sm:space-y-6 text-center">
+              <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
                 <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-maroon-50 text-maroon-800 border border-maroon-200 shadow-sm">
                   <Sparkles className="w-3.5 h-3.5 text-maroon-800" />
                   {course.discountPercent || (course.actualFee > course.fee ? Math.round(((course.actualFee - course.fee) / course.actualFee) * 100) : 50)}% INAUGURAL OFFER
@@ -216,25 +216,25 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                 </span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.2]">
                 {course.title}
               </h1>
 
               {course.tagline && (
-                <p className="text-base sm:text-lg font-serif italic font-semibold text-maroon-800 tracking-wide">
+                <p className="text-sm sm:text-base lg:text-lg font-serif italic font-semibold text-maroon-800 tracking-wide">
                   {course.tagline}
                 </p>
               )}
 
-              <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-3xl">
+              <p className="text-xs sm:text-sm lg:text-base text-slate-600 leading-relaxed max-w-2xl mx-auto">
                 {course.description}
               </p>
 
-              {/* Price & CTA Action Bar */}
-              <div className="pt-6 border-t border-slate-200 flex flex-wrap items-center gap-6">
-                <div>
+              {/* Price & CTA Action Bar (Centered) */}
+              <div className="pt-6 border-t border-slate-200/90 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
+                <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
+                    <span className="text-[11px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider">
                       Inaugural Offer Fee
                     </span>
                     {course.actualFee && (
@@ -243,7 +243,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                       </span>
                     )}
                   </div>
-                  <div className="flex items-baseline gap-2">
+                  <div className="flex items-baseline gap-2 mt-0.5">
                     <span className="text-3xl sm:text-4xl font-black text-maroon-800">
                       {formatCurrency(course.fee, course.currency)}
                     </span>
@@ -255,19 +255,19 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full sm:w-auto">
                   <Link
                     href={`/courses/${course.slug}/enroll`}
-                    className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold text-white bg-maroon-800 hover:bg-maroon-900 shadow-lg shadow-maroon-900/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    className="inline-flex items-center justify-center gap-2 px-8 py-3.5 sm:py-4 rounded-2xl text-sm font-bold text-white bg-maroon-800 hover:bg-maroon-900 shadow-lg shadow-maroon-900/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    <span>Enroll</span>
+                    <span>Enroll Now</span>
                     <ArrowUpRight className="w-4 h-4" />
                   </Link>
                   <a
                     href={whatsappLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-4 rounded-2xl text-sm font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-all hover:scale-105"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-4 rounded-2xl text-sm font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-all hover:scale-105"
                   >
                     <MessageCircle className="w-4 h-4 text-emerald-600" />
                     <span>WhatsApp Mentor</span>
