@@ -73,97 +73,97 @@ const TEMPLATE_HEIGHT = 1152;
 const POSITIONS = {
 
   // ----------------------------------------------------------
-  // Invoice top-right information
+  // Invoice top-right information (common X = 636)
   // ----------------------------------------------------------
 
   invoiceNo: {
-    x: 715,
-    y: 215,
+    x: 636,
+    y: 216,
   },
 
   date: {
-    x: 715,
-    y: 237,
+    x: 636,
+    y: 242,
   },
 
 
   // ----------------------------------------------------------
-  // Student Details
+  // Student Details (all common X = 260)
   // ----------------------------------------------------------
 
   studentName: {
-    x: 360,
-    y: 320,
+    x: 260,
+    y: 331,
   },
 
   phone: {
-    x: 360,
-    y: 360,
+    x: 260,
+    y: 364,
   },
 
   email: {
-    x: 360,
+    x: 260,
     y: 400,
   },
 
 
   // ----------------------------------------------------------
-  // Course Details
+  // Course Details (common X = 260)
   // ----------------------------------------------------------
 
   courseName: {
-    x: 360,
-    y: 485,
+    x: 260,
+    y: 495,
   },
 
 
   // ----------------------------------------------------------
-  // Payment Details
+  // Payment Details (all common X = 285)
   // ----------------------------------------------------------
 
   totalCourseFee: {
-    x: 390,
-    y: 590,
+    x: 285,
+    y: 585,
   },
 
   couponCode: {
-    x: 390,
-    y: 614,
+    x: 285,
+    y: 612,
   },
 
   scholarshipDiscount: {
-    x: 390,
-    y: 638,
+    x: 285,
+    y: 641,
   },
 
   discountApplied: {
-    x: 390,
-    y: 662,
+    x: 285,
+    y: 670,
   },
 
   finalAmount: {
-    x: 390,
-    y: 686,
+    x: 285,
+    y: 702,
   },
 
   amountPaid: {
-    x: 390,
-    y: 710,
-  },
-
-  paymentMode: {
-    x: 390,
+    x: 285,
     y: 734,
   },
 
+  paymentMode: {
+    x: 285,
+    y: 764,
+  },
+
   transactionId: {
-    x: 390,
-    y: 758,
+    x: 285,
+    y: 795,
   },
 
   paymentDate: {
-    x: 390,
-    y: 782,
+    x: 285,
+    y: 827,
   },
 };
 

@@ -103,9 +103,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
   }
 
   const phoneClean = siteConfig.contact.phone.replace(/[^0-9]/g, "");
-  const whatsappLink = `https://wa.me/91${phoneClean}?text=Hello%20JBM,%20I%20am%20interested%20in%20enrolling%20in%20${encodeURIComponent(
-    course.title
-  )}`;
+  const whatsappLink = siteConfig.social.whatsapp;
 
   const courseSchema = {
     "@context": "https://schema.org",

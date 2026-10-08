@@ -28,11 +28,7 @@ export default async function RegisterSuccessPage({ searchParams }: SuccessPageP
   const isVipFree = status === "vip_free" || vip === "true";
   const isConfirmedPaid = pay === "confirmed" || isVipFree;
 
-  const phoneClean = siteConfig.contact.phone.replace(/[^0-9]/g, "");
-  const whatsappMsg = encodeURIComponent(
-    `Hello JBM, my registration reference is ${ref || "N/A"}. I would like to verify my admission.`
-  );
-  const whatsappUrl = `https://wa.me/91${phoneClean}?text=${whatsappMsg}`;
+  const whatsappUrl = siteConfig.social.whatsapp;
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50/60 text-slate-900 selection:bg-rose-500 selection:text-white">

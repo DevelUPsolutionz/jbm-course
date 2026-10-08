@@ -537,7 +537,7 @@ export function CourseEnrollmentForm({ course }: CourseEnrollmentFormProps) {
           </div>
           <div className="flex items-center gap-2">
             <a
-              href={`https://wa.me/91${phoneClean}?text=Hello%20JBM,%20I%20have%20questions%20before%20enrolling%20in%20${encodeURIComponent(course.title)}`}
+              href={siteConfig.social.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-transform hover:scale-105"

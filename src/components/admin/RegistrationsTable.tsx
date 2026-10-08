@@ -38,6 +38,7 @@ export function RegistrationsTable({ initialRegistrations }: RegistrationsTableP
   const handleExportCSV = () => {
     if (filteredData.length === 0) return;
     const headers = [
+      "Registered Date & Time",
       "Reference ID",
       "Student Name",
       "Email",
@@ -48,7 +49,6 @@ export function RegistrationsTable({ initialRegistrations }: RegistrationsTableP
       "Referral Code",
       "Counselor",
       "Status",
-      "Registered Date",
     ];
 
     const defang = (val: any) => {
@@ -58,6 +58,7 @@ export function RegistrationsTable({ initialRegistrations }: RegistrationsTableP
     };
 
     const rows = filteredData.map((r) => [
+      defang(new Date(r.createdAt).toLocaleString("en-IN")),
       defang(r.registrationReference),
       defang(r.fullName),
       defang(r.email),
@@ -68,7 +69,6 @@ export function RegistrationsTable({ initialRegistrations }: RegistrationsTableP
       defang(r.referralCode || "DIRECT"),
       defang(r.counselorName || "None"),
       defang(r.paymentStatus),
-      defang(new Date(r.createdAt).toISOString()),
     ]);
     const csvContent =
       "data:text/csv;charset=utf-8," +
@@ -246,13 +246,13 @@ export function RegistrationsTable({ initialRegistrations }: RegistrationsTableP
           <table className="w-full text-left text-sm text-slate-600">
             <thead className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
               <tr>
+                <th className="px-6 py-4">Date & Time</th>
                 <th className="px-6 py-4">Reference</th>
                 <th className="px-6 py-4">Student</th>
                 <th className="px-6 py-4">Course</th>
                 <th className="px-6 py-4">Referral</th>
                 <th className="px-6 py-4">Amount</th>
                 <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Date</th>
                 <th className="px-6 py-4 text-right">Action</th>
               </tr>
             </thead>
@@ -266,6 +266,22 @@ export function RegistrationsTable({ initialRegistrations }: RegistrationsTableP
               ) : (
                 filteredData.map((reg) => (
                   <tr key={reg.id} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap text-xs">
+                      <div className="font-semibold text-slate-800">
+                        {new Date(reg.createdAt).toLocaleDateString("en-IN", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </div>
+                      <div className="text-[11px] text-slate-500 font-medium mt-0.5">
+                        {new Date(reg.createdAt).toLocaleTimeString("en-IN", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })}
+                      </div>
+                    </td>
                     <td className="px-6 py-4 font-mono text-xs font-bold text-slate-800">
                       {reg.registrationReference}
                     </td>
@@ -294,13 +310,6 @@ export function RegistrationsTable({ initialRegistrations }: RegistrationsTableP
                       {formatCurrency(reg.amount, reg.currency)}
                     </td>
                     <td className="px-6 py-4">{renderStatusBadge(reg.paymentStatus)}</td>
-                    <td className="px-6 py-4 text-xs text-slate-500">
-                      {new Date(reg.createdAt).toLocaleDateString("en-IN", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </td>
                     <td className="px-6 py-4 text-right">
                       <div className="inline-flex items-center justify-end gap-1.5">
                         <button

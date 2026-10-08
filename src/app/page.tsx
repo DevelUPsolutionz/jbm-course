@@ -256,7 +256,7 @@ export default function HomePage() {
                   </Link>
 
                   <a
-                    href={`https://wa.me/${siteConfig.contact.rawWhatsapp}?text=Hi%20JBM%20Mentor,%20I%20would%20like%20to%20talk%20to%20a%20mentor%20about%20your%20learning%20programs.`}
+                    href={siteConfig.social.whatsapp}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-sm font-bold text-slate-800 bg-white hover:bg-slate-50 border border-slate-300 shadow-md transition-all hover:scale-105"
@@ -883,7 +883,7 @@ export default function HomePage() {
                     </div>
 
                     <a
-                      href={`https://wa.me/${siteConfig.contact.rawWhatsapp}?text=Hi%20JBM,%20I%20am%20interested%20in%20Internship%20and%20practical%20learning%20opportunities.`}
+                      href={siteConfig.social.whatsapp}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 shadow-md transition-all hover:scale-105"
@@ -1343,7 +1343,7 @@ export default function HomePage() {
                 {/* CTAs */}
                 <div className="pt-2 flex flex-wrap gap-4">
                   <a
-                    href={`https://wa.me/${siteConfig.contact.rawWhatsapp}?text=Hi%20JBM,%20We%20would%20like%20to%20request%20an%20institutional%20session%20for%20our%20college.`}
+                    href={siteConfig.social.whatsapp}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-xs sm:text-sm font-bold text-slate-950 bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:opacity-95 shadow-xl shadow-amber-400/20 transition-all hover:scale-105"
@@ -1582,7 +1582,7 @@ export default function HomePage() {
                   <strong className="text-base sm:text-lg text-white">Direct helpline: +91 {siteConfig.contact.phone}</strong>
                 </div>
                 <a
-                  href={`https://wa.me/${siteConfig.contact.rawWhatsapp}?text=Hi%20JBM,%20We%20would%20like%20to%20discuss%20an%20institutional%20program%20for%20our%20students.`}
+                  href={siteConfig.social.whatsapp}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-sm flex items-center gap-2 transition-all shadow-md flex-shrink-0 hover:scale-105"

@@ -22,7 +22,9 @@ export const siteConfig = {
     website: "www.johannabrightmentors.com",
   },
   social: {
-    whatsapp: "https://wa.me/918778578437?text=Hi%20Johanna%20Bright%20Mentors,%20I%20want%20to%20know%20more%20about%20your%20courses!",
+    whatsapp: `https://wa.me/918778578437?text=${encodeURIComponent(
+      `🌟 Welcome to Johanna Bright Mentors (JBM)! 🌟\n\nThank you for reaching out to us! 😊\n\nWe’re delighted to connect with you. At JBM, we are committed to empowering individuals through quality education, skill development, and career guidance.\n\n💬 How may we assist you today?\n\nFeel free to share your queries or requirements. Our team will be happy to guide you.\n\nWarm Regards,\nTeam JBM\nJohanna Bright Mentors\nLearn • Grow • Succeed 🚀`
+    )}`,
     email: "mailto:hello.johannabrightmentors@gmail.com",
     phone: "tel:+918778578437",
   },

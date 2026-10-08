@@ -153,7 +153,7 @@ export function Footer() {
               <li className="flex items-center gap-3">
                 <MessageSquare className="w-4 h-4 text-emerald-400 flex-shrink-0" />
                 <a
-                  href={`https://wa.me/${siteConfig.contact.rawWhatsapp}`}
+                  href={siteConfig.social.whatsapp}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-emerald-300 transition-colors font-semibold"

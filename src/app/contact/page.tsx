@@ -77,7 +77,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <strong className="block text-slate-900 text-sm font-bold">Helpline & WhatsApp</strong>
-                      <a href={`https://wa.me/91${siteConfig.contact.phone.replace(/[^0-9]/g, "")}`} className="text-maroon-800 font-semibold hover:underline">
+                      <a href={siteConfig.social.whatsapp} target="_blank" rel="noopener noreferrer" className="text-maroon-800 font-semibold hover:underline">
                         +91 {siteConfig.contact.phone}
                       </a>
                     </div>

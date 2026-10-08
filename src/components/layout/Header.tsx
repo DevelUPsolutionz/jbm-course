@@ -401,7 +401,7 @@ export function Header() {
             {/* Quick Helpline Strip */}
             <div className="flex items-center justify-between gap-2 pt-1 text-[11px] text-rose-200/80">
               <a
-                href={`https://wa.me/91${phoneClean}?text=Hello%20JBM,%20I%20would%20like%20to%20know%20more%20about%20your%20programs.`}
+                href={siteConfig.social.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 hover:text-white transition-colors"

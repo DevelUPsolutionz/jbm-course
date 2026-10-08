@@ -14,11 +14,7 @@ export function WhatsAppWidget() {
     return null;
   }
 
-  const phoneClean = siteConfig.contact.phone.replace(/[^0-9]/g, "");
-  const defaultMessage = encodeURIComponent(
-    `Hello ${siteConfig.name}, I would like to know more about admission into your courses.`
-  );
-  const whatsappUrl = `https://wa.me/91${phoneClean}?text=${defaultMessage}`;
+  const whatsappUrl = siteConfig.social.whatsapp;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2 group">
