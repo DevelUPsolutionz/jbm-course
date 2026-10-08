@@ -99,12 +99,12 @@ export function AnimatedProcess() {
                   >
                     {s.title}
                   </h3>
-                  <div
-                    className={`grid transition-all duration-500 overflow-hidden ${
-                      isActive ? "grid-rows-[1fr] opacity-100 mt-1.5 sm:mt-2" : "grid-rows-[0fr] opacity-0"
-                    }`}
-                  >
-                    <p className="text-xs sm:text-sm text-slate-500 leading-relaxed overflow-hidden">
+                  <div className="relative min-h-[38px] sm:min-h-[42px] mt-1">
+                    <p
+                      className={`text-xs sm:text-sm text-slate-500 leading-relaxed transition-opacity duration-300 ${
+                        isActive ? "opacity-100 relative" : "opacity-0 absolute inset-0 pointer-events-none"
+                      }`}
+                    >
                       {s.desc}
                     </p>
                   </div>
