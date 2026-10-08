@@ -19,7 +19,7 @@ export const COURSES: Course[] = [
     introVideoUrl: "https://www.youtube.com/watch?v=JMUxmLyrhSk",
     headerImageUrl: "/images/courses/ai-banner.webp",
     thumbnailUrl: "/images/courses/ai-banner.webp",
-    posterUrl: "/images/courses/ai-poster.webp",
+    posterUrl: "/images/courses/ai-banner.webp",
     isActive: true,
     syllabus: [
       {
@@ -124,7 +124,7 @@ export const COURSES: Course[] = [
     introVideoUrl: "https://www.youtube.com/watch?v=juKd26qkNAw",
     headerImageUrl: "/images/courses/english-banner.webp",
     thumbnailUrl: "/images/courses/english-banner.webp",
-    posterUrl: "/images/courses/english-poster.webp",
+    posterUrl: "/images/courses/english-banner.webp",
     isActive: true,
     syllabus: [
       {
@@ -220,7 +220,7 @@ export const COURSES: Course[] = [
     introVideoUrl: "https://www.youtube.com/watch?v=inWWhr5tnEA",
     headerImageUrl: "/images/courses/cyber-security-banner.webp",
     thumbnailUrl: "/images/courses/cyber-security-banner.webp",
-    posterUrl: "/images/courses/cyber-security-poster.webp",
+    posterUrl: "/images/courses/cyber-security-banner.webp",
     isActive: true,
     syllabus: [
       {

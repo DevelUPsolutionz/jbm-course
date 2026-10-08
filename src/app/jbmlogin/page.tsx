@@ -57,26 +57,15 @@ export default function JbmHiddenLogin() {
         <div className="flex flex-col items-center justify-center w-full md:w-1/2 p-8 md:p-12 bg-slate-50/70 border-b md:border-b-0 md:border-r border-slate-100 relative">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-maroon-50/80 via-transparent to-transparent opacity-80 pointer-events-none" />
           
-          <div className="relative z-10 flex flex-col items-center text-center space-y-4">
-            <div className="w-24 h-24 sm:w-28 sm:h-28 bg-white rounded-3xl shadow-md p-3 flex items-center justify-center border border-slate-100">
-              <Image
-                src="/images/jbm-logo.png"
-                alt="Johanna Bright Mentors Logo"
-                width={88}
-                height={88}
-                className="object-contain drop-shadow-sm w-full h-full"
-                priority
-              />
-            </div>
-            
-            <div className="space-y-1">
-              <h1 className="text-xl sm:text-2xl font-black text-maroon-800 tracking-tight uppercase">
-                Johanna Bright Mentors
-              </h1>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">
-                Skill Development & Mentorship
-              </p>
-            </div>
+          <div className="relative z-10 flex flex-col items-center justify-center text-center">
+            <Image
+              src="/images/jbm-logo.png"
+              alt="Johanna Bright Mentors Logo"
+              width={260}
+              height={140}
+              className="object-contain drop-shadow-sm w-56 sm:w-64 h-auto max-h-48"
+              priority
+            />
           </div>
         </div>
 
