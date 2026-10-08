@@ -360,7 +360,9 @@ export function RegistrationsTable({ initialRegistrations }: RegistrationsTableP
                   <div className="mt-1">{renderStatusBadge(selectedRecord.paymentStatus)}</div>
                 </div>
                 <div>
-                  <span className="text-xs text-slate-500 block">Course Fee</span>
+                  <span className="text-xs text-slate-500 block">
+                    {selectedRecord.paymentStatus === "paid" ? "Amount Paid" : "Course Fee"}
+                  </span>
                   <span className="text-base font-bold text-slate-900">
                     {formatCurrency(selectedRecord.amount, selectedRecord.currency)}
                   </span>

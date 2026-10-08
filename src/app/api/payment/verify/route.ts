@@ -3,6 +3,9 @@ import { verifyPaymentSignature } from "@/lib/razorpay";
 import { getAdminClient } from "@/lib/supabase/admin";
 import { sendPaymentConfirmedEmail, sendAdminPaymentReceivedAlert } from "@/lib/email/send";
 import { rateLimit } from "@/lib/rate-limit";
+import { generateReceiptPDF } from "@/lib/pdf/generateReceipt";
+import { getDynamicCourseBySlug } from "@/lib/course-pricing";
+import { getCourseBySlug } from "@/config/courses";
 
 export async function POST(req: NextRequest) {
   try {
@@ -63,8 +66,9 @@ export async function POST(req: NextRequest) {
 
     let studentEmail = "";
     let studentName = "";
+    let studentPhone = "";
     let courseTitle = "";
-    let amount = 0;
+    let paidAmount = 0;
 
     try {
       // Find the registration
@@ -74,18 +78,92 @@ export async function POST(req: NextRequest) {
         .eq("registration_reference", cleanRef)
         .single();
 
+      // Find the corresponding payment record to get exact paid amount
+      const { data: paymentRecord } = await supabase
+        .from("payments")
+        .select("*")
+        .eq("provider_order_id", razorpay_order_id.trim())
+        .maybeSingle();
+
       if (reg) {
         studentEmail = reg.email;
         studentName = reg.full_name;
+        studentPhone = reg.phone;
         courseTitle = reg.course_title;
-        amount = reg.amount;
+        paidAmount = paymentRecord?.amount !== undefined ? paymentRecord.amount : reg.amount;
 
         // Idempotency: Check if already marked paid
-        if (reg.payment_status !== "paid") {
-          // Update registration status to 'paid'
+        if (reg.payment_status !== "paid" || !reg.receipt_url) {
+          // Generate PDF Receipt
+          let pdfBuffer: Buffer | undefined;
+          let receiptPath: string | null = null;
+
+          try {
+            const dynamicCourse = await getDynamicCourseBySlug(reg.course_slug);
+            const course = dynamicCourse || getCourseBySlug(reg.course_slug);
+            const totalCourseFee = course?.actualFee || (paidAmount > 0 ? paidAmount * 2 : 20000);
+            const discountApplied = Math.max(0, totalCourseFee - paidAmount);
+            const discountPercent = totalCourseFee > 0 ? Math.round((discountApplied / totalCourseFee) * 100) : 0;
+
+            let couponCode = "";
+            if (reg.message && reg.message.includes("[Referral:")) {
+              const match = reg.message.match(/\[Referral:\s*([^\]]+)\]/);
+              if (match) couponCode = match[1];
+            }
+
+            const paymentDate = new Date().toLocaleDateString("en-IN", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+              timeZone: "Asia/Kolkata",
+            });
+            const currentYear = new Date().getFullYear();
+            const invoiceNo = `JBM-${currentYear}-${cleanRef.replace(/[^a-zA-Z0-9]/g, "").slice(-6).toUpperCase()}`;
+
+            pdfBuffer = await generateReceiptPDF({
+              invoiceNo,
+              date: paymentDate,
+              studentName: reg.full_name,
+              phone: reg.phone,
+              email: reg.email,
+              courseName: reg.course_title,
+              totalCourseFee,
+              couponCode: couponCode || "N/A",
+              scholarshipDiscount: discountPercent > 0 ? `${discountPercent}% Scholarship` : "Standard Enrollment",
+              discountApplied,
+              finalAmount: paidAmount,
+              amountPaid: paidAmount,
+              paymentMode: "Razorpay Secure Gateway",
+              transactionId: razorpay_payment_id.trim(),
+              paymentDate,
+            });
+
+            // Upload PDF to Supabase Storage
+            const fileName = `JBM_Invoice_${cleanRef}.pdf`;
+            const { data: uploadData, error: uploadErr } = await supabase.storage
+              .from("invoices")
+              .upload(fileName, pdfBuffer, {
+                contentType: "application/pdf",
+                upsert: true,
+              });
+
+            if (!uploadErr && uploadData) {
+              receiptPath = uploadData.path || fileName;
+            } else {
+              receiptPath = fileName;
+            }
+          } catch (pdfErr) {
+            console.error("PDF generation in verify route error:", pdfErr);
+          }
+
+          // Update registration status to 'paid', update amount to exact paid amount, and set receipt_url
           await supabase
             .from("registrations")
-            .update({ payment_status: "paid" })
+            .update({
+              payment_status: "paid",
+              amount: paidAmount,
+              receipt_url: receiptPath || `JBM_Invoice_${cleanRef}.pdf`,
+            })
             .eq("id", reg.id);
 
           // Update payments table record
@@ -98,25 +176,31 @@ export async function POST(req: NextRequest) {
             })
             .eq("provider_order_id", razorpay_order_id.trim());
 
-          // Send confirmation emails to Student and Admin
+          // Send confirmation emails to Student and Admin (AWAITED to avoid Vercel serverless cancellation)
           if (studentEmail) {
-            sendPaymentConfirmedEmail({
-              fullName: studentName,
-              email: studentEmail,
-              courseTitle: courseTitle,
-              registrationReference: cleanRef,
-              amount: amount,
-              paymentId: razorpay_payment_id.trim(),
-            }).catch((err) => console.error("Payment email dispatch error:", err));
-
-            sendAdminPaymentReceivedAlert({
-              fullName: studentName,
-              email: studentEmail,
-              courseTitle: courseTitle,
-              registrationReference: cleanRef,
-              amount: amount,
-              paymentId: razorpay_payment_id.trim(),
-            }).catch((err) => console.error("Admin payment alert dispatch error:", err));
+            try {
+              await Promise.allSettled([
+                sendPaymentConfirmedEmail({
+                  fullName: studentName,
+                  email: studentEmail,
+                  courseTitle: courseTitle,
+                  registrationReference: cleanRef,
+                  amount: paidAmount,
+                  paymentId: razorpay_payment_id.trim(),
+                  receiptBuffer: pdfBuffer,
+                }),
+                sendAdminPaymentReceivedAlert({
+                  fullName: studentName,
+                  email: studentEmail,
+                  courseTitle: courseTitle,
+                  registrationReference: cleanRef,
+                  amount: paidAmount,
+                  paymentId: razorpay_payment_id.trim(),
+                }),
+              ]);
+            } catch (emailErr) {
+              console.error("Payment confirmation emails dispatch error:", emailErr);
+            }
           }
         }
       }
@@ -129,6 +213,7 @@ export async function POST(req: NextRequest) {
       message: "Payment successfully verified and registered.",
       registrationReference: cleanRef,
       paymentId: razorpay_payment_id.trim(),
+      amount: paidAmount,
     });
   } catch (error: any) {
     console.error("Payment verification route exception:", error);

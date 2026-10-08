@@ -4,6 +4,7 @@ import { getAdminClient } from "@/lib/supabase/admin";
 import { sendPaymentConfirmedEmail, sendAdminPaymentReceivedAlert } from "@/lib/email/send";
 import { generateReceiptPDF } from "@/lib/pdf/generateReceipt";
 import { getCourseBySlug } from "@/config/courses";
+import { getDynamicCourseBySlug } from "@/lib/course-pricing";
 
 export async function POST(req: NextRequest) {
   try {
@@ -96,7 +97,8 @@ export async function POST(req: NextRequest) {
                 if (match) couponCode = match[1];
               }
 
-              const course = getCourseBySlug(reg.course_slug);
+              const dynamicCourse = await getDynamicCourseBySlug(reg.course_slug);
+              const course = dynamicCourse || getCourseBySlug(reg.course_slug);
               const actualFee = course ? course.actualFee : reg.amount * 2; 
               const discountPercent = course ? course.discountPercent : 50;
               const discountApplied = actualFee - reg.amount;
@@ -158,25 +160,30 @@ export async function POST(req: NextRequest) {
                 .eq("provider_order_id", orderId);
             }
 
-            // Send confirmation emails to Student & Admin
-            sendPaymentConfirmedEmail({
-              fullName: reg.full_name,
-              email: reg.email,
-              courseTitle: reg.course_title,
-              registrationReference: reg.registration_reference,
-              amount: reg.amount,
-              paymentId: paymentId || "ONLINE_PAYMENT",
-              receiptBuffer: pdfBuffer,
-            }).catch((err) => console.error("Webhook student email notification error:", err));
-
-            sendAdminPaymentReceivedAlert({
-              fullName: reg.full_name,
-              email: reg.email,
-              courseTitle: reg.course_title,
-              registrationReference: reg.registration_reference,
-              amount: reg.amount,
-              paymentId: paymentId || "ONLINE_PAYMENT",
-            }).catch((err) => console.error("Webhook admin payment notification error:", err));
+            // Send confirmation emails to Student & Admin (AWAITED)
+            try {
+              await Promise.allSettled([
+                sendPaymentConfirmedEmail({
+                  fullName: reg.full_name,
+                  email: reg.email,
+                  courseTitle: reg.course_title,
+                  registrationReference: reg.registration_reference,
+                  amount: reg.amount,
+                  paymentId: paymentId || "ONLINE_PAYMENT",
+                  receiptBuffer: pdfBuffer,
+                }),
+                sendAdminPaymentReceivedAlert({
+                  fullName: reg.full_name,
+                  email: reg.email,
+                  courseTitle: reg.course_title,
+                  registrationReference: reg.registration_reference,
+                  amount: reg.amount,
+                  paymentId: paymentId || "ONLINE_PAYMENT",
+                }),
+              ]);
+            } catch (emailErr) {
+              console.error("Webhook email notification dispatch error:", emailErr);
+            }
           }
         } catch (dbErr: any) {
           console.error("Webhook database update failed:", dbErr);

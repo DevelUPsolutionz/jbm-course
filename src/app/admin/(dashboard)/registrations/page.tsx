@@ -19,7 +19,7 @@ export default async function AdminRegistrationsPage() {
   try {
     const dbPromise = supabase
       .from("registrations")
-      .select("*")
+      .select("*, payments(*)")
       .order("created_at", { ascending: false });
 
     const timeoutPromise = new Promise((_, reject) =>
@@ -45,6 +45,15 @@ export default async function AdminRegistrationsPage() {
         }
         const refInfo = refCode ? validateReferralCode(refCode) : null;
 
+        // Dynamically get the actual payment amount from payments record
+        const capturedPayment = Array.isArray(r.payments)
+          ? r.payments.find((p: any) => p.status === "captured") || r.payments[0]
+          : null;
+        const effectiveAmount =
+          r.payment_status === "paid" && capturedPayment?.amount !== undefined
+            ? capturedPayment.amount
+            : r.amount;
+
         return {
           id: r.id,
           registrationReference: r.registration_reference,
@@ -54,7 +63,7 @@ export default async function AdminRegistrationsPage() {
           courseId: r.course_id,
           courseSlug: r.course_slug,
           courseTitle: r.course_title,
-          amount: r.amount,
+          amount: effectiveAmount,
           currency: r.currency,
           referralCode: refCode,
           counselorName: refInfo?.staffName || null,

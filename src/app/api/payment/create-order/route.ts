@@ -109,6 +109,12 @@ export async function POST(req: NextRequest) {
           status: "created",
           raw_payload: order as any,
         });
+
+        // Ensure registration amount accurately reflects the order payable amount
+        await supabase
+          .from("registrations")
+          .update({ amount: finalPrice })
+          .eq("id", reg.id);
       }
     } catch (err: any) {
       console.warn("Payment order record notice:", err.message);

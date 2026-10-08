@@ -37,7 +37,7 @@ export function PrintReceiptButton({
       className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl text-xs font-bold text-white bg-maroon-800 hover:bg-maroon-900 shadow-md shadow-maroon-900/20 transition-all print:hidden"
     >
       <FileText className="w-4 h-4" />
-      <span>📄 Download Receipt (PDF)</span>
+      <span>Download Receipt (PDF)</span>
     </a>
   );
 }

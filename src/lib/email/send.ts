@@ -5,6 +5,7 @@ import { formatCurrency } from "@/lib/utils";
 function getResendClient() {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey || apiKey === "re_your_resend_api_key") {
+    console.warn("Resend API key is missing. Transactional emails will not be sent.");
     return null;
   }
   return new Resend(apiKey);
@@ -343,6 +344,268 @@ export async function sendPaymentConfirmedEmail(params: {
   const resend = getResendClient();
   const fromEmail = process.env.EMAIL_FROM || "Johanna Bright Mentors <noreply@johannabrightmentors.com>";
   const adminEmail = process.env.ADMIN_EMAIL || "hello.johannabrightmentors@gmail.com";
+  const siteUrl = siteConfig.url;
+  const downloadUrl = `${siteUrl}/api/invoice/download?ref=${params.registrationReference}`;
+
+  const emailHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Receipt - ${siteConfig.name}</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: #1e293b;
+      -webkit-font-smoothing: antialiased;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .wrapper {
+      width: 100%;
+      background-color: #f8fafc;
+      padding: 30px 15px;
+    }
+    .main-card {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+    .header-bar {
+      background: linear-gradient(135deg, #800020 0%, #5a0016 100%);
+      padding: 32px 28px 24px 28px;
+      text-align: center;
+    }
+    .brand-title {
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      margin: 0;
+      text-transform: uppercase;
+    }
+    .brand-slogan {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 3px 12px;
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 9999px;
+      color: #fef3c7;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .content-body {
+      padding: 32px 28px;
+    }
+    .status-badge {
+      display: inline-block;
+      background-color: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #047857;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 16px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+    .greeting {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 12px 0;
+    }
+    .lead-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #475569;
+      margin: 0 0 24px 0;
+    }
+    .details-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin: 0 0 24px 0;
+    }
+    .details-row {
+      padding: 8px 0;
+      font-size: 13.5px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .details-row:last-child {
+      border-bottom: none;
+    }
+    .details-label {
+      color: #64748b;
+      font-weight: 500;
+    }
+    .details-val {
+      color: #0f172a;
+      font-weight: 700;
+      text-align: right;
+    }
+    .cta-container {
+      text-align: center;
+      margin: 28px 0;
+    }
+    .download-btn {
+      display: inline-block;
+      background-color: #800020;
+      color: #ffffff !important;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(128, 0, 32, 0.25);
+    }
+    .steps-box {
+      background: #fff5f7;
+      border: 1px solid #fed7aa;
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin: 0 0 24px 0;
+    }
+    .steps-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #800020;
+      margin: 0 0 10px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .step-item {
+      font-size: 12.5px;
+      color: #334155;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+    .help-card {
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 12.5px;
+      color: #475569;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+    .footer {
+      background: #0f172a;
+      padding: 24px 28px;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+    .footer a {
+      color: #cbd5e1;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="main-card">
+      <div class="header-bar">
+        <h1 class="brand-title">${siteConfig.name}</h1>
+        <div class="brand-slogan">✨ ${siteConfig.slogan}</div>
+      </div>
+
+      <div class="content-body">
+        <div style="text-align: center;">
+          <span class="status-badge">✔ Payment Verified & Admission Confirmed</span>
+        </div>
+
+        <p class="greeting">Dear ${params.fullName},</p>
+        <p class="lead-text">
+          Thank you for choosing <strong>${siteConfig.name}</strong>. Your payment has been successfully verified, and your enrollment seat has been officially locked. Welcome aboard!
+        </p>
+
+        <!-- Summary Card -->
+        <div class="details-card">
+          <table>
+            <tr class="details-row">
+              <td class="details-label">Enrolled Program:</td>
+              <td class="details-val">${params.courseTitle}</td>
+            </tr>
+            <tr class="details-row">
+              <td class="details-label">Registration Ref:</td>
+              <td class="details-val" style="color: #800020; font-family: monospace;">${params.registrationReference}</td>
+            </tr>
+            <tr class="details-row">
+              <td class="details-label">Payment Gateway ID:</td>
+              <td class="details-val" style="font-family: monospace; font-size: 12px;">${params.paymentId}</td>
+            </tr>
+            <tr class="details-row">
+              <td class="details-label">Amount Paid:</td>
+              <td class="details-val" style="color: #047857; font-size: 16px;">${formatCurrency(params.amount)}</td>
+            </tr>
+            <tr class="details-row">
+              <td class="details-label">Payment Status:</td>
+              <td class="details-val" style="color: #047857;">✔ Confirmed Paid</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Download Button -->
+        <div class="cta-container">
+          <a href="${downloadUrl}" target="_blank" class="download-btn">
+            📄 Download Official Receipt (PDF)
+          </a>
+          <p style="font-size: 11.5px; color: #64748b; margin: 10px 0 0 0;">
+            A copy of your official PDF receipt is also attached directly to this email.
+          </p>
+        </div>
+
+        <!-- Onboarding Steps -->
+        <div class="steps-box">
+          <div class="steps-title">What Happens Next?</div>
+          <div class="step-item">
+            <strong>1.&nbsp;Academic Onboarding:</strong> Our admissions desk will share your live classroom link and batch schedule before cohort kickoff.
+          </div>
+          <div class="step-item">
+            <strong>2.&nbsp;Direct Support:</strong> Quote reference <strong>${params.registrationReference}</strong> for any queries with your assigned mentor.
+          </div>
+        </div>
+
+        <div class="help-card">
+          <strong>Need assistance or have questions?</strong><br>
+          📞 Phone: <a href="tel:${siteConfig.contact.rawPhone}">${siteConfig.contact.formattedPhone}</a><br>
+          💬 WhatsApp: <a href="${siteConfig.social.whatsapp}">Chat with Admissions Mentor</a><br>
+          ✉️ Email: <a href="mailto:${siteConfig.contact.email}">${siteConfig.contact.email}</a>
+        </div>
+
+        <p style="font-size: 12.5px; color: #64748b; margin: 0; line-height: 1.5;">
+          Warm regards,<br>
+          <strong style="color: #0f172a; font-size: 13.5px;">Admissions & Mentorship Team</strong><br>
+          ${siteConfig.name} • <em>${siteConfig.tagline}</em>
+        </p>
+      </div>
+
+      <div class="footer">
+        <p style="margin: 0 0 6px 0; font-weight: 600; color: #ffffff;">${siteConfig.name}</p>
+        <p style="margin: 0;">${siteConfig.contact.address} • <a href="${siteUrl}">${siteConfig.contact.website}</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+  `;
 
   const emailText = `Dear ${params.fullName},
 
@@ -353,6 +616,9 @@ Your official payment receipt is attached to this email.
 
 Registration Reference: ${params.registrationReference}
 Transaction ID: ${params.paymentId}
+
+You can also download your receipt online at:
+${downloadUrl}
 
 Our Academic Coordinator will connect with you via Phone/WhatsApp within 24 business hours to share your live class schedule and onboarding details.
 
@@ -379,6 +645,7 @@ Johanna Bright Mentors`;
       replyTo: adminEmail,
       to: params.email,
       subject: `Official Payment Receipt: ${params.courseTitle} [${params.registrationReference}]`,
+      html: emailHtml,
       text: emailText,
       attachments: attachments.length > 0 ? attachments : undefined,
     });

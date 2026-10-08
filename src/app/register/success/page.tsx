@@ -44,13 +44,13 @@ export default async function RegisterSuccessPage({ searchParams }: SuccessPageP
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="rounded-3xl p-8 sm:p-12 bg-white border border-slate-200 shadow-xl shadow-slate-200/50 text-center space-y-6">
             {/* JBM Logo Header */}
-            <div className="relative w-16 h-16 mx-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+            <div className="relative mx-auto flex items-center justify-center pt-2">
               <Image
                 src="/images/jbm-logo.png"
                 alt={siteConfig.name}
-                width={52}
-                height={52}
-                className="object-contain"
+                width={100}
+                height={100}
+                className="object-contain h-20 w-auto"
                 priority
               />
             </div>

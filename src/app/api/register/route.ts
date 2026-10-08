@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { registrationSchema } from "@/lib/validations/registration";
 import { getCourseBySlug } from "@/config/courses";
+import { getDynamicCourseBySlug } from "@/lib/course-pricing";
 import { generateRegistrationReference } from "@/lib/utils";
 import { getAdminClient } from "@/lib/supabase/admin";
 import { sendRegistrationReceivedEmail, sendAdminNewRegistrationAlert } from "@/lib/email/send";
@@ -33,8 +34,9 @@ export async function POST(req: NextRequest) {
 
     const data = parsed.data;
 
-    // 2. Validate course existence & price lookup
-    const course = getCourseBySlug(data.courseSlug);
+    // 2. Validate course existence & price lookup (dynamic pricing)
+    const dynamicCourse = await getDynamicCourseBySlug(data.courseSlug);
+    const course = dynamicCourse || getCourseBySlug(data.courseSlug);
     if (!course) {
       return NextResponse.json(
         { error: "The selected course does not exist." },
@@ -89,25 +91,30 @@ export async function POST(req: NextRequest) {
       console.warn("Database insert skipped or failed:", err.message);
     }
 
-    // 6. Send emails to Student and Admin
-    sendRegistrationReceivedEmail({
-      fullName: data.fullName,
-      email: data.email,
-      courseTitle: course.title,
-      registrationReference: registrationReference,
-      amount: course.fee,
-    }).catch((err) => console.error("Student email send error:", err));
-
-    sendAdminNewRegistrationAlert({
-      fullName: data.fullName,
-      email: data.email,
-      phone: data.phone,
-      courseTitle: course.title,
-      registrationReference: registrationReference,
-      amount: course.fee,
-      referralCode: appliedReferralCode,
-      message: data.message,
-    }).catch((err) => console.error("Admin alert email send error:", err));
+    // 6. Send emails to Student and Admin (AWAITED for serverless reliability)
+    try {
+      await Promise.allSettled([
+        sendRegistrationReceivedEmail({
+          fullName: data.fullName,
+          email: data.email,
+          courseTitle: course.title,
+          registrationReference: registrationReference,
+          amount: course.fee,
+        }),
+        sendAdminNewRegistrationAlert({
+          fullName: data.fullName,
+          email: data.email,
+          phone: data.phone,
+          courseTitle: course.title,
+          registrationReference: registrationReference,
+          amount: course.fee,
+          referralCode: appliedReferralCode,
+          message: data.message,
+        }),
+      ]);
+    } catch (emailErr) {
+      console.error("Registration email dispatch notice:", emailErr);
+    }
 
     return NextResponse.json({
       success: true,
