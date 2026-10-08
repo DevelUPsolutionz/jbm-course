@@ -103,7 +103,6 @@ export const COURSES: Course[] = [
       name: "Johanna Bright Mentors — AI Faculty",
       role: "Lead Generative AI & Automation Mentor",
       bio: "Industry practitioners specializing in Generative AI implementation, enterprise automation, and applied machine learning solutions.",
-      avatarUrl: "/images/avatars/instructor-ai.webp",
     },
   },
   {
@@ -199,7 +198,6 @@ export const COURSES: Course[] = [
       name: "Johanna Bright Mentors — English Faculty",
       role: "Senior Corporate Communication Specialist",
       bio: "Master corporate vocal coaches with 15+ years guiding candidates across IT, banking, and multinational placements.",
-      avatarUrl: "/images/avatars/instructor-english.webp",
     },
   },
   {
@@ -313,7 +311,6 @@ export const COURSES: Course[] = [
       name: "Johanna Bright Mentors — Security Faculty",
       role: "Principal Network & Cyber Security Mentor",
       bio: "CISSP & CEH certified network defense specialists with 12+ years securing cloud infrastructure and critical enterprise perimeters.",
-      avatarUrl: "/images/avatars/instructor-cyber.webp",
     },
   },
 ];
