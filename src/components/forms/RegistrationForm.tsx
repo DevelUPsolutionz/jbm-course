@@ -106,7 +106,7 @@ export function RegistrationForm({ initialCourseSlug }: RegistrationFormProps) {
 
     const validated = validateReferralCode(couponInput.trim());
     if (!validated) {
-      setCouponError(`Invalid Referral Code "${couponInput.toUpperCase()}".`);
+      setCouponError("Coupon invalid");
       setAppliedCoupon(null);
     } else {
       setAppliedCoupon(validated);
@@ -394,12 +394,12 @@ export function RegistrationForm({ initialCourseSlug }: RegistrationFormProps) {
             </div>
           </div>
 
-          {/* Counselor Referral Code Section */}
+          {/* Coupon Code Section */}
           <div className="pt-2">
             <label htmlFor="couponInput" className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <Tag className="w-3.5 h-3.5 text-maroon-800" />
-                Referral Code
+                Coupon Code
               </span>
             </label>
 
@@ -410,7 +410,7 @@ export function RegistrationForm({ initialCourseSlug }: RegistrationFormProps) {
                   id="couponInput"
                   value={couponInput}
                   onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
-                  placeholder="ENTER REFERRAL CODE"
+                  placeholder="ENTER COUPON CODE"
                   disabled={!!appliedCoupon}
                   className={`w-full uppercase font-mono px-3.5 py-2.5 rounded-xl border text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 transition-all ${
                     appliedCoupon
@@ -452,7 +452,7 @@ export function RegistrationForm({ initialCourseSlug }: RegistrationFormProps) {
                 <div className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-600 flex-shrink-0" />
                   <span className="font-semibold">
-                    ✓ Referral Code "{appliedCoupon.code}" Applied! Attributed to {appliedCoupon.staffName}.
+                    Coupon applied
                   </span>
                 </div>
                 <span className="px-2 py-0.5 rounded-full bg-emerald-200/60 font-bold text-[10px] uppercase">
@@ -495,7 +495,7 @@ export function RegistrationForm({ initialCourseSlug }: RegistrationFormProps) {
 
               {priceCalculation.appliedCoupon && (
                 <div className="flex justify-between text-emerald-700 font-semibold">
-                  <span>Referral Code Applied:</span>
+                  <span>Coupon Applied:</span>
                   <span>{priceCalculation.appliedCoupon.code}</span>
                 </div>
               )}

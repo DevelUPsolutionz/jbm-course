@@ -72,7 +72,7 @@ export function DirectEnrollModal({
     if (couponCode.trim()) {
       const validRef = validateReferralCode(couponCode.trim());
       if (!validRef) {
-        setErrorMessage(`Invalid Referral Code "${couponCode.trim().toUpperCase()}".`);
+        setErrorMessage("Coupon invalid");
         return;
       }
     }
@@ -339,11 +339,11 @@ export function DirectEnrollModal({
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">
-                  Referral Code
+                  Coupon Code
                 </label>
                 <input
                   type="text"
-                  placeholder=""
+                  placeholder="ENTER COUPON CODE"
                   value={couponCode}
                   onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
                   className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-maroon-700 focus:border-transparent text-slate-900 uppercase bg-slate-50/50"

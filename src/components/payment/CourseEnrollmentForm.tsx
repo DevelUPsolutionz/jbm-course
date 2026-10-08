@@ -68,7 +68,7 @@ export function CourseEnrollmentForm({ course }: CourseEnrollmentFormProps) {
 
     const validated = validateReferralCode(couponInput.trim());
     if (!validated) {
-      setCouponError(`Invalid Referral Code "${couponInput.toUpperCase()}".`);
+      setCouponError("Coupon invalid");
       setAppliedCoupon(null);
     } else {
       setAppliedCoupon(validated);
@@ -349,15 +349,15 @@ export function CourseEnrollmentForm({ course }: CourseEnrollmentFormProps) {
             </div>
           </div>
 
-          {/* Referral Code */}
+          {/* Coupon Code */}
           <div className="pt-2">
             <label className="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
-              Referral Code
+              Coupon Code
             </label>
             <div className="flex gap-2">
               <input
                 type="text"
-                placeholder=""
+                placeholder="ENTER COUPON CODE"
                 value={couponInput}
                 onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
                 disabled={!!appliedCoupon}
@@ -391,7 +391,7 @@ export function CourseEnrollmentForm({ course }: CourseEnrollmentFormProps) {
               <div className="mt-2.5 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
                   <Check className="w-4 h-4 text-emerald-600" />
-                  <span>✓ Referral Code "{appliedCoupon.code}" applied! (Attributed to {appliedCoupon.staffName})</span>
+                  <span>Coupon applied</span>
                 </span>
                 <span className="text-emerald-700 uppercase tracking-wider text-[10px] bg-emerald-100 px-2 py-0.5 rounded">
                   Verified

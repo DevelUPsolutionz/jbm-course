@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
       const validRef = validateReferralCode(codeClean);
       if (!validRef) {
         return NextResponse.json(
-          { error: `Invalid Referral Code "${codeClean}". Please check with your counselor or leave it blank.` },
+          { error: "Coupon invalid" },
           { status: 400 }
         );
       }
