@@ -88,7 +88,7 @@ export default async function AdminReferralsPage() {
     <div className="p-6 sm:p-10 space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+        <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 tracking-tight">
           Staff Referral & Counselor Attribution
         </h1>
         <p className="text-sm text-slate-500 mt-1">

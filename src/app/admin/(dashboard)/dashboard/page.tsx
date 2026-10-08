@@ -65,7 +65,7 @@ export default async function AdminDashboardPage() {
     <div className="p-6 sm:p-10 space-y-8">
       {/* Top Header */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+        <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 tracking-tight">
           Admissions Overview
         </h1>
         <p className="text-sm text-slate-500 mt-1">
@@ -110,7 +110,7 @@ export default async function AdminDashboardPage() {
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div className="flex items-center gap-2.5">
             <BookOpen className="w-5 h-5 text-brand-600" />
-            <h2 className="text-lg font-bold text-slate-900">Course Breakdown</h2>
+            <h2 className="text-lg font-display font-extrabold text-slate-900 tracking-tight">Course Breakdown</h2>
           </div>
           <span className="text-xs text-slate-400 font-medium">3 Active Courses</span>
         </div>

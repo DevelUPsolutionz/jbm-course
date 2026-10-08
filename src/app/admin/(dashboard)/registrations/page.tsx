@@ -62,7 +62,7 @@ export default async function AdminRegistrationsPage() {
     <div className="p-6 sm:p-10 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+          <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-900 tracking-tight">
             Student Registrations
           </h1>
           <p className="text-sm text-slate-500 mt-1">
