@@ -1441,7 +1441,7 @@ export default function HomePage() {
               {/* Card 2: Training Programs */}
               <div className="p-6 rounded-[2rem] bg-white border border-sky-200/80 shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group flex flex-col justify-start">
                 <div className="relative w-full h-40 mb-5 rounded-[1.5rem] overflow-hidden bg-sky-50">
-                  <Image src="/images/institution/program-training.webp" alt="Training Programs" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <Image src="/images/institution/campus-workshop.webp" alt="Training Programs" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-2 flex items-center gap-2">
                   <span>— Training Programs</span>
