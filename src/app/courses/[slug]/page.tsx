@@ -175,7 +175,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
         <section className="relative pt-4 pb-12 sm:pt-6 sm:pb-16 border-b border-slate-200/80 overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[750px] h-[320px] bg-maroon-100/40 blur-[100px] rounded-full pointer-events-none" />
 
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             {/* Back Navigation Button */}
             <div className="mb-4 sm:mb-5">
               <Link
@@ -187,9 +187,9 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
               </Link>
             </div>
 
-            {/* 1. Official Course Page Header Banner (Compact, Ultra-Crisp, Instant Loading & Centered) */}
+            {/* 1. Official Course Page Header Banner (Wide, Ultra-Crisp, Instant Loading & Centered) */}
             {course.headerImageUrl && (
-              <div className="mb-6 sm:mb-8 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-lg bg-slate-100 group relative">
+              <div className="mb-8 sm:mb-10 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-xl bg-slate-900 group relative">
                 <Image
                   src={course.headerImageUrl}
                   alt={`${course.title} Official Course Header Banner`}
@@ -203,7 +203,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
             )}
 
             {/* Course Hero Details (Centered Layout on Desktop & Mobile) */}
-            <div className="w-full space-y-5 sm:space-y-6 text-center">
+            <div className="w-full max-w-4xl mx-auto space-y-5 sm:space-y-6 text-center">
               <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
                 <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-maroon-50 text-maroon-800 border border-maroon-200 shadow-sm">
                   <Sparkles className="w-3.5 h-3.5 text-maroon-800" />

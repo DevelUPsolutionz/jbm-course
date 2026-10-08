@@ -17,9 +17,9 @@ export const COURSES: Course[] = [
     duration: "30 Days (Live Online + Hands-on Labs)",
     level: "Beginner to Advanced",
     introVideoUrl: "https://www.youtube.com/watch?v=JMUxmLyrhSk",
-    headerImageUrl: "/images/courses/ai-banner.webp",
-    thumbnailUrl: "/images/courses/ai-banner.webp",
-    posterUrl: "/images/courses/ai-banner.webp",
+    headerImageUrl: "https://vpyttmmosqhdjucdwzye.supabase.co/storage/v1/object/public/course-banners/ai-hero-banner.webp",
+    thumbnailUrl: "/images/courses/ai-thumb.webp",
+    posterUrl: "/images/courses/ai-thumb.webp",
     isActive: true,
     syllabus: [
       {
@@ -121,9 +121,9 @@ export const COURSES: Course[] = [
     duration: "40 Days (Interactive Live Workshops)",
     level: "Beginner to Advanced",
     introVideoUrl: "https://www.youtube.com/watch?v=juKd26qkNAw",
-    headerImageUrl: "/images/courses/english-banner.webp",
-    thumbnailUrl: "/images/courses/english-banner.webp",
-    posterUrl: "/images/courses/english-banner.webp",
+    headerImageUrl: "https://vpyttmmosqhdjucdwzye.supabase.co/storage/v1/object/public/course-banners/english-hero-banner.webp",
+    thumbnailUrl: "/images/courses/english-thumb.webp",
+    posterUrl: "/images/courses/english-thumb.webp",
     isActive: true,
     syllabus: [
       {
@@ -216,9 +216,9 @@ export const COURSES: Course[] = [
     duration: "30 Days (Hands-on Labs + Live Mentorship)",
     level: "Beginner to Intermediate",
     introVideoUrl: "https://www.youtube.com/watch?v=inWWhr5tnEA",
-    headerImageUrl: "/images/courses/cyber-security-banner.webp",
-    thumbnailUrl: "/images/courses/cyber-security-banner.webp",
-    posterUrl: "/images/courses/cyber-security-banner.webp",
+    headerImageUrl: "https://vpyttmmosqhdjucdwzye.supabase.co/storage/v1/object/public/course-banners/cyber-hero-banner.webp",
+    thumbnailUrl: "/images/courses/cyber-security-thumb.webp",
+    posterUrl: "/images/courses/cyber-security-thumb.webp",
     isActive: true,
     syllabus: [
       {
