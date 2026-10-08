@@ -107,27 +107,27 @@ export function Header() {
             </div>
 
             {/* Central Curved Navigation Dock: Holds Logo, Menu, and Action Button */}
-            <div className="h-[84px] flex-shrink-0 flex items-center justify-between px-6 xl:px-8 bg-white/95 backdrop-blur-xl border-b border-slate-200 min-w-[800px] xl:min-w-[1000px] 2xl:min-w-[1120px]">
+            <div className="h-[84px] flex-shrink-0 flex items-center justify-between px-8 xl:px-12 2xl:px-16 bg-white/95 backdrop-blur-xl border-b border-slate-200 min-w-[960px] xl:min-w-[1140px] 2xl:min-w-[1260px]">
               {/* Brand Logo & Name */}
               <Link
                 href="/"
-                className="flex items-center gap-3.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-maroon-800 rounded-xl flex-shrink-0"
+                className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-maroon-800 rounded-xl flex-shrink-0"
               >
-                <div className="relative w-20 h-20 flex items-center justify-center transition-all">
+                <div className="relative w-16 h-16 flex items-center justify-center transition-all">
                   <Image
                     src="/images/jbm-logo.png"
                     alt={siteConfig.name}
-                    width={80}
-                    height={80}
+                    width={64}
+                    height={64}
                     className="object-contain w-full h-full group-hover:scale-105 transition-transform"
                     priority
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[17px] xl:text-xl font-black text-slate-900 tracking-tight group-hover:text-maroon-800 transition-colors">
+                  <span className="text-[15px] xl:text-[17px] font-black text-slate-900 tracking-tight group-hover:text-maroon-800 transition-colors">
                     {siteConfig.name}
                   </span>
-                  <span className="text-[10.5px] font-extrabold text-maroon-800 tracking-wider uppercase flex items-center gap-1.5">
+                  <span className="text-[9.5px] xl:text-[10px] font-extrabold text-maroon-800 tracking-wider uppercase flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                     {siteConfig.slogan}
                   </span>
@@ -135,7 +135,7 @@ export function Header() {
               </Link>
               {/* Desktop Navigation Links (Floating Pill Dock) */}
               <nav
-                className="flex items-center gap-1 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/80 shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]"
+                className="flex items-center gap-1.5 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/80 shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]"
                 aria-label="Main Navigation"
               >
                 {siteConfig.nav.map((item) => {
