@@ -9,7 +9,8 @@ export const metadata: Metadata = {
   title: "Registrations Management | Admin",
 };
 
-export const revalidate = 10; // Fast ISR cache revalidation for instant tab switching
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function AdminRegistrationsPage() {
   const supabase = getAdminClient();
