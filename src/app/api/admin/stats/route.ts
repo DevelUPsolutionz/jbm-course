@@ -14,11 +14,24 @@ export async function GET(req: NextRequest) {
     }
 
     const supabase = getAdminClient();
-    const { data: registrations, error } = await supabase
-      .from("registrations")
-      .select("*");
+    let allRegs: any[] = [];
 
-    const allRegs: any[] = (registrations as any[]) || [];
+    try {
+      const dbPromise = supabase
+        .from("registrations")
+        .select("*");
+
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Supabase Timeout")), 2000)
+      );
+
+      const result: any = await Promise.race([dbPromise, timeoutPromise]);
+      if (result && !result.error && Array.isArray(result.data)) {
+        allRegs = result.data;
+      }
+    } catch (err: any) {
+      console.warn("Admin stats fetch notice (using empty fallback):", err.message || err);
+    }
 
     const totalRegistrations = allRegs.length;
     const paidRegistrations = allRegs.filter((r) => r.payment_status === "paid").length;

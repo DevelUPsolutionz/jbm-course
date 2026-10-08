@@ -28,13 +28,21 @@ export default async function AdminDashboardPage() {
   let registrations: any[] = [];
 
   try {
-    const { data } = await supabase
+    const dbPromise = supabase
       .from("registrations")
       .select("*")
       .order("created_at", { ascending: false });
-    registrations = data || [];
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Timeout")), 2000)
+    );
+
+    const result: any = await Promise.race([dbPromise, timeoutPromise]);
+    if (result && !result.error && Array.isArray(result.data)) {
+      registrations = result.data;
+    }
   } catch (err) {
-    console.warn("Registrations fetch in dashboard:", err);
+    console.warn("Registrations fetch notice in dashboard:", err);
   }
 
   const totalRegs = registrations.length;

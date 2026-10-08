@@ -17,12 +17,19 @@ export default async function AdminRegistrationsPage() {
   let records: RegistrationRecord[] = [];
 
   try {
-    const { data } = await supabase
+    const dbPromise = supabase
       .from("registrations")
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (data) {
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Timeout")), 2000)
+    );
+
+    const result: any = await Promise.race([dbPromise, timeoutPromise]);
+    const data = result && !result.error && Array.isArray(result.data) ? result.data : [];
+
+    if (data.length > 0) {
       records = data.map((r: any) => {
         let refCode: string | null = null;
         if (r.message) {

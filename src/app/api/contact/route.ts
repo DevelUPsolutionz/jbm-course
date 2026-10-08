@@ -30,10 +30,10 @@ export async function POST(req: Request) {
       message,
     }).catch((err) => console.warn("Email alert warning:", err));
 
-    // 3. Attempt Supabase insert if DB available
+    // 3. Attempt Supabase insert with Admin client (bypasses RLS)
     try {
       const supabase = getAdminClient();
-      await supabase
+      const { data: dbData, error: dbError } = await supabase
         .from('contact_messages')
         .insert([
           {
@@ -44,9 +44,16 @@ export async function POST(req: Request) {
             message,
             status: 'unread'
           }
-        ]);
+        ])
+        .select();
+
+      if (dbError) {
+        console.error('Supabase contact insert error:', dbError.message || dbError);
+      } else {
+        console.log('Supabase contact insert success:', dbData);
+      }
     } catch (dbErr) {
-      console.warn('Supabase contact insert notice (saved to local fallback):', dbErr);
+      console.warn('Supabase contact insert exception:', dbErr);
     }
 
     return NextResponse.json({ success: true, data: localRecord });

@@ -14,14 +14,24 @@ export async function GET(req: NextRequest) {
     }
 
     const supabase = getAdminClient();
-    const { data: registrations, error } = await supabase
-      .from("registrations")
-      .select("*")
-      .order("created_at", { ascending: false });
+    let registrations: any[] = [];
 
-    if (error) {
-      // Fallback empty array if table not yet migrated
-      return NextResponse.json({ registrations: [] });
+    try {
+      const dbPromise = supabase
+        .from("registrations")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Supabase Timeout")), 2000)
+      );
+
+      const result: any = await Promise.race([dbPromise, timeoutPromise]);
+      if (result && !result.error && Array.isArray(result.data)) {
+        registrations = result.data;
+      }
+    } catch (err: any) {
+      console.warn("Admin registrations fetch notice (using empty fallback):", err.message || err);
     }
 
     const formatted = ((registrations as any[]) || []).map((r: any) => {
