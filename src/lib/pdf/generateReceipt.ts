@@ -70,100 +70,99 @@ const TEMPLATE_HEIGHT = 1152;
 // The helper `pdfY()` converts visual Y to PDF Y.
 // ============================================================
 
+// ============================================================
+// Canva Coordinates (from design: 1024 x 1536 px)
+// Derived directly from the Canva Position panel screenshots
+// ============================================================
+const CANVA_COORDINATES = {
+  // Top-right Invoice Box
+  invoiceNo:           { x: 850.3, y: 274.5 },
+  date:                { x: 850.3, y: 309.7 },
+
+  // Student Details
+  studentName:         { x: 364.2, y: 425.1 },
+  phone:               { x: 364.2, y: 472.3 },
+  email:               { x: 364.2, y: 519.6 },
+
+  // Course Details
+  courseName:          { x: 364.2, y: 646.0 },
+
+  // Payment Details
+  totalCourseFee:      { x: 389.6, y: 762.5 },
+  couponCode:          { x: 389.6, y: 805.9 },
+  scholarshipDiscount: { x: 389.6, y: 844.4 },
+  discountApplied:     { x: 389.6, y: 882.9 },
+  finalAmount:         { x: 389.6, y: 921.3 },
+  amountPaid:          { x: 389.6, y: 967.8 },
+  paymentMode:         { x: 389.6, y: 1008.3 },
+  transactionId:       { x: 389.6, y: 1049.0 },
+  paymentDate:         { x: 389.6, y: 1089.7 },
+};
+
+// Scale factor: Canva 1024x1536 px -> PDF 768x1152 pt
+const CANVA_SCALE = 0.75; // 768 / 1024
+const BASELINE_OFFSET = 17.5; // Offset from Canva box top (24.7px height) to font baseline
+
 const POSITIONS = {
-
-  // ----------------------------------------------------------
-  // Invoice top-right information (common X = 636)
-  // ----------------------------------------------------------
-
   invoiceNo: {
-    x: 636,
-    y: 216,
+    x: Number((CANVA_COORDINATES.invoiceNo.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.invoiceNo.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
-
   date: {
-    x: 636,
-    y: 242,
+    x: Number((CANVA_COORDINATES.date.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.date.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
-
-
-  // ----------------------------------------------------------
-  // Student Details (all common X = 260)
-  // ----------------------------------------------------------
-
   studentName: {
-    x: 260,
-    y: 331,
+    x: Number((CANVA_COORDINATES.studentName.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.studentName.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
-
   phone: {
-    x: 260,
-    y: 364,
+    x: Number((CANVA_COORDINATES.phone.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.phone.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
-
   email: {
-    x: 260,
-    y: 400,
+    x: Number((CANVA_COORDINATES.email.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.email.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
-
-
-  // ----------------------------------------------------------
-  // Course Details (common X = 260)
-  // ----------------------------------------------------------
-
   courseName: {
-    x: 260,
-    y: 495,
+    x: Number((CANVA_COORDINATES.courseName.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.courseName.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
-
-
-  // ----------------------------------------------------------
-  // Payment Details (all common X = 285)
-  // ----------------------------------------------------------
-
   totalCourseFee: {
-    x: 285,
-    y: 585,
+    x: Number((CANVA_COORDINATES.totalCourseFee.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.totalCourseFee.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
-
   couponCode: {
-    x: 285,
-    y: 612,
+    x: Number((CANVA_COORDINATES.couponCode.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.couponCode.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
-
   scholarshipDiscount: {
-    x: 285,
-    y: 641,
+    x: Number((CANVA_COORDINATES.scholarshipDiscount.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.scholarshipDiscount.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
-
   discountApplied: {
-    x: 285,
-    y: 670,
+    x: Number((CANVA_COORDINATES.discountApplied.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.discountApplied.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
-
   finalAmount: {
-    x: 285,
-    y: 702,
+    x: Number((CANVA_COORDINATES.finalAmount.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.finalAmount.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
-
   amountPaid: {
-    x: 285,
-    y: 734,
+    x: Number((CANVA_COORDINATES.amountPaid.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.amountPaid.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
-
   paymentMode: {
-    x: 285,
-    y: 764,
+    x: Number((CANVA_COORDINATES.paymentMode.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.paymentMode.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
-
   transactionId: {
-    x: 285,
-    y: 795,
+    x: Number((CANVA_COORDINATES.transactionId.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.transactionId.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
-
   paymentDate: {
-    x: 285,
-    y: 827,
+    x: Number((CANVA_COORDINATES.paymentDate.x * CANVA_SCALE).toFixed(1)),
+    y: Number(((CANVA_COORDINATES.paymentDate.y + BASELINE_OFFSET) * CANVA_SCALE).toFixed(1)),
   },
 };
 
