@@ -63,8 +63,8 @@ export default function TermsAndConditionsPage() {
       desc: "Course fees, discounts, promotional prices and special offers may vary by program or batch. Promotional offers may have specific eligibility requirements, validity periods or limited availability.",
     },
     {
-      title: "14. Refunds & Cancellations",
-      desc: "Refunds, cancellations, transfers and related requests will be handled according to the JBM Refund & Cancellation Policy applicable to the participant's enrollment. Participants should review that policy before making payment.",
+      title: "14. Refunds & Cancellations Policy",
+      desc: "Enrollment fee refunds or batch transfer requests submitted prior to the official batch launch date will be processed within 5 to 7 business days to the original payment method via Razorpay. Cancellations requested after batch commencement are evaluated on a case-by-case basis. To request a refund or transfer, contact our admissions desk at hello.johannabrightmentors@gmail.com or +91 87785 78437.",
     },
     {
       title: "15. Changes to JBM Services",

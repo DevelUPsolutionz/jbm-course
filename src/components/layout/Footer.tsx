@@ -171,7 +171,15 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-4 mt-6 border-t border-white/10 flex flex-col items-center justify-center gap-1.5 text-xs text-white/80 text-center">
-          <div className="flex items-center gap-4 mb-0.5 text-white">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mb-0.5 text-white font-medium">
+            <Link href="/about" className="hover:text-amber-400 transition-colors">
+              About Us
+            </Link>
+            <span>•</span>
+            <Link href="/contact" className="hover:text-amber-400 transition-colors">
+              Contact Us
+            </Link>
+            <span>•</span>
             <Link href="/terms" className="hover:text-amber-400 transition-colors">
               Terms & Conditions
             </Link>
