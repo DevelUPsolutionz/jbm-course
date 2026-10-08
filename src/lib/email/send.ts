@@ -546,3 +546,77 @@ export async function sendAdminPaymentReceivedAlert(params: {
     return { success: false, error };
   }
 }
+
+/**
+ * 6. CONTACT FORM INQUIRY ALERT TO ADMIN
+ */
+export async function sendContactInquiryNotificationEmail(params: {
+  name: string;
+  email: string;
+  phone?: string;
+  purpose: string;
+  message: string;
+}) {
+  const resend = getResendClient();
+  const fromEmail = process.env.EMAIL_FROM || "Johanna Bright Mentors <noreply@johannabrightmentors.com>";
+  const adminEmail = process.env.ADMIN_EMAIL || "hello.johannabrightmentors@gmail.com";
+  const siteUrl = siteConfig.url;
+
+  const emailHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: sans-serif; background: #f8fafc; padding: 20px; }
+    .card { max-width: 550px; margin: 0 auto; background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; }
+    .header { background: #800020; color: #fff; padding: 20px; }
+    .body { padding: 20px; color: #334155; line-height: 1.6; }
+    .field { margin-bottom: 12px; }
+    .label { font-weight: bold; color: #0f172a; font-size: 13px; }
+    .box { background: #f1f5f9; padding: 12px; rounded: 8px; border-left: 4px solid #800020; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <h3 style="margin:0; text-transform: uppercase;">📩 New Contact Inquiry</h3>
+      <p style="margin:4px 0 0 0; font-size: 12px; opacity: 0.9;">Johanna Bright Mentors Website</p>
+    </div>
+    <div class="body">
+      <div class="field"><span class="label">Name:</span> ${params.name}</div>
+      <div class="field"><span class="label">Email:</span> ${params.email}</div>
+      <div class="field"><span class="label">Phone:</span> ${params.phone || "N/A"}</div>
+      <div class="field"><span class="label">Purpose:</span> <span style="text-transform: uppercase; font-weight: bold; color: #800020;">${params.purpose}</span></div>
+      <div class="field" style="margin-top: 16px;">
+        <span class="label">Message:</span>
+        <div class="box">${params.message}</div>
+      </div>
+      <div style="margin-top: 20px; text-align: center;">
+        <a href="${siteUrl}/admin/messages" style="background: #800020; color: #fff; padding: 10px 18px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 13px;">View Messages in Admin</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+
+  if (!resend) {
+    console.log(`[CONTACT EMAIL STUB] Inquiry from ${params.name} (${params.email}) - Purpose: ${params.purpose}`);
+    return { success: true, mocked: true };
+  }
+
+  try {
+    const data = await resend.emails.send({
+      from: fromEmail,
+      to: adminEmail,
+      subject: `📩 New Website Inquiry from ${params.name} [${params.purpose.toUpperCase()}]`,
+      html: emailHtml,
+    });
+    return { success: true, data };
+  } catch (error) {
+    console.error("Failed to send contact inquiry notification:", error);
+    return { success: false, error };
+  }
+}
+

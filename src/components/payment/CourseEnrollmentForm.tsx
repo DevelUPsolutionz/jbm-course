@@ -460,13 +460,14 @@ export function CourseEnrollmentForm({ course }: CourseEnrollmentFormProps) {
 
           {/* Course Title & Full-View Thumbnail Banner */}
           <div className="space-y-3">
-            <div className="w-full rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-950 p-1 flex items-center justify-center">
+            <div className="w-full rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 p-1 flex items-center justify-center">
               <Image
                 src={course.thumbnailUrl}
                 alt={course.title}
                 width={600}
                 height={340}
                 className="w-full h-auto object-contain rounded-xl"
+                priority
               />
             </div>
             <h3 className="text-xl font-extrabold text-slate-900 leading-snug">

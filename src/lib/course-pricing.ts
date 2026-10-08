@@ -49,15 +49,21 @@ function writeLocalPricingOverrides(data: Record<string, CoursePricingRecord>): 
 export async function getDynamicCourses(): Promise<Course[]> {
   const overrides = readLocalPricingOverrides();
 
-  // Attempt to fetch from Supabase
+  // Attempt to fetch from Supabase with 2s timeout
   try {
     const supabase = getAdminClient();
-    const { data: dbCourses, error } = await supabase
+    const dbPromise = supabase
       .from("courses")
       .select("slug, actual_fee, discount_percent, fee, is_active");
 
-    if (!error && dbCourses && dbCourses.length > 0) {
-      dbCourses.forEach((dbC) => {
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Supabase Timeout")), 2000)
+    );
+
+    const result: any = await Promise.race([dbPromise, timeoutPromise]);
+
+    if (result && !result.error && Array.isArray(result.data) && result.data.length > 0) {
+      result.data.forEach((dbC: any) => {
         if (dbC.slug) {
           overrides[dbC.slug] = {
             slug: dbC.slug,
@@ -71,7 +77,7 @@ export async function getDynamicCourses(): Promise<Course[]> {
       writeLocalPricingOverrides(overrides);
     }
   } catch (err) {
-    console.warn("Supabase course pricing fetch warning (using cached pricing):", err);
+    console.warn("Supabase course pricing fetch notice (using cached pricing):", err);
   }
 
   // Merge pricing into static course definitions

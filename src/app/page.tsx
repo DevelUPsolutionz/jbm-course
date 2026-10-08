@@ -949,7 +949,7 @@ export default function HomePage() {
                     </div>
 
                     <MouseBlobImage
-                      src="/images/sections/workshops-blob.webp"
+                      src="/images/institution/campus-workshop.webp"
                       alt="Workshops & Training"
                       blobColor="#D1C4E9"
                     />
@@ -1649,7 +1649,7 @@ export default function HomePage() {
                     {/* Central Vertical Pill Image */}
                     <div className="absolute top-[5%] left-[30%] w-[40%] h-[90%] rounded-[4rem] overflow-hidden border-8 border-white shadow-xl z-20">
                       <Image
-                        src="/images/mosaic/students-collab.webp"
+                        src="/images/institution/program-internships.webp"
                         alt="Students collaborating"
                         fill
                         className="object-cover hover:scale-105 transition-transform duration-700"

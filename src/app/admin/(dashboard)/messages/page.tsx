@@ -1,28 +1,45 @@
 import React from 'react';
 import { getAdminClient } from '@/lib/supabase/admin';
+import { getLocalContactMessages } from '@/lib/contact-store';
 import { format } from 'date-fns';
 import { Mail, Phone, Calendar, Tag, Inbox } from 'lucide-react';
 
 export const revalidate = 0; // Disable cache to always fetch latest messages
 
 export default async function AdminMessagesPage() {
-  let messages: any[] = [];
+  const localMsgs = getLocalContactMessages();
+  let messages: any[] = [...localMsgs];
 
   try {
     const supabase = getAdminClient();
-    const { data, error } = await supabase
+    const dbPromise = supabase
       .from('contact_messages')
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (!error && data) {
-      messages = data;
-    } else if (error) {
-      console.warn("Notice: contact_messages table query note:", error.message);
+    // 2-second timeout race to prevent page hanging
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Timeout")), 2000)
+    );
+
+    const result: any = await Promise.race([dbPromise, timeoutPromise]);
+
+    if (result && !result.error && Array.isArray(result.data)) {
+      const dbMsgs = result.data;
+      // Merge dbMsgs with localMsgs, avoiding duplicate IDs or messages
+      const existingIds = new Set(localMsgs.map((m) => m.id));
+      dbMsgs.forEach((dbM: any) => {
+        if (!existingIds.has(dbM.id)) {
+          messages.push(dbM);
+        }
+      });
+      // Sort newest first
+      messages.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
     }
   } catch (err: any) {
-    console.warn("Messages page database fetch note:", err);
+    console.warn("Messages page fetch notice (showing local messages):", err.message || err);
   }
+
 
   return (
     <div className="p-6 max-w-7xl mx-auto">

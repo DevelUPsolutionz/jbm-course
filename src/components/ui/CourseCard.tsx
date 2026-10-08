@@ -23,7 +23,7 @@ export function CourseCard({ course }: CourseCardProps) {
         className="flex flex-col h-full bg-white border border-slate-200 rounded-3xl overflow-hidden hover:shadow-2xl hover:border-maroon-300 transition-all duration-300 hover:-translate-y-2"
       >
         {/* Course Banner Container — Aspect 1024/384 fits official JBM banners with zero cropping */}
-        <div className="relative w-full aspect-[1024/384] bg-slate-950 overflow-hidden border-b border-slate-100">
+        <div className="relative w-full aspect-[1024/384] bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 overflow-hidden border-b border-slate-100">
           <Image
             src={course.thumbnailUrl}
             alt={course.title}

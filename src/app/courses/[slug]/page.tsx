@@ -191,7 +191,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
 
             {/* 1. Official Course Page Header Banner */}
             {course.headerImageUrl && (
-              <div className="mb-10 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200 shadow-xl bg-slate-950 group relative">
+              <div className="mb-10 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200 shadow-xl bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 group relative">
                 <Image
                   src={course.headerImageUrl}
                   alt={`${course.title} Official Course Header Banner`}
@@ -396,13 +396,14 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
               <div className="lg:col-span-1">
                 <div className="sticky top-24 rounded-3xl bg-white border border-slate-200 shadow-xl shadow-slate-200/60 p-6 sm:p-7 space-y-6">
                   {/* Fully Visible Course Banner Image */}
-                  <div className="w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 shadow-sm p-1 flex items-center justify-center">
+                  <div className="w-full rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 border border-slate-200 shadow-sm p-1 flex items-center justify-center">
                     <Image
                       src={course.thumbnailUrl}
                       alt={course.title}
                       width={600}
                       height={340}
                       className="w-full h-auto object-contain rounded-xl"
+                      priority
                     />
                   </div>
 
