@@ -57,16 +57,16 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
 
       // Invoice Meta (Top Right)
       page.drawText(data.invoiceNo, {
-        x: sx(630),
-        y: sy(195),
+        x: sx(715),
+        y: sy(215),
         size: 11,
         font: fontBold,
         color: maroonColor,
       });
 
       page.drawText(data.date, {
-        x: sx(630),
-        y: sy(215),
+        x: sx(715),
+        y: sy(237),
         size: 11,
         font: fontRegular,
         color: textColor,
@@ -74,7 +74,7 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
 
       // Student Details Section
       page.drawText(data.studentName, {
-        x: sx(320),
+        x: sx(380),
         y: sy(320),
         size: 11,
         font: fontBold,
@@ -82,7 +82,7 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
       });
 
       page.drawText(data.phone, {
-        x: sx(320),
+        x: sx(380),
         y: sy(360),
         size: 11,
         font: fontRegular,
@@ -90,7 +90,7 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
       });
 
       page.drawText(data.email, {
-        x: sx(320),
+        x: sx(380),
         y: sy(400),
         size: 11,
         font: fontRegular,
@@ -99,7 +99,7 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
 
       // Course Details Section
       page.drawText(data.courseName, {
-        x: sx(320),
+        x: sx(380),
         y: sy(485),
         size: 11,
         font: fontBold,
@@ -107,51 +107,51 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
       });
 
       // Payment Details Section
-      const payY = (index: number) => sy(615 + (index * 20)); // Adjusted spacing for 9 fields (20 points per row)
+      const payY = (index: number) => sy(590 + (index * 23.8));
 
       // 1. Total Course Fee
       page.drawText(`INR ${data.totalCourseFee.toLocaleString()}`, {
-        x: sx(320), y: payY(0), size: 11, font: fontBold, color: textColor,
+        x: sx(410), y: payY(0), size: 11, font: fontBold, color: textColor,
       });
 
       // 2. Coupon Code
       page.drawText(data.couponCode || "-", {
-        x: sx(320), y: payY(1), size: 11, font: fontRegular, color: textColor,
+        x: sx(410), y: payY(1), size: 11, font: fontRegular, color: textColor,
       });
 
       // 3. Scholarship / Discount
       page.drawText(data.scholarshipDiscount, {
-        x: sx(320), y: payY(2), size: 11, font: fontBold, color: maroonColor,
+        x: sx(410), y: payY(2), size: 11, font: fontBold, color: maroonColor,
       });
 
       // 4. Discount Applied
       page.drawText(`INR ${data.discountApplied.toLocaleString()}`, {
-        x: sx(320), y: payY(3), size: 11, font: fontBold, color: textColor,
+        x: sx(410), y: payY(3), size: 11, font: fontBold, color: textColor,
       });
 
       // 5. Final Amount (Red)
       page.drawText(`INR ${data.finalAmount.toLocaleString()}`, {
-        x: sx(320), y: payY(4), size: 12, font: fontBold, color: maroonColor,
+        x: sx(410), y: payY(4), size: 12, font: fontBold, color: maroonColor,
       });
 
       // 6. Amount Paid
       page.drawText(`INR ${data.amountPaid.toLocaleString()}`, {
-        x: sx(320), y: payY(5), size: 11, font: fontBold, color: textColor,
+        x: sx(410), y: payY(5), size: 11, font: fontBold, color: textColor,
       });
 
       // 7. Payment Mode
       page.drawText(data.paymentMode, {
-        x: sx(320), y: payY(6), size: 11, font: fontRegular, color: textColor,
+        x: sx(410), y: payY(6), size: 11, font: fontRegular, color: textColor,
       });
 
       // 8. Transaction ID
       page.drawText(data.transactionId, {
-        x: sx(320), y: payY(7), size: 11, font: fontRegular, color: textColor,
+        x: sx(410), y: payY(7), size: 11, font: fontRegular, color: textColor,
       });
 
       // 9. Payment Date
       page.drawText(data.paymentDate, {
-        x: sx(320), y: payY(8), size: 11, font: fontRegular, color: textColor,
+        x: sx(410), y: payY(8), size: 11, font: fontRegular, color: textColor,
       });
 
       const pdfBytes = await pdfDoc.save();
