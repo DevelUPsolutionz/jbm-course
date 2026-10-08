@@ -113,21 +113,21 @@ export function Header() {
                 href="/"
                 className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-maroon-800 rounded-xl flex-shrink-0"
               >
-                <div className="relative w-16 h-16 flex items-center justify-center transition-all">
+                <div className="relative w-[74px] h-[74px] flex items-center justify-center transition-all">
                   <Image
                     src="/images/jbm-logo.png"
                     alt={siteConfig.name}
-                    width={64}
-                    height={64}
+                    width={74}
+                    height={74}
                     className="object-contain w-full h-full group-hover:scale-105 transition-transform"
                     priority
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[15px] xl:text-[17px] font-black text-slate-900 tracking-tight group-hover:text-maroon-800 transition-colors">
+                  <span className="text-[16px] xl:text-[18px] font-black text-slate-900 tracking-tight group-hover:text-maroon-800 transition-colors">
                     {siteConfig.name}
                   </span>
-                  <span className="text-[9.5px] xl:text-[10px] font-extrabold text-maroon-800 tracking-wider uppercase flex items-center gap-1.5">
+                  <span className="text-[10px] xl:text-[10.5px] font-extrabold text-maroon-800 tracking-wider uppercase flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                     {siteConfig.slogan}
                   </span>
@@ -227,18 +227,18 @@ export function Header() {
         {/* 2. MOBILE / TABLET COMPACT HEADER (lg:hidden) */}
         <div className="lg:hidden w-full flex items-center justify-between px-4 sm:px-6 h-20 bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-12 h-12 flex items-center justify-center">
+            <div className="w-14 h-14 flex items-center justify-center">
               <Image
                 src="/images/jbm-logo.png"
                 alt={siteConfig.name}
-                width={48}
-                height={48}
-                className="object-contain"
+                width={56}
+                height={56}
+                className="object-contain w-full h-full"
                 priority
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-extrabold text-slate-900 tracking-tight">
+              <span className="text-[14.5px] font-extrabold text-slate-900 tracking-tight">
                 {siteConfig.name}
               </span>
               <span className="text-[9px] font-bold text-maroon-800 tracking-wider uppercase">

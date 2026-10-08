@@ -193,8 +193,10 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                 <Image
                   src={course.headerImageUrl}
                   alt={`${course.title} Official Course Header Banner`}
-                  width={1600}
-                  height={600}
+                  width={2560}
+                  height={960}
+                  quality={95}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1400px"
                   className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.01]"
                   priority
                 />
