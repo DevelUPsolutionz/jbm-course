@@ -105,7 +105,7 @@ export default function HomePage() {
               </div>
 
               {/* 2. CHARACTER 1: TOP-RIGHT STUDENT WITH MINT-CYAN POLYGON BACKDROP */}
-              <div className="absolute top-12 right-6 xl:right-16 hidden lg:block z-10 animate-float" style={{ animationDelay: '1s' }}>
+              <div className="absolute top-12 right-6 xl:right-16 hidden md:block z-10 animate-float" style={{ animationDelay: '1s' }}>
                 <div className="relative w-52 xl:w-60 h-64 xl:h-72">
                   {/* Floating 3D Cyan Diamond Plates above student */}
                   <div className="absolute -top-8 left-8 flex flex-col items-center gap-0.5 opacity-90 animate-pulse-slow">
@@ -137,7 +137,7 @@ export default function HomePage() {
               </div>
 
               {/* 3. CHARACTER 2: BOTTOM-LEFT STUDENT WITH PASTEL LILAC SCALLOPED FLOWER BACKDROP */}
-              <div className="absolute bottom-10 left-6 xl:left-14 hidden lg:block z-10 animate-float" style={{ animationDelay: '2s' }}>
+              <div className="absolute bottom-10 left-6 xl:left-14 hidden md:block z-10 animate-float" style={{ animationDelay: '2s' }}>
                 <div className="relative w-48 xl:w-56 h-60 xl:h-68">
                   {/* Pastel Lilac/Violet Scalloped Flower Silhouette Shape */}
                   <div className="absolute -inset-4 opacity-90 transform -rotate-6 transition-transform hover:rotate-0 duration-500">
@@ -832,7 +832,7 @@ export default function HomePage() {
             <div className="mt-12 space-y-8 sm:space-y-10">
               {/* Showcase 1: Internships & Practical Learning */}
               <div className="bg-white rounded-[2.5rem] p-6 sm:p-10 lg:p-12 border border-slate-200 shadow-sm relative overflow-hidden">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                   {/* Left Tilted Image Frame with ZenEd Organic Backdrops (From Screenshot 2 & 4) */}
                   <div className="relative">
                     {/* Dual Organic Backdrops */}
@@ -897,7 +897,7 @@ export default function HomePage() {
 
               {/* Showcase 2: Workshops & Training */}
               <div className="bg-white rounded-[2.5rem] p-8 sm:p-12 lg:p-16 border border-slate-200 shadow-sm">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                   {/* Left Content from PDF */}
                   <div className="order-2 lg:order-1">
                     <span className="text-xs font-extrabold uppercase tracking-widest text-purple-700 bg-purple-50 px-3 py-1 rounded-full border border-purple-200">
