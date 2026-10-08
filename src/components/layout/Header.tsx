@@ -113,7 +113,7 @@ export function Header() {
                 href="/"
                 className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-maroon-800 rounded-xl flex-shrink-0"
               >
-                <div className="relative w-14 h-14 rounded-xl bg-white border border-slate-200/90 p-1 flex items-center justify-center shadow-sm group-hover:border-maroon-300 group-hover:shadow-md transition-all">
+                <div className="relative w-14 h-14 flex items-center justify-center transition-all">
                   <Image
                     src="/images/jbm-logo.png"
                     alt={siteConfig.name}
@@ -178,7 +178,7 @@ export function Header() {
                 href="/"
                 className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-maroon-800 rounded-xl flex-shrink-0"
               >
-                <div className="relative w-12 h-12 rounded-xl bg-white border border-slate-200/90 p-1 flex items-center justify-center shadow-sm group-hover:border-maroon-300 group-hover:shadow-md transition-all">
+                <div className="relative w-12 h-12 flex items-center justify-center transition-all">
                   <Image
                     src="/images/jbm-logo.png"
                     alt={siteConfig.name}
@@ -228,7 +228,7 @@ export function Header() {
         {/* 2. MOBILE / TABLET COMPACT HEADER (lg:hidden) */}
         <div className="lg:hidden w-full flex items-center justify-between px-4 sm:px-6 h-20 bg-white/95 backdrop-blur-xl border-b border-slate-200 shadow-sm">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 p-1 flex items-center justify-center shadow-sm">
+            <div className="w-12 h-12 flex items-center justify-center">
               <Image
                 src="/images/jbm-logo.png"
                 alt={siteConfig.name}
@@ -307,7 +307,7 @@ export function Header() {
           {/* Drawer Top Header (Logo & Animated Close Button) */}
           <div className="flex items-center justify-between pb-5 border-b border-rose-900/30 relative z-10">
             <div className="flex items-center gap-2.5">
-              <div className="w-12 h-12 rounded-xl bg-white p-1 flex items-center justify-center shadow-md">
+              <div className="w-12 h-12 flex items-center justify-center">
                 <Image
                   src="/images/jbm-logo.png"
                   alt={siteConfig.name}

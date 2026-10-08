@@ -13,9 +13,9 @@ export const siteConfig = {
   contact: {
     phone: "87785 78437",
     formattedPhone: "+91 87785 78437",
-    rawPhone: "8778578437",
+    rawPhone: "918778578437",
     whatsapp: "+91 87785 78437",
-    rawWhatsapp: "8778578437",
+    rawWhatsapp: "918778578437",
     email: "hello.johannabrightmentors@gmail.com",
     address: "Coimbatore, Tamil Nadu, India",
     workingHours: "Mon - Sat: 9:00 AM - 8:00 PM IST",
@@ -24,7 +24,7 @@ export const siteConfig = {
   social: {
     whatsapp: "https://wa.me/918778578437?text=Hi%20Johanna%20Bright%20Mentors,%20I%20want%20to%20know%20more%20about%20your%20courses!",
     email: "mailto:hello.johannabrightmentors@gmail.com",
-    phone: "tel:8778578437",
+    phone: "tel:+918778578437",
   },
   nav: [
     { label: "Home", href: "/" },
