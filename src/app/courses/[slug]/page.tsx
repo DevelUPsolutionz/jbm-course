@@ -187,18 +187,17 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
               </Link>
             </div>
 
-            {/* 1. Official Course Page Header Banner (Compact, Ultra-Crisp & Centered) */}
+            {/* 1. Official Course Page Header Banner (Compact, Ultra-Crisp, Instant Loading & Centered) */}
             {course.headerImageUrl && (
-              <div className="mb-6 sm:mb-8 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-lg bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 group relative">
+              <div className="mb-6 sm:mb-8 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-lg bg-slate-100 group relative">
                 <Image
                   src={course.headerImageUrl}
                   alt={`${course.title} Official Course Header Banner`}
                   width={2560}
                   height={960}
-                  quality={95}
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 896px, 896px"
-                  className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.01]"
+                  unoptimized={true}
                   priority
+                  className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.01]"
                 />
               </div>
             )}
