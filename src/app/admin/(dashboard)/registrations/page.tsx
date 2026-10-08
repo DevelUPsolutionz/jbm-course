@@ -27,6 +27,11 @@ export default async function AdminRegistrationsPage() {
     );
 
     const result: any = await Promise.race([dbPromise, timeoutPromise]);
+    
+    if (result && result.error) {
+      console.error("Registrations Supabase fetch error:", result.error);
+    }
+    
     const data = result && !result.error && Array.isArray(result.data) ? result.data : [];
 
     if (data.length > 0) {
