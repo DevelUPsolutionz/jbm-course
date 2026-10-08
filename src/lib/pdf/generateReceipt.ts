@@ -1,10 +1,17 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import {
+  PDFDocument,
+  rgb,
+  StandardFonts,
+} from 'pdf-lib';
 import fs from 'fs';
 import path from 'path';
 
-// Type definitions for jspdf-autotable to avoid TS errors
+// ============================================================
+// Type definitions for jspdf-autotable
+// ============================================================
+
 declare module 'jspdf' {
   interface jsPDF {
     autoTable: (options: any) => jsPDF;
@@ -14,162 +21,681 @@ declare module 'jspdf' {
   }
 }
 
+// ============================================================
+// Receipt Data
+// ============================================================
+
 export interface ReceiptData {
   invoiceNo: string;
   date: string;
+
   studentName: string;
   phone: string;
   email: string;
+
   courseName: string;
+
   totalCourseFee: number;
   couponCode: string;
   scholarshipDiscount: string;
   discountApplied: number;
   finalAmount: number;
+
   amountPaid: number;
   paymentMode: string;
   transactionId: string;
   paymentDate: string;
 }
 
-export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
-  const templatePath = path.join(process.cwd(), 'public', 'invoice_template.pdf');
+// ============================================================
+// Template configuration
+// ============================================================
 
-  // 1. Try filling official template PDF if present
-  if (fs.existsSync(templatePath)) {
-    try {
-      const templateBytes = fs.readFileSync(templatePath);
-      const pdfDoc = await PDFDocument.load(templateBytes);
-      const fontRegular = await pdfDoc.embedFont(StandardFonts.Helvetica);
-      const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+const TEMPLATE_WIDTH = 768;
+const TEMPLATE_HEIGHT = 1152;
 
-      const page = pdfDoc.getPages()[0];
-      const { width, height } = page.getSize();
+// ============================================================
+// Coordinates
+//
+// IMPORTANT:
+// These coordinates use TOP-LEFT visual positioning.
+//
+// X → left to right
+// Y → top to bottom
+//
+// pdf-lib internally uses:
+// X → left to right
+// Y → bottom to top
+//
+// The helper `pdfY()` converts visual Y to PDF Y.
+// ============================================================
 
-      const textColor = rgb(0.1, 0.1, 0.1);
-      const maroonColor = rgb(0.5, 0, 0.125);
+const POSITIONS = {
 
-      // Coordinates mapped relative to 768 x 1152 point canvas
-      const scaleX = width / 768;
-      const scaleY = height / 1152;
-      const sx = (x: number) => x * scaleX;
-      const sy = (y: number) => height - (y * scaleY);
+  // ----------------------------------------------------------
+  // Invoice top-right information
+  // ----------------------------------------------------------
 
-      // Invoice Meta (Top Right Box)
-      // Pink box is from x=480 to x=650. Colon is at x=560.
-      // Text starts right after colon at x = 580.
-      page.drawText(data.invoiceNo, {
-        x: sx(580),
-        y: sy(216),
-        size: 10,
-        font: fontBold,
-        color: maroonColor,
-      });
+  invoiceNo: {
+    x: 638,
+    y: 216,
+  },
 
-      page.drawText(data.date, {
-        x: sx(580),
-        y: sy(240),
-        size: 10,
-        font: fontBold,
-        color: textColor,
-      });
+  date: {
+    x: 638,
+    y: 240,
+  },
 
-      // Student Details Section
-      // Colons for Name, Phone, Email are at x ~ 260. Text starts right after colon at x = 280.
-      page.drawText(data.studentName, {
-        x: sx(280),
-        y: sy(318),
-        size: 11,
-        font: fontBold,
-        color: textColor,
-      });
 
-      page.drawText(data.phone, {
-        x: sx(280),
-        y: sy(358),
-        size: 11,
-        font: fontBold,
-        color: textColor,
-      });
+  // ----------------------------------------------------------
+  // Student Details
+  // ----------------------------------------------------------
 
-      page.drawText(data.email, {
-        x: sx(280),
-        y: sy(398),
-        size: 11,
-        font: fontBold,
-        color: textColor,
-      });
+  studentName: {
+    x: 280,
+    y: 330,
+  },
 
-      // Course Details Section
-      // Colon for Course Name is at x ~ 260. Text starts at x = 280.
-      page.drawText(data.courseName, {
-        x: sx(280),
-        y: sy(485),
-        size: 11,
-        font: fontBold,
-        color: textColor,
-      });
+  phone: {
+    x: 280,
+    y: 370,
+  },
 
-      // Payment Details Section
-      // Colons for Payment Details labels are at x ~ 285.
-      // Values start right after colon at x = 300.
-      // Explicit Y coordinates per row for perfect background box alignment:
-      const payX = sx(300);
-      const payRowsY = [582, 608, 634, 660, 705, 736, 764, 792, 820];
+  email: {
+    x: 280,
+    y: 405,
+  },
 
-      // 1. Total Course Fee
-      page.drawText(`INR ${data.totalCourseFee.toLocaleString()}`, {
-        x: payX, y: sy(payRowsY[0]), size: 11, font: fontBold, color: textColor,
-      });
 
-      // 2. Coupon Code
-      page.drawText(data.couponCode || "-", {
-        x: payX, y: sy(payRowsY[1]), size: 11, font: fontBold, color: textColor,
-      });
+  // ----------------------------------------------------------
+  // Course Details
+  // ----------------------------------------------------------
 
-      // 3. Scholarship / Discount
-      page.drawText(data.scholarshipDiscount, {
-        x: payX, y: sy(payRowsY[2]), size: 11, font: fontBold, color: maroonColor,
-      });
+  courseName: {
+    x: 280,
+    y: 495,
+  },
 
-      // 4. Discount Applied
-      page.drawText(`INR ${data.discountApplied.toLocaleString()}`, {
-        x: payX, y: sy(payRowsY[3]), size: 11, font: fontBold, color: textColor,
-      });
 
-      // 5. Final Amount (Red text inside Pink Highlighted Band)
-      page.drawText(`INR ${data.finalAmount.toLocaleString()}`, {
-        x: payX, y: sy(payRowsY[4]), size: 12, font: fontBold, color: maroonColor,
-      });
+  // ----------------------------------------------------------
+  // Payment Details
+  // ----------------------------------------------------------
 
-      // 6. Amount Paid
-      page.drawText(`INR ${data.amountPaid.toLocaleString()}`, {
-        x: payX, y: sy(payRowsY[5]), size: 11, font: fontBold, color: textColor,
-      });
+  totalCourseFee: {
+    x: 300,
+    y: 592,
+  },
 
-      // 7. Payment Mode
-      page.drawText(data.paymentMode, {
-        x: payX, y: sy(payRowsY[6]), size: 11, font: fontBold, color: textColor,
-      });
+  couponCode: {
+    x: 300,
+    y: 618,
+  },
 
-      // 8. Transaction ID
-      page.drawText(data.transactionId, {
-        x: payX, y: sy(payRowsY[7]), size: 11, font: fontBold, color: textColor,
-      });
+  scholarshipDiscount: {
+    x: 300,
+    y: 644,
+  },
 
-      // 9. Payment Date
-      page.drawText(data.paymentDate, {
-        x: payX, y: sy(payRowsY[8]), size: 11, font: fontBold, color: textColor,
-      });
+  discountApplied: {
+    x: 300,
+    y: 670,
+  },
 
-      const pdfBytes = await pdfDoc.save();
-      return Buffer.from(pdfBytes);
-    } catch (err) {
-      console.error("Error overlaying text onto invoice_template.pdf:", err);
+  finalAmount: {
+    x: 300,
+    y: 715,
+  },
+
+  amountPaid: {
+    x: 300,
+    y: 746,
+  },
+
+  paymentMode: {
+    x: 300,
+    y: 774,
+  },
+
+  transactionId: {
+    x: 300,
+    y: 802,
+  },
+
+  paymentDate: {
+    x: 300,
+    y: 830,
+  },
+};
+
+// ============================================================
+// Utility: Convert top-left Y coordinate to PDF Y coordinate
+// ============================================================
+
+function pdfY(
+  visualY: number,
+  pageHeight: number = TEMPLATE_HEIGHT
+): number {
+  return pageHeight - visualY;
+}
+
+// ============================================================
+// Utility: Format Indian currency
+// ============================================================
+
+function formatCurrency(value: number): string {
+  return `INR ${value.toLocaleString('en-IN')}`;
+}
+
+// ============================================================
+// Utility: Draw text with optional maximum width
+// ============================================================
+
+function drawFittedText(
+  page: any,
+  text: string,
+  options: {
+    x: number;
+    y: number;
+    size: number;
+    font: any;
+    color: any;
+    maxWidth?: number;
+    minSize?: number;
+  }
+) {
+  if (!text) {
+    return;
+  }
+
+  let fontSize = options.size;
+
+  const minSize = options.minSize ?? 7;
+
+  if (options.maxWidth) {
+    while (
+      fontSize > minSize &&
+      options.font.widthOfTextAtSize(
+        text,
+        fontSize
+      ) > options.maxWidth
+    ) {
+      fontSize -= 0.25;
     }
   }
 
-  // 2. Clean fallback generation using jsPDF if template file is missing/unreadable
+  page.drawText(text, {
+    x: options.x,
+    y: options.y,
+    size: fontSize,
+    font: options.font,
+    color: options.color,
+  });
+}
+
+// ============================================================
+// MAIN FUNCTION
+// ============================================================
+
+export async function generateReceiptPDF(
+  data: ReceiptData
+): Promise<Buffer> {
+
+  // ==========================================================
+  // Template path
+  // ==========================================================
+
+  const templatePath = path.join(
+    process.cwd(),
+    'public',
+    'invoice_template.pdf'
+  );
+
+  // ==========================================================
+  // Check template
+  // ==========================================================
+
+  if (!fs.existsSync(templatePath)) {
+    console.warn(
+      'invoice_template.pdf not found. Using fallback invoice.'
+    );
+
+    return generateFallbackInvoice(data);
+  }
+
+  // ==========================================================
+  // Read original template
+  // ==========================================================
+
+  const templateBytes =
+    fs.readFileSync(templatePath);
+
+  // ==========================================================
+  // Load original template
+  // ==========================================================
+
+  const templateDoc =
+    await PDFDocument.load(templateBytes);
+
+  const templatePages =
+    templateDoc.getPages();
+
+  if (!templatePages.length) {
+    throw new Error(
+      'Invoice template does not contain any pages.'
+    );
+  }
+
+  const templatePage =
+    templatePages[0];
+
+  const {
+    width,
+    height,
+  } = templatePage.getSize();
+
+  console.log(
+    'Invoice template PDF size:',
+    {
+      width,
+      height,
+    }
+  );
+
+  // ==========================================================
+  // Safety check
+  // ==========================================================
+
+  if (
+    Math.abs(width - TEMPLATE_WIDTH) > 2 ||
+    Math.abs(height - TEMPLATE_HEIGHT) > 2
+  ) {
+    console.warn(
+      `Template size is ${width}x${height}, expected ` +
+      `${TEMPLATE_WIDTH}x${TEMPLATE_HEIGHT}.`
+    );
+  }
+
+  // ==========================================================
+  // Create a SEPARATE transparent overlay document
+  //
+  // This is the important fix.
+  //
+  // We do NOT draw dynamic text directly on the template.
+  // ==========================================================
+
+  const overlayDoc =
+    await PDFDocument.create();
+
+  const overlayPage =
+    overlayDoc.addPage([
+      width,
+      height,
+    ]);
+
+  // ==========================================================
+  // Embed fonts into overlay
+  // ==========================================================
+
+  const fontRegular =
+    await overlayDoc.embedFont(
+      StandardFonts.Helvetica
+    );
+
+  const fontBold =
+    await overlayDoc.embedFont(
+      StandardFonts.HelveticaBold
+    );
+
+  // ==========================================================
+  // Colors
+  // ==========================================================
+
+  const textColor = rgb(
+    0.10,
+    0.10,
+    0.10
+  );
+
+  const maroonColor = rgb(
+    0.50,
+    0.00,
+    0.125
+  );
+
+  // ==========================================================
+  // Helper for this overlay page
+  // ==========================================================
+
+  const drawText = ({
+    value,
+    x,
+    y,
+    size = 11,
+    font = fontBold,
+    color = textColor,
+    maxWidth,
+    minSize = 7,
+  }: {
+    value: string;
+    x: number;
+    y: number;
+    size?: number;
+    font?: any;
+    color?: any;
+    maxWidth?: number;
+    minSize?: number;
+  }) => {
+
+    if (
+      value === undefined ||
+      value === null ||
+      value === ''
+    ) {
+      return;
+    }
+
+    drawFittedText(
+      overlayPage,
+      String(value),
+      {
+        x,
+        y: pdfY(y, height),
+        size,
+        font,
+        color,
+        maxWidth,
+        minSize,
+      }
+    );
+  };
+
+  // ==========================================================
+  // 1. INVOICE NUMBER
+  // ==========================================================
+
+  drawText({
+    value: data.invoiceNo,
+    x: POSITIONS.invoiceNo.x,
+    y: POSITIONS.invoiceNo.y,
+    size: 10,
+    font: fontBold,
+    color: maroonColor,
+    maxWidth: 110,
+  });
+
+  // ==========================================================
+  // 2. INVOICE DATE
+  // ==========================================================
+
+  drawText({
+    value: data.date,
+    x: POSITIONS.date.x,
+    y: POSITIONS.date.y,
+    size: 10,
+    font: fontBold,
+    color: textColor,
+    maxWidth: 110,
+  });
+
+  // ==========================================================
+  // 3. STUDENT NAME
+  // ==========================================================
+
+  drawText({
+    value: data.studentName,
+    x: POSITIONS.studentName.x,
+    y: POSITIONS.studentName.y,
+    size: 11,
+    font: fontBold,
+    color: textColor,
+    maxWidth: 400,
+  });
+
+  // ==========================================================
+  // 4. PHONE
+  // ==========================================================
+
+  drawText({
+    value: data.phone,
+    x: POSITIONS.phone.x,
+    y: POSITIONS.phone.y,
+    size: 11,
+    font: fontBold,
+    color: textColor,
+    maxWidth: 400,
+  });
+
+  // ==========================================================
+  // 5. EMAIL
+  // ==========================================================
+
+  drawText({
+    value: data.email,
+    x: POSITIONS.email.x,
+    y: POSITIONS.email.y,
+    size: 11,
+    font: fontBold,
+    color: textColor,
+    maxWidth: 400,
+    minSize: 8,
+  });
+
+  // ==========================================================
+  // 6. COURSE NAME
+  // ==========================================================
+
+  drawText({
+    value: data.courseName,
+    x: POSITIONS.courseName.x,
+    y: POSITIONS.courseName.y,
+    size: 11,
+    font: fontBold,
+    color: textColor,
+    maxWidth: 400,
+    minSize: 8,
+  });
+
+  // ==========================================================
+  // 7. TOTAL COURSE FEE
+  // ==========================================================
+
+  drawText({
+    value: formatCurrency(
+      data.totalCourseFee
+    ),
+    x: POSITIONS.totalCourseFee.x,
+    y: POSITIONS.totalCourseFee.y,
+    size: 11,
+    font: fontBold,
+    color: textColor,
+    maxWidth: 350,
+  });
+
+  // ==========================================================
+  // 8. COUPON CODE
+  // ==========================================================
+
+  drawText({
+    value:
+      data.couponCode ||
+      '-',
+    x: POSITIONS.couponCode.x,
+    y: POSITIONS.couponCode.y,
+    size: 11,
+    font: fontBold,
+    color: textColor,
+    maxWidth: 350,
+  });
+
+  // ==========================================================
+  // 9. SCHOLARSHIP / DISCOUNT
+  // ==========================================================
+
+  drawText({
+    value:
+      data.scholarshipDiscount ||
+      '-',
+    x: POSITIONS.scholarshipDiscount.x,
+    y: POSITIONS.scholarshipDiscount.y,
+    size: 11,
+    font: fontBold,
+    color: maroonColor,
+    maxWidth: 350,
+  });
+
+  // ==========================================================
+  // 10. DISCOUNT APPLIED
+  // ==========================================================
+
+  drawText({
+    value: formatCurrency(
+      data.discountApplied
+    ),
+    x: POSITIONS.discountApplied.x,
+    y: POSITIONS.discountApplied.y,
+    size: 11,
+    font: fontBold,
+    color: textColor,
+    maxWidth: 350,
+  });
+
+  // ==========================================================
+  // 11. FINAL AMOUNT
+  // ==========================================================
+
+  drawText({
+    value: formatCurrency(
+      data.finalAmount
+    ),
+    x: POSITIONS.finalAmount.x,
+    y: POSITIONS.finalAmount.y,
+    size: 12,
+    font: fontBold,
+    color: maroonColor,
+    maxWidth: 350,
+  });
+
+  // ==========================================================
+  // 12. AMOUNT PAID
+  // ==========================================================
+
+  drawText({
+    value: formatCurrency(
+      data.amountPaid
+    ),
+    x: POSITIONS.amountPaid.x,
+    y: POSITIONS.amountPaid.y,
+    size: 11,
+    font: fontBold,
+    color: textColor,
+    maxWidth: 350,
+  });
+
+  // ==========================================================
+  // 13. PAYMENT MODE
+  // ==========================================================
+
+  drawText({
+    value:
+      data.paymentMode ||
+      '-',
+    x: POSITIONS.paymentMode.x,
+    y: POSITIONS.paymentMode.y,
+    size: 11,
+    font: fontBold,
+    color: textColor,
+    maxWidth: 350,
+  });
+
+  // ==========================================================
+  // 14. TRANSACTION ID
+  // ==========================================================
+
+  drawText({
+    value:
+      data.transactionId ||
+      '-',
+    x: POSITIONS.transactionId.x,
+    y: POSITIONS.transactionId.y,
+    size: 11,
+    font: fontBold,
+    color: textColor,
+    maxWidth: 350,
+    minSize: 8,
+  });
+
+  // ==========================================================
+  // 15. PAYMENT DATE
+  // ==========================================================
+
+  drawText({
+    value:
+      data.paymentDate ||
+      '-',
+    x: POSITIONS.paymentDate.x,
+    y: POSITIONS.paymentDate.y,
+    size: 11,
+    font: fontBold,
+    color: textColor,
+    maxWidth: 350,
+  });
+
+  // ==========================================================
+  // Save overlay
+  // ==========================================================
+
+  const overlayBytes =
+    await overlayDoc.save();
+
+  // ==========================================================
+  // Embed overlay page into original template
+  // ==========================================================
+
+  const [
+    embeddedOverlay,
+  ] = await templateDoc.embedPdf(
+    overlayBytes
+  );
+
+  // ==========================================================
+  // Draw overlay on top of original template
+  //
+  // IMPORTANT:
+  // The original template is never modified.
+  // The dynamic text exists on a separate page layer.
+  // ==========================================================
+
+  templatePage.drawPage(
+    embeddedOverlay,
+    {
+      x: 0,
+      y: 0,
+      width,
+      height,
+    }
+  );
+
+  // ==========================================================
+  // Save final PDF
+  // ==========================================================
+
+  const finalBytes =
+    await templateDoc.save();
+
+  return Buffer.from(finalBytes);
+}
+
+
+// ============================================================
+// FALLBACK INVOICE
+//
+// This is only used if invoice_template.pdf is missing.
+// ============================================================
+
+async function generateFallbackInvoice(
+  data: ReceiptData
+): Promise<Buffer> {
+
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -178,103 +704,417 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
 
   const primaryColor = [128, 0, 0];
 
-  // Header Title
+  // ==========================================================
+  // Header
+  // ==========================================================
+
   doc.setFontSize(24);
-  doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-  doc.setFont("helvetica", "bold");
-  doc.text("JOHANNA BRIGHT MENTORS", 20, 25);
-  
-  doc.setFontSize(10);
-  doc.setTextColor(100, 100, 100);
-  doc.setFont("helvetica", "normal");
-  doc.text("Skill Development | Career Readiness | Professional Training", 20, 32);
 
-  // Line break
-  doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+  doc.setTextColor(
+    primaryColor[0],
+    primaryColor[1],
+    primaryColor[2]
+  );
+
+  doc.setFont(
+    'helvetica',
+    'bold'
+  );
+
+  doc.text(
+    'JOHANNA BRIGHT MENTORS',
+    20,
+    25
+  );
+
+  // ==========================================================
+  // Subtitle
+  // ==========================================================
+
+  doc.setFontSize(10);
+
+  doc.setTextColor(
+    100,
+    100,
+    100
+  );
+
+  doc.setFont(
+    'helvetica',
+    'normal'
+  );
+
+  doc.text(
+    'Skill Development | Career Readiness | Professional Training',
+    20,
+    32
+  );
+
+  // ==========================================================
+  // Header line
+  // ==========================================================
+
+  doc.setDrawColor(
+    primaryColor[0],
+    primaryColor[1],
+    primaryColor[2]
+  );
+
   doc.setLineWidth(0.5);
-  doc.line(20, 37, 190, 37);
 
-  // Invoice Title
+  doc.line(
+    20,
+    37,
+    190,
+    37
+  );
+
+  // ==========================================================
+  // Invoice title
+  // ==========================================================
+
   doc.setFontSize(20);
-  doc.setTextColor(0, 0, 0);
-  doc.setFont("helvetica", "bold");
-  doc.text("PAYMENT INVOICE / RECEIPT", 20, 50);
 
-  // Invoice Meta
+  doc.setTextColor(
+    0,
+    0,
+    0
+  );
+
+  doc.setFont(
+    'helvetica',
+    'bold'
+  );
+
+  doc.text(
+    'PAYMENT INVOICE / RECEIPT',
+    20,
+    50
+  );
+
+  // ==========================================================
+  // Invoice meta
+  // ==========================================================
+
   doc.setFontSize(10);
-  doc.text(`Invoice No.: ${data.invoiceNo}`, 140, 47);
-  doc.text(`Date: ${data.date}`, 140, 53);
 
-  // AutoTable: Student Details
+  doc.text(
+    `Invoice No.: ${data.invoiceNo}`,
+    140,
+    47
+  );
+
+  doc.text(
+    `Date: ${data.date}`,
+    140,
+    53
+  );
+
+  // ==========================================================
+  // Student Details
+  // ==========================================================
+
   doc.autoTable({
     startY: 65,
-    margin: { left: 20, right: 20 },
-    head: [[{ content: 'STUDENT DETAILS', colSpan: 2 }]],
-    body: [
-      ['Name', data.studentName],
-      ['Phone Number', data.phone],
-      ['Email ID', data.email],
+
+    margin: {
+      left: 20,
+      right: 20,
+    },
+
+    head: [
+      [
+        {
+          content: 'STUDENT DETAILS',
+          colSpan: 2,
+        },
+      ],
     ],
+
+    body: [
+      [
+        'Name',
+        data.studentName,
+      ],
+      [
+        'Phone Number',
+        data.phone,
+      ],
+      [
+        'Email ID',
+        data.email,
+      ],
+    ],
+
     theme: 'plain',
-    headStyles: { fillColor: primaryColor as [number, number, number], textColor: 255, fontStyle: 'bold' },
-    bodyStyles: { textColor: 50 },
-    columnStyles: { 0: { cellWidth: 50, fontStyle: 'bold' } },
-    styles: { cellPadding: 3, fontSize: 10 },
+
+    headStyles: {
+      fillColor:
+        primaryColor as [
+          number,
+          number,
+          number
+        ],
+
+      textColor: 255,
+
+      fontStyle: 'bold',
+    },
+
+    bodyStyles: {
+      textColor: 50,
+    },
+
+    columnStyles: {
+      0: {
+        cellWidth: 50,
+        fontStyle: 'bold',
+      },
+    },
+
+    styles: {
+      cellPadding: 3,
+      fontSize: 10,
+    },
   });
 
-  // AutoTable: Course Details
+  // ==========================================================
+  // Course Details
+  // ==========================================================
+
   doc.autoTable({
-    startY: doc.lastAutoTable.finalY + 8,
-    margin: { left: 20, right: 20 },
-    head: [[{ content: 'COURSE DETAILS', colSpan: 2 }]],
-    body: [
-      ['Course Name', data.courseName],
+    startY:
+      doc.lastAutoTable.finalY + 8,
+
+    margin: {
+      left: 20,
+      right: 20,
+    },
+
+    head: [
+      [
+        {
+          content: 'COURSE DETAILS',
+          colSpan: 2,
+        },
+      ],
     ],
+
+    body: [
+      [
+        'Course Name',
+        data.courseName,
+      ],
+    ],
+
     theme: 'plain',
-    headStyles: { fillColor: primaryColor as [number, number, number], textColor: 255, fontStyle: 'bold' },
-    bodyStyles: { textColor: 50 },
-    columnStyles: { 0: { cellWidth: 50, fontStyle: 'bold' } },
-    styles: { cellPadding: 3, fontSize: 10 },
+
+    headStyles: {
+      fillColor:
+        primaryColor as [
+          number,
+          number,
+          number
+        ],
+
+      textColor: 255,
+
+      fontStyle: 'bold',
+    },
+
+    bodyStyles: {
+      textColor: 50,
+    },
+
+    columnStyles: {
+      0: {
+        cellWidth: 50,
+        fontStyle: 'bold',
+      },
+    },
+
+    styles: {
+      cellPadding: 3,
+      fontSize: 10,
+    },
   });
 
-  // AutoTable: Payment Details
+  // ==========================================================
+  // Payment Details
+  // ==========================================================
+
   doc.autoTable({
-    startY: doc.lastAutoTable.finalY + 8,
-    margin: { left: 20, right: 20 },
-    head: [[{ content: 'PAYMENT DETAILS', colSpan: 2 }]],
-    body: [
-      ['Total Course Fee', `INR ${data.totalCourseFee.toLocaleString()}`],
-      ['Coupon Code', data.couponCode || "None"],
-      ['Scholarship / Discount', data.scholarshipDiscount],
-      ['Discount Applied', `INR ${data.discountApplied.toLocaleString()}`],
-      ['Final Amount', `INR ${data.finalAmount.toLocaleString()}`],
-      ['Amount Paid', `INR ${data.amountPaid.toLocaleString()}`],
-      ['Payment Mode', data.paymentMode],
-      ['Transaction ID', data.transactionId],
-      ['Payment Date', data.paymentDate],
+    startY:
+      doc.lastAutoTable.finalY + 8,
+
+    margin: {
+      left: 20,
+      right: 20,
+    },
+
+    head: [
+      [
+        {
+          content: 'PAYMENT DETAILS',
+          colSpan: 2,
+        },
+      ],
     ],
+
+    body: [
+      [
+        'Total Course Fee',
+        formatCurrency(
+          data.totalCourseFee
+        ),
+      ],
+
+      [
+        'Coupon Code',
+        data.couponCode || 'None',
+      ],
+
+      [
+        'Scholarship / Discount',
+        data.scholarshipDiscount,
+      ],
+
+      [
+        'Discount Applied',
+        formatCurrency(
+          data.discountApplied
+        ),
+      ],
+
+      [
+        'Final Amount',
+        formatCurrency(
+          data.finalAmount
+        ),
+      ],
+
+      [
+        'Amount Paid',
+        formatCurrency(
+          data.amountPaid
+        ),
+      ],
+
+      [
+        'Payment Mode',
+        data.paymentMode,
+      ],
+
+      [
+        'Transaction ID',
+        data.transactionId,
+      ],
+
+      [
+        'Payment Date',
+        data.paymentDate,
+      ],
+    ],
+
     theme: 'plain',
-    headStyles: { fillColor: primaryColor as [number, number, number], textColor: 255, fontStyle: 'bold' },
-    bodyStyles: { textColor: 50 },
-    columnStyles: { 0: { cellWidth: 50, fontStyle: 'bold' } },
-    styles: { cellPadding: 3, fontSize: 10 },
+
+    headStyles: {
+      fillColor:
+        primaryColor as [
+          number,
+          number,
+          number
+        ],
+
+      textColor: 255,
+
+      fontStyle: 'bold',
+    },
+
+    bodyStyles: {
+      textColor: 50,
+    },
+
+    columnStyles: {
+      0: {
+        cellWidth: 50,
+        fontStyle: 'bold',
+      },
+    },
+
+    styles: {
+      cellPadding: 3,
+      fontSize: 10,
+    },
   });
 
+  // ==========================================================
   // Footer success message
-  const finalY = doc.lastAutoTable.finalY + 20;
-  doc.setFillColor(245, 245, 245);
-  doc.rect(20, finalY, 170, 25, 'F');
-  
-  doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(14);
-  doc.text("Payment Received Successfully!", 25, finalY + 10);
-  
-  doc.setTextColor(50, 50, 50);
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-  doc.text("Thank you for choosing Johanna Bright Mentors. We are excited to have you with us!", 25, finalY + 18);
+  // ==========================================================
 
-  const arrayBuffer = doc.output('arraybuffer');
-  return Buffer.from(arrayBuffer);
+  const finalY =
+    doc.lastAutoTable.finalY + 20;
+
+  doc.setFillColor(
+    245,
+    245,
+    245
+  );
+
+  doc.rect(
+    20,
+    finalY,
+    170,
+    25,
+    'F'
+  );
+
+  doc.setTextColor(
+    primaryColor[0],
+    primaryColor[1],
+    primaryColor[2]
+  );
+
+  doc.setFont(
+    'helvetica',
+    'bold'
+  );
+
+  doc.setFontSize(14);
+
+  doc.text(
+    'Payment Received Successfully!',
+    25,
+    finalY + 10
+  );
+
+  doc.setTextColor(
+    50,
+    50,
+    50
+  );
+
+  doc.setFont(
+    'helvetica',
+    'normal'
+  );
+
+  doc.setFontSize(10);
+
+  doc.text(
+    'Thank you for choosing Johanna Bright Mentors. We are excited to have you with us!',
+    25,
+    finalY + 18
+  );
+
+  // ==========================================================
+  // Return Buffer
+  // ==========================================================
+
+  const arrayBuffer =
+    doc.output('arraybuffer');
+
+  return Buffer.from(
+    arrayBuffer
+  );
 }
