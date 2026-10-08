@@ -172,7 +172,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
         {/* ==================================================================== */}
         {/* COURSE HERO SECTION (With Official Header Banner)                    */}
         {/* ==================================================================== */}
-        <section className="relative pt-4 pb-12 sm:pt-6 sm:pb-16 border-b border-slate-200/80 overflow-hidden">
+        <section className="relative pt-4 pb-6 sm:pt-5 sm:pb-8 border-b border-slate-200/80 overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[750px] h-[320px] bg-maroon-100/40 blur-[100px] rounded-full pointer-events-none" />
 
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -189,7 +189,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
 
             {/* 1. Official Course Page Header Banner (Wide, Ultra-Crisp, Instant Loading & Centered) */}
             {course.headerImageUrl && (
-              <div className="mb-8 sm:mb-10 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-xl bg-slate-900 group relative">
+              <div className="mb-6 sm:mb-8 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-xl bg-slate-900 group relative">
                 <Image
                   src={course.headerImageUrl}
                   alt={`${course.title} Official Course Header Banner`}
@@ -203,7 +203,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
             )}
 
             {/* Course Hero Details (Centered Layout on Desktop & Mobile) */}
-            <div className="w-full max-w-4xl mx-auto space-y-5 sm:space-y-6 text-center">
+            <div className="w-full max-w-4xl mx-auto space-y-4 sm:space-y-5 text-center">
               <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
                 <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-maroon-50 text-maroon-800 border border-maroon-200 shadow-sm">
                   <Sparkles className="w-3.5 h-3.5 text-maroon-800" />
@@ -230,7 +230,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
               </p>
 
               {/* Price & CTA Action Bar (Centered) */}
-              <div className="pt-6 border-t border-slate-200/90 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
+              <div className="pt-5 border-t border-slate-200/90 flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-8">
                 <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
                   <div className="flex items-center gap-2">
                     <span className="text-[11px] sm:text-xs text-slate-500 font-semibold uppercase tracking-wider">
@@ -282,13 +282,13 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
         {/* ==================================================================== */}
         {/* SYLLABUS & CURRICULUM BENTO GRID (Maroon & White) */}
         {/* ==================================================================== */}
-        <section className="py-16 sm:py-24 relative bg-slate-50/50">
+        <section className="py-8 sm:py-12 relative bg-slate-50/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
               {/* Left 2 Cols: Learning Outcomes & Weekly Syllabus */}
-              <div className="lg:col-span-2 space-y-10">
+              <div className="lg:col-span-2 space-y-6 sm:space-y-8">
                 {/* Learning Outcomes */}
-                <div className="p-7 sm:p-9 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-6">
+                <div className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-5">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-maroon-50 border border-maroon-200 text-maroon-800 flex items-center justify-center">
                       <Award className="w-5 h-5" />
@@ -317,7 +317,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                 </div>
 
                 {/* Comprehensive Syllabus */}
-                <div className="p-7 sm:p-9 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-6">
+                <div className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-5">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-maroon-50 border border-maroon-200 text-maroon-800 flex items-center justify-center">
                       <BookOpen className="w-5 h-5" />
@@ -358,8 +358,8 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                 </div>
 
                 {/* Prerequisites & Audience */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+                  <div className="p-5 sm:p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
                     <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
                       <Users className="w-4 h-4 text-maroon-800" />
                       Target Audience
@@ -374,7 +374,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                     </ul>
                   </div>
 
-                  <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+                  <div className="p-5 sm:p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
                     <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
                       <Layers className="w-4 h-4 text-maroon-800" />
                       Prerequisites
@@ -393,7 +393,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
 
               {/* Right Col: Sticky Enrollment Card */}
               <div className="lg:col-span-1">
-                <div className="sticky top-24 rounded-3xl bg-white border border-slate-200 shadow-xl shadow-slate-200/60 p-6 sm:p-7 space-y-6">
+                <div className="sticky top-24 rounded-3xl bg-white border border-slate-200 shadow-xl shadow-slate-200/60 p-5 sm:p-6 space-y-5">
                   {/* Fully Visible Course Banner Image */}
                   <div className="w-full rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 border border-slate-200 shadow-sm p-1 flex items-center justify-center">
                     <Image
