@@ -279,7 +279,7 @@ export default function HomePage() {
                 <div className="flex shrink-0 items-center gap-8 pr-8 whitespace-nowrap animate-marquee group-hover:[animation-play-state:paused] select-none text-xs font-bold text-slate-700">
                   <span className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-amber-500" />
-                    <span>100+ Students Impacted</span>
+                    <span>2500+ Students Impacted</span>
                   </span>
                   <span className="text-rose-300">•</span>
                   <span className="flex items-center gap-2">
@@ -318,7 +318,7 @@ export default function HomePage() {
                 <div className="flex shrink-0 items-center gap-8 pr-8 whitespace-nowrap animate-marquee group-hover:[animation-play-state:paused] select-none text-xs font-bold text-slate-700" aria-hidden="true">
                   <span className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-amber-500" />
-                    <span>100+ Students Impacted</span>
+                    <span>2500+ Students Impacted</span>
                   </span>
                   <span className="text-rose-300">•</span>
                   <span className="flex items-center gap-2">
@@ -625,7 +625,7 @@ export default function HomePage() {
                 <div className="flex flex-col items-center">
                   <DoodleBurstLines className="w-8 h-5 text-amber-500 mb-1" />
                   <span className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-                    100+
+                    2500+
                   </span>
                   <span className="text-xs sm:text-sm font-bold text-slate-600 mt-1">
                     Students
@@ -697,7 +697,7 @@ export default function HomePage() {
                   />
                 </div>
                 <p className="text-xs font-semibold text-slate-700">
-                  <strong className="text-slate-900 font-extrabold">Trusted by 100+ learners</strong> across universities and tech institutions.
+                  <strong className="text-slate-900 font-extrabold">Trusted by 2500+ learners</strong> across universities and tech institutions.
                 </p>
               </div>
             </div>
@@ -714,7 +714,7 @@ export default function HomePage() {
                   <span>Industry-Focused Training Programs</span>
                 </div>
                 <div className="flex items-center justify-center px-6 py-3 sm:px-10 sm:py-4 bg-[#E1F5FE] rounded-full shadow-sm hover:scale-105 transition-transform border border-sky-200 whitespace-nowrap">
-                  <span className="text-xl sm:text-3xl font-black text-slate-900">100+</span>
+                  <span className="text-xl sm:text-3xl font-black text-slate-900">2500+</span>
                   <span className="text-xs font-bold text-sky-900 ml-2">Students Impacted</span>
                 </div>
                 <div className="flex items-center gap-2 px-5 py-3 sm:px-8 sm:py-4 bg-[#FFE082] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-xs sm:text-sm text-slate-900 whitespace-nowrap">
@@ -732,7 +732,7 @@ export default function HomePage() {
                   <span>Industry-Focused Training Programs</span>
                 </div>
                 <div className="flex items-center justify-center px-6 py-3 sm:px-10 sm:py-4 bg-[#E1F5FE] rounded-full shadow-sm hover:scale-105 transition-transform border border-sky-200 whitespace-nowrap">
-                  <span className="text-xl sm:text-3xl font-black text-slate-900">100+</span>
+                  <span className="text-xl sm:text-3xl font-black text-slate-900">2500+</span>
                   <span className="text-xs font-bold text-sky-900 ml-2">Students Impacted</span>
                 </div>
                 <div className="flex items-center gap-2 px-5 py-3 sm:px-8 sm:py-4 bg-[#FFE082] rounded-full shadow-sm hover:scale-105 transition-transform font-bold text-xs sm:text-sm text-slate-900 whitespace-nowrap">
@@ -1399,7 +1399,7 @@ export default function HomePage() {
                 {/* Floating Live Badge */}
                 <div className="absolute -top-4 -right-4 bg-slate-800/95 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-xl border border-slate-700 flex items-center gap-2 animate-float">
                   <Sparkles className="w-4 h-4 text-amber-400" />
-                  <span className="text-xs font-bold text-white">100+ Students</span>
+                  <span className="text-xs font-bold text-white">2500+ Students</span>
                 </div>
               </div>
             </div>
