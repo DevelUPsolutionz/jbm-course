@@ -26,16 +26,26 @@ export function ContactForm() {
         body: JSON.stringify(formData),
       });
 
+      let errorData: any = {};
+      try {
+        errorData = await res.json();
+      } catch (parseErr) {
+        // Fallback if response is non-JSON
+      }
+
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to submit message");
+        throw new Error(errorData.error || `Server error (${res.status}). Please try again.`);
       }
 
       setStatus("success");
       setFormData({ name: "", email: "", phone: "", purpose: "general", message: "" });
     } catch (err: any) {
-      console.error(err);
-      setErrorMessage(err.message || "An unexpected error occurred. Please try again.");
+      console.error("Contact Form Submission Error:", err);
+      let userMsg = err.message || "An unexpected error occurred. Please try again.";
+      if (typeof userMsg === "string" && (userMsg.toLowerCase().includes("load failed") || userMsg.toLowerCase().includes("failed to fetch"))) {
+        userMsg = "Unable to reach server. Please check your internet connection or try again.";
+      }
+      setErrorMessage(userMsg);
       setStatus("error");
     }
   };

@@ -97,9 +97,9 @@ export const metadata: Metadata = {
     images: [siteConfig.ogImage],
   },
   icons: {
-    icon: "/images/jbm-favicon-white.png",
-    shortcut: "/images/jbm-favicon-white.png",
-    apple: "/images/jbm-favicon-white.png",
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
   },
   other: {
     "geo.region": "IN-TN",
