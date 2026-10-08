@@ -56,20 +56,20 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
       const sy = (y: number) => height - (y * scaleY);
 
       // Invoice Meta (Top Right Box)
-      // "Invoice No. :" colon is at x ~ 710, "Date :" colon is at x ~ 710.
-      // Text starts right after colon at x = 725.
+      // Pink box is from x=480 to x=650. Colon is at x=560.
+      // Text starts right after colon at x = 580.
       page.drawText(data.invoiceNo, {
-        x: sx(725),
+        x: sx(580),
         y: sy(216),
-        size: 11,
+        size: 10,
         font: fontBold,
         color: maroonColor,
       });
 
       page.drawText(data.date, {
-        x: sx(725),
+        x: sx(580),
         y: sy(240),
-        size: 11,
+        size: 10,
         font: fontBold,
         color: textColor,
       });
