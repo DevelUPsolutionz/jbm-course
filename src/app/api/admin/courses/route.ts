@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getDynamicCourses, updateCoursePricing } from "@/lib/course-pricing";
 import { ADMIN_COOKIE_NAME, verifyAdminSessionToken } from "@/lib/auth/admin-session";
 
@@ -63,6 +64,16 @@ export async function POST(req: NextRequest) {
       numDiscountPercent,
       numFee
     );
+
+    // Revalidate paths to instantly update landing page, admin catalog, and course pages
+    try {
+      revalidatePath("/");
+      revalidatePath("/admin/courses");
+      revalidatePath("/register");
+      revalidatePath("/courses/[slug]", "page");
+    } catch (e) {
+      console.warn("Revalidate path warning:", e);
+    }
 
     return NextResponse.json({
       success: true,

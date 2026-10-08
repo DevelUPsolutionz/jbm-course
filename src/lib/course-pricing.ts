@@ -139,21 +139,25 @@ export async function updateCoursePricing(
   overrides[slug] = record;
   writeLocalPricingOverrides(overrides);
 
-  // Attempt to persist to Supabase
+  // Persist to Supabase database
   try {
     const supabase = getAdminClient();
-    await supabase
+    const { data, error } = await supabase
       .from("courses")
-      .upsert(
-        {
-          slug,
-          actual_fee: actualFee,
-          discount_percent: discountPercent,
-          fee,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "slug" }
-      );
+      .update({
+        actual_fee: actualFee,
+        discount_percent: discountPercent,
+        fee: fee,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("slug", slug)
+      .select();
+
+    if (error) {
+      console.error("Supabase course pricing update error:", error.message || error);
+    } else {
+      console.log("Supabase course pricing updated successfully for:", slug, data);
+    }
   } catch (err) {
     console.warn("Supabase course pricing update notice (cached locally):", err);
   }

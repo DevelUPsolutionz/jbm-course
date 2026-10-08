@@ -77,12 +77,12 @@ const POSITIONS = {
   // ----------------------------------------------------------
 
   invoiceNo: {
-    x: 530,
+    x: 625,
     y: 216,
   },
 
   date: {
-    x: 530,
+    x: 625,
     y: 240,
   },
 
@@ -93,7 +93,7 @@ const POSITIONS = {
 
   studentName: {
     x: 280,
-    y: 318,
+    y: 320,
   },
 
   phone: {
@@ -112,7 +112,7 @@ const POSITIONS = {
   // ----------------------------------------------------------
 
   courseName: {
-    x: 276,
+    x: 280,
     y: 485,
   },
 
@@ -123,47 +123,47 @@ const POSITIONS = {
 
   totalCourseFee: {
     x: 300,
-    y: 586,
+    y: 582,
   },
 
   couponCode: {
     x: 300,
-    y: 610,
+    y: 606,
   },
 
   scholarshipDiscount: {
     x: 300,
-    y: 638,
+    y: 630,
   },
 
   discountApplied: {
     x: 300,
-    y: 660,
+    y: 654,
   },
 
   finalAmount: {
     x: 300,
-    y: 715,
+    y: 695,
   },
 
   amountPaid: {
     x: 300,
-    y: 740,
+    y: 724,
   },
 
   paymentMode: {
     x: 300,
-    y: 769,
+    y: 750,
   },
 
   transactionId: {
     x: 300,
-    y: 798,
+    y: 776,
   },
 
   paymentDate: {
     x: 300,
-    y: 825,
+    y: 802,
   },
 };
 
