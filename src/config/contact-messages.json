@@ -1,0 +1,12 @@
+[
+  {
+    "id": "msg_1791450775799_hg735",
+    "name": "Test User",
+    "email": "test@example.com",
+    "phone": "1234567890",
+    "purpose": "general",
+    "message": "This is a test message",
+    "status": "unread",
+    "created_at": "2026-10-08T09:12:55.799Z"
+  }
+]
