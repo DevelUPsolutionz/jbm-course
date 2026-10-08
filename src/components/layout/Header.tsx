@@ -111,23 +111,23 @@ export function Header() {
               {/* Brand Logo & Name */}
               <Link
                 href="/"
-                className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-maroon-800 rounded-xl flex-shrink-0"
+                className="flex items-center gap-3.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-maroon-800 rounded-xl flex-shrink-0"
               >
-                <div className="relative w-16 h-16 flex items-center justify-center transition-all">
+                <div className="relative w-20 h-20 flex items-center justify-center transition-all">
                   <Image
                     src="/images/jbm-logo.png"
                     alt={siteConfig.name}
-                    width={64}
-                    height={64}
+                    width={80}
+                    height={80}
                     className="object-contain w-full h-full group-hover:scale-105 transition-transform"
                     priority
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[16px] xl:text-lg font-extrabold text-slate-900 tracking-tight group-hover:text-maroon-800 transition-colors">
+                  <span className="text-[17px] xl:text-xl font-black text-slate-900 tracking-tight group-hover:text-maroon-800 transition-colors">
                     {siteConfig.name}
                   </span>
-                  <span className="text-[10px] font-bold text-maroon-800 tracking-wider uppercase flex items-center gap-1.5">
+                  <span className="text-[10.5px] font-extrabold text-maroon-800 tracking-wider uppercase flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                     {siteConfig.slogan}
                   </span>
@@ -175,23 +175,23 @@ export function Header() {
               {/* Brand Logo & Name */}
               <Link
                 href="/"
-                className="flex items-center gap-3 group focus:outline-none focus-visible:ring-2 focus-visible:ring-maroon-800 rounded-xl flex-shrink-0"
+                className="flex items-center gap-3.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-maroon-800 rounded-xl flex-shrink-0"
               >
-                <div className="relative w-16 h-16 flex items-center justify-center transition-all">
+                <div className="relative w-20 h-20 flex items-center justify-center transition-all">
                   <Image
                     src="/images/jbm-logo.png"
                     alt={siteConfig.name}
-                    width={64}
-                    height={64}
+                    width={80}
+                    height={80}
                     className="object-contain w-full h-full group-hover:scale-105 transition-transform"
                     priority
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[16px] xl:text-lg font-extrabold text-slate-900 tracking-tight group-hover:text-maroon-800 transition-colors">
+                  <span className="text-[17px] xl:text-xl font-black text-slate-900 tracking-tight group-hover:text-maroon-800 transition-colors">
                     {siteConfig.name}
                   </span>
-                  <span className="text-[10px] font-bold text-maroon-800 tracking-wider uppercase flex items-center gap-1.5">
+                  <span className="text-[10.5px] font-extrabold text-maroon-800 tracking-wider uppercase flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                     {siteConfig.slogan}
                   </span>
