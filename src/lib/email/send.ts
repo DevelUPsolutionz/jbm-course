@@ -277,12 +277,37 @@ export async function sendRegistrationReceivedEmail(params: {
           </div>
         </div>
 
-        <!-- Admissions Helpdesk Box -->
-        <div class="help-card">
-          <strong>Need immediate assistance or have a question?</strong><br>
-          📞 Phone: <a href="tel:${siteConfig.contact.rawPhone}">${siteConfig.contact.formattedPhone}</a><br>
-          💬 WhatsApp: <a href="${siteConfig.social.whatsapp}">Chat with Admissions Mentor</a><br>
-          ✉️ Email: <a href="mailto:${siteConfig.contact.email}">${siteConfig.contact.email}</a>
+        <!-- Contact Details Box -->
+        <div style="background-color: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 18px 20px; margin: 0 0 24px 0;">
+          <div style="font-size: 13px; font-weight: 800; color: #800020; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+            📞 Admissions & Support Desk (Contact Details)
+          </div>
+          <table style="width: 100%; font-size: 13px; color: #334155;">
+            <tr>
+              <td style="padding: 5px 0; font-weight: 600; width: 130px; color: #64748b;">✉️ Official Email:</td>
+              <td style="padding: 5px 0;">
+                <a href="mailto:hello.johannabrightmentors@gmail.com" style="color: #800020; font-weight: 700; text-decoration: none;">
+                  hello.johannabrightmentors@gmail.com
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 0; font-weight: 600; color: #64748b;">💬 WhatsApp:</td>
+              <td style="padding: 5px 0;">
+                <a href="https://wa.me/918778578437?text=Hi%20JBM%20Team,%20my%20registration%20ref%20is%20${params.registrationReference}" style="color: #047857; font-weight: 700; text-decoration: none;">
+                  +91 87785 78437 (Click to Chat)
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 0; font-weight: 600; color: #64748b;">📞 Call Support:</td>
+              <td style="padding: 5px 0;">
+                <a href="tel:+918778578437" style="color: #0f172a; font-weight: 600; text-decoration: none;">
+                  +91 87785 78437
+                </a>
+              </td>
+            </tr>
+          </table>
         </div>
 
         <p style="font-size: 13px; color: #64748b; margin: 0; line-height: 1.5;">
@@ -583,11 +608,37 @@ export async function sendPaymentConfirmedEmail(params: {
           </div>
         </div>
 
-        <div class="help-card">
-          <strong>Need assistance or have questions?</strong><br>
-          📞 Phone: <a href="tel:${siteConfig.contact.rawPhone}">${siteConfig.contact.formattedPhone}</a><br>
-          💬 WhatsApp: <a href="${siteConfig.social.whatsapp}">Chat with Admissions Mentor</a><br>
-          ✉️ Email: <a href="mailto:${siteConfig.contact.email}">${siteConfig.contact.email}</a>
+        <!-- Contact Details Box -->
+        <div style="background-color: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 12px; padding: 18px 20px; margin: 0 0 24px 0;">
+          <div style="font-size: 13px; font-weight: 800; color: #800020; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+            📞 Admissions & Support Desk (Contact Details)
+          </div>
+          <table style="width: 100%; font-size: 13px; color: #334155;">
+            <tr>
+              <td style="padding: 5px 0; font-weight: 600; width: 130px; color: #64748b;">✉️ Official Email:</td>
+              <td style="padding: 5px 0;">
+                <a href="mailto:hello.johannabrightmentors@gmail.com" style="color: #800020; font-weight: 700; text-decoration: none;">
+                  hello.johannabrightmentors@gmail.com
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 0; font-weight: 600; color: #64748b;">💬 WhatsApp:</td>
+              <td style="padding: 5px 0;">
+                <a href="https://wa.me/918778578437?text=Hi%20JBM%20Team,%20my%20registration%20ref%20is%20${params.registrationReference}" style="color: #047857; font-weight: 700; text-decoration: none;">
+                  +91 87785 78437 (Click to Chat)
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 5px 0; font-weight: 600; color: #64748b;">📞 Call Support:</td>
+              <td style="padding: 5px 0;">
+                <a href="tel:+918778578437" style="color: #0f172a; font-weight: 600; text-decoration: none;">
+                  +91 87785 78437
+                </a>
+              </td>
+            </tr>
+          </table>
         </div>
 
         <p style="font-size: 12.5px; color: #64748b; margin: 0; line-height: 1.5;">
@@ -619,6 +670,11 @@ Transaction ID: ${params.paymentId}
 
 You can also download your receipt online at:
 ${downloadUrl}
+
+Contact Details / Support:
+• Official Email: hello.johannabrightmentors@gmail.com
+• WhatsApp: +91 87785 78437 (https://wa.me/918778578437)
+• Phone: +91 87785 78437
 
 Our Academic Coordinator will connect with you via Phone/WhatsApp within 24 business hours to share your live class schedule and onboarding details.
 
