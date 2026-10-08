@@ -56,31 +56,30 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
       const sy = (y: number) => height - (y * scaleY);
 
       // Invoice Meta (Top Right Box)
-      // "Invoice No. :" colon is at x ~ 540, "Date :" colon is at x ~ 540.
-      // Text starts right after colon at x = 550.
+      // "Invoice No. :" colon is at x ~ 710, "Date :" colon is at x ~ 710.
+      // Text starts right after colon at x = 725.
       page.drawText(data.invoiceNo, {
-        x: sx(550),
+        x: sx(725),
         y: sy(216),
-        size: 10,
+        size: 11,
         font: fontBold,
         color: maroonColor,
       });
 
       page.drawText(data.date, {
-        x: sx(550),
+        x: sx(725),
         y: sy(240),
-        size: 10,
-        font: fontRegular,
+        size: 11,
+        font: fontBold,
         color: textColor,
       });
 
       // Student Details Section
-      // Colons for Name, Phone, Email are at x ~ 260.
-      // Text starts right after colon at x = 280.
+      // Colons for Name, Phone, Email are at x ~ 260. Text starts right after colon at x = 280.
       page.drawText(data.studentName, {
         x: sx(280),
         y: sy(318),
-        size: 10,
+        size: 11,
         font: fontBold,
         color: textColor,
       });
@@ -88,16 +87,16 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
       page.drawText(data.phone, {
         x: sx(280),
         y: sy(358),
-        size: 10,
-        font: fontRegular,
+        size: 11,
+        font: fontBold,
         color: textColor,
       });
 
       page.drawText(data.email, {
         x: sx(280),
         y: sy(398),
-        size: 10,
-        font: fontRegular,
+        size: 11,
+        font: fontBold,
         color: textColor,
       });
 
@@ -106,7 +105,7 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
       page.drawText(data.courseName, {
         x: sx(280),
         y: sy(485),
-        size: 10,
+        size: 11,
         font: fontBold,
         color: textColor,
       });
@@ -116,51 +115,51 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
       // Values start right after colon at x = 300.
       // Explicit Y coordinates per row for perfect background box alignment:
       const payX = sx(300);
-      const payRowsY = [582, 608, 634, 660, 688, 716, 744, 772, 800];
+      const payRowsY = [582, 608, 634, 660, 705, 736, 764, 792, 820];
 
       // 1. Total Course Fee
       page.drawText(`INR ${data.totalCourseFee.toLocaleString()}`, {
-        x: payX, y: sy(payRowsY[0]), size: 10, font: fontBold, color: textColor,
+        x: payX, y: sy(payRowsY[0]), size: 11, font: fontBold, color: textColor,
       });
 
       // 2. Coupon Code
       page.drawText(data.couponCode || "-", {
-        x: payX, y: sy(payRowsY[1]), size: 10, font: fontRegular, color: textColor,
+        x: payX, y: sy(payRowsY[1]), size: 11, font: fontBold, color: textColor,
       });
 
       // 3. Scholarship / Discount
       page.drawText(data.scholarshipDiscount, {
-        x: payX, y: sy(payRowsY[2]), size: 10, font: fontBold, color: maroonColor,
+        x: payX, y: sy(payRowsY[2]), size: 11, font: fontBold, color: maroonColor,
       });
 
       // 4. Discount Applied
       page.drawText(`INR ${data.discountApplied.toLocaleString()}`, {
-        x: payX, y: sy(payRowsY[3]), size: 10, font: fontBold, color: textColor,
+        x: payX, y: sy(payRowsY[3]), size: 11, font: fontBold, color: textColor,
       });
 
       // 5. Final Amount (Red text inside Pink Highlighted Band)
       page.drawText(`INR ${data.finalAmount.toLocaleString()}`, {
-        x: payX, y: sy(payRowsY[4]), size: 11, font: fontBold, color: maroonColor,
+        x: payX, y: sy(payRowsY[4]), size: 12, font: fontBold, color: maroonColor,
       });
 
       // 6. Amount Paid
       page.drawText(`INR ${data.amountPaid.toLocaleString()}`, {
-        x: payX, y: sy(payRowsY[5]), size: 10, font: fontBold, color: textColor,
+        x: payX, y: sy(payRowsY[5]), size: 11, font: fontBold, color: textColor,
       });
 
       // 7. Payment Mode
       page.drawText(data.paymentMode, {
-        x: payX, y: sy(payRowsY[6]), size: 10, font: fontRegular, color: textColor,
+        x: payX, y: sy(payRowsY[6]), size: 11, font: fontBold, color: textColor,
       });
 
       // 8. Transaction ID
       page.drawText(data.transactionId, {
-        x: payX, y: sy(payRowsY[7]), size: 10, font: fontRegular, color: textColor,
+        x: payX, y: sy(payRowsY[7]), size: 11, font: fontBold, color: textColor,
       });
 
       // 9. Payment Date
       page.drawText(data.paymentDate, {
-        x: payX, y: sy(payRowsY[8]), size: 10, font: fontRegular, color: textColor,
+        x: payX, y: sy(payRowsY[8]), size: 11, font: fontBold, color: textColor,
       });
 
       const pdfBytes = await pdfDoc.save();
