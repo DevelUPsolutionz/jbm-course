@@ -3,6 +3,7 @@ import { verifyWebhookSignature } from "@/lib/razorpay";
 import { getAdminClient } from "@/lib/supabase/admin";
 import { sendPaymentConfirmedEmail, sendAdminPaymentReceivedAlert } from "@/lib/email/send";
 import { generateReceiptPDF } from "@/lib/pdf/generateReceipt";
+import { getCourseBySlug } from "@/config/courses";
 
 export async function POST(req: NextRequest) {
   try {
@@ -89,6 +90,17 @@ export async function POST(req: NextRequest) {
             let receiptPath = null;
             
             try {
+              let couponCode = "";
+              if (reg.message && reg.message.includes("[Referral:")) {
+                const match = reg.message.match(/\[Referral:\s*([^\]]+)\]/);
+                if (match) couponCode = match[1];
+              }
+
+              const course = getCourseBySlug(reg.course_slug);
+              const actualFee = course ? course.actualFee : reg.amount * 2; 
+              const discountPercent = course ? course.discountPercent : 50;
+              const discountApplied = actualFee - reg.amount;
+
               pdfBuffer = await generateReceiptPDF({
                 invoiceNo: dynamicInvoiceNo,
                 date: paymentDate,
@@ -96,9 +108,15 @@ export async function POST(req: NextRequest) {
                 phone: reg.phone,
                 email: reg.email,
                 courseName: reg.course_title,
-                feeAmount: reg.amount,
+                totalCourseFee: actualFee,
+                couponCode: couponCode,
+                scholarshipDiscount: `${discountPercent}% Scholarship`,
+                discountApplied: discountApplied,
+                finalAmount: reg.amount,
+                amountPaid: reg.amount,
                 paymentMode: "Razorpay Secure Gateway",
-                transactionId: paymentId || "ONLINE_PAYMENT"
+                transactionId: paymentId || "ONLINE_PAYMENT",
+                paymentDate: paymentDate
               });
 
               // 2. Upload to Supabase Storage

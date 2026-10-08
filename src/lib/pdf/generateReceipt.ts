@@ -21,9 +21,15 @@ export interface ReceiptData {
   phone: string;
   email: string;
   courseName: string;
-  feeAmount: number;
+  totalCourseFee: number;
+  couponCode: string;
+  scholarshipDiscount: string;
+  discountApplied: number;
+  finalAmount: number;
+  amountPaid: number;
   paymentMode: string;
   transactionId: string;
+  paymentDate: string;
 }
 
 export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
@@ -101,36 +107,51 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
       });
 
       // Payment Details Section
-      page.drawText(`INR ${data.feeAmount.toLocaleString()}`, {
-        x: sx(250),
-        y: sy(660),
-        size: 11,
-        font: fontBold,
-        color: textColor,
+      const payY = (index: number) => sy(655 + (index * 36.5)); // Adjusted spacing for 9 fields
+
+      // 1. Total Course Fee
+      page.drawText(`INR ${data.totalCourseFee.toLocaleString()}`, {
+        x: sx(250), y: payY(0), size: 11, font: fontBold, color: textColor,
       });
 
-      page.drawText(`INR ${data.feeAmount.toLocaleString()}`, {
-        x: sx(250),
-        y: sy(700),
-        size: 11,
-        font: fontBold,
-        color: maroonColor,
+      // 2. Coupon Code
+      page.drawText(data.couponCode || "None", {
+        x: sx(250), y: payY(1), size: 11, font: fontRegular, color: textColor,
       });
 
+      // 3. Scholarship / Discount
+      page.drawText(data.scholarshipDiscount, {
+        x: sx(250), y: payY(2), size: 11, font: fontBold, color: maroonColor,
+      });
+
+      // 4. Discount Applied
+      page.drawText(`INR ${data.discountApplied.toLocaleString()}`, {
+        x: sx(250), y: payY(3), size: 11, font: fontBold, color: textColor,
+      });
+
+      // 5. Final Amount (Red)
+      page.drawText(`INR ${data.finalAmount.toLocaleString()}`, {
+        x: sx(250), y: payY(4), size: 12, font: fontBold, color: maroonColor,
+      });
+
+      // 6. Amount Paid
+      page.drawText(`INR ${data.amountPaid.toLocaleString()}`, {
+        x: sx(250), y: payY(5), size: 11, font: fontBold, color: textColor,
+      });
+
+      // 7. Payment Mode
       page.drawText(data.paymentMode, {
-        x: sx(250),
-        y: sy(740),
-        size: 11,
-        font: fontRegular,
-        color: textColor,
+        x: sx(250), y: payY(6), size: 11, font: fontRegular, color: textColor,
       });
 
+      // 8. Transaction ID
       page.drawText(data.transactionId, {
-        x: sx(250),
-        y: sy(780),
-        size: 11,
-        font: fontRegular,
-        color: textColor,
+        x: sx(250), y: payY(7), size: 11, font: fontRegular, color: textColor,
+      });
+
+      // 9. Payment Date
+      page.drawText(data.paymentDate, {
+        x: sx(250), y: payY(8), size: 11, font: fontRegular, color: textColor,
       });
 
       const pdfBytes = await pdfDoc.save();
@@ -214,11 +235,15 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<Buffer> {
     margin: { left: 20, right: 20 },
     head: [[{ content: 'PAYMENT DETAILS', colSpan: 2 }]],
     body: [
-      ['Total Course Fee', `INR ${data.feeAmount.toLocaleString()}`],
-      ['Amount Paid', `INR ${data.feeAmount.toLocaleString()}`],
+      ['Total Course Fee', `INR ${data.totalCourseFee.toLocaleString()}`],
+      ['Coupon Code', data.couponCode || "None"],
+      ['Scholarship / Discount', data.scholarshipDiscount],
+      ['Discount Applied', `INR ${data.discountApplied.toLocaleString()}`],
+      ['Final Amount', `INR ${data.finalAmount.toLocaleString()}`],
+      ['Amount Paid', `INR ${data.amountPaid.toLocaleString()}`],
       ['Payment Mode', data.paymentMode],
       ['Transaction ID', data.transactionId],
-      ['Payment Date', data.date],
+      ['Payment Date', data.paymentDate],
     ],
     theme: 'plain',
     headStyles: { fillColor: primaryColor as [number, number, number], textColor: 255, fontStyle: 'bold' },
