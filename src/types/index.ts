@@ -21,6 +21,7 @@ export interface Course {
   thumbnailUrl: string;
   posterUrl?: string; // High-res course flyer poster
   headerImageUrl?: string; // Official wide landscape course header banner
+  blurDataUrl?: string; // Ultra-light inline base64 placeholder for instant zero-flash rendering
   isActive: boolean;
   syllabus: SyllabusModule[];
   learningOutcomes: string[];

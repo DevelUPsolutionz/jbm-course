@@ -187,9 +187,9 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
               </Link>
             </div>
 
-            {/* 1. Official Course Page Header Banner (Wide, Ultra-Crisp, Instant Loading & Centered) */}
+            {/* 1. Official Course Page Header Banner (Instant Zero-Delay, Blur Placeholder & Warm Background) */}
             {course.headerImageUrl && (
-              <div className="mb-6 sm:mb-8 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-xl bg-slate-900 group relative">
+              <div className="mb-6 sm:mb-8 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-xl bg-gradient-to-r from-slate-100 via-slate-50 to-slate-100 group relative">
                 <Image
                   src={course.headerImageUrl}
                   alt={`${course.title} Official Course Header Banner`}
@@ -197,6 +197,9 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                   height={960}
                   unoptimized={true}
                   priority
+                  fetchPriority="high"
+                  placeholder={course.blurDataUrl ? "blur" : "empty"}
+                  blurDataURL={course.blurDataUrl}
                   className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.01]"
                 />
               </div>
