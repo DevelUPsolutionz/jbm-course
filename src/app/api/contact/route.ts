@@ -12,7 +12,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Name, email, and message are required.' }, { status: 400 });
     }
 
-    // 1. Always save locally first so message is never lost
+    // 1. Local fallback storage
     const localRecord = saveLocalContactMessage({
       name,
       email,
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       message,
     });
 
-    // 2. Trigger email notification to admin asynchronously
+    // 2. Trigger email notification asynchronously
     sendContactInquiryNotificationEmail({
       name,
       email,
@@ -30,7 +30,10 @@ export async function POST(req: Request) {
       message,
     }).catch((err) => console.warn("Email alert warning:", err));
 
-    // 3. Attempt Supabase insert with Admin client (bypasses RLS)
+    // 3. Primary persistent database storage: Supabase Admin Client
+    let dbRecord = null;
+    let dbSuccess = false;
+
     try {
       const supabase = getAdminClient();
       const { data: dbData, error: dbError } = await supabase
@@ -39,8 +42,8 @@ export async function POST(req: Request) {
           {
             name,
             email,
-            phone,
-            purpose,
+            phone: phone || '',
+            purpose: purpose || 'general',
             message,
             status: 'unread'
           }
@@ -49,14 +52,20 @@ export async function POST(req: Request) {
 
       if (dbError) {
         console.error('Supabase contact insert error:', dbError.message || dbError);
-      } else {
-        console.log('Supabase contact insert success:', dbData);
+      } else if (dbData && dbData.length > 0) {
+        dbRecord = dbData[0];
+        dbSuccess = true;
+        console.log('Supabase contact insert successful:', dbRecord.id);
       }
     } catch (dbErr) {
       console.warn('Supabase contact insert exception:', dbErr);
     }
 
-    return NextResponse.json({ success: true, data: localRecord });
+    return NextResponse.json({ 
+      success: true, 
+      data: dbRecord || localRecord,
+      dbSynced: dbSuccess 
+    });
   } catch (error) {
     console.error('Contact API Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
