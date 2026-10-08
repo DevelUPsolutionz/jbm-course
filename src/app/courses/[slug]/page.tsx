@@ -172,31 +172,31 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
         {/* ==================================================================== */}
         {/* COURSE HERO SECTION (With Official Header Banner)                    */}
         {/* ==================================================================== */}
-        <section className="relative pt-6 pb-16 sm:pt-8 sm:pb-20 border-b border-slate-200/80 overflow-hidden">
+        <section className="relative pt-4 pb-12 sm:pt-6 sm:pb-16 border-b border-slate-200/80 overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[750px] h-[320px] bg-maroon-100/40 blur-[100px] rounded-full pointer-events-none" />
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             {/* Back Navigation Button */}
-            <div className="mb-6 sm:mb-8">
+            <div className="mb-4 sm:mb-5">
               <Link
                 href="/#courses"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-bold text-slate-700 bg-white/95 hover:bg-white border border-slate-200/90 shadow-xs hover:shadow-sm hover:text-maroon-800 hover:border-maroon-300 transition-all group"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-bold text-slate-700 bg-white/95 hover:bg-white border border-slate-200/90 shadow-xs hover:shadow-sm hover:text-maroon-800 hover:border-maroon-300 transition-all group"
               >
-                <ArrowLeft className="w-4 h-4 text-maroon-800 group-hover:-translate-x-1 transition-transform" />
+                <ArrowLeft className="w-3.5 h-3.5 text-maroon-800 group-hover:-translate-x-1 transition-transform" />
                 <span>Back to All Courses</span>
               </Link>
             </div>
 
-            {/* 1. Official Course Page Header Banner */}
+            {/* 1. Official Course Page Header Banner (Compact & Ultra-Crisp) */}
             {course.headerImageUrl && (
-              <div className="mb-10 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200 shadow-xl bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 group relative">
+              <div className="mb-6 sm:mb-8 max-w-4xl rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-lg bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200 group relative">
                 <Image
                   src={course.headerImageUrl}
                   alt={`${course.title} Official Course Header Banner`}
                   width={2560}
                   height={960}
                   quality={95}
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1400px"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 896px, 896px"
                   className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.01]"
                   priority
                 />
