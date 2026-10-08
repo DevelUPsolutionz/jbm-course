@@ -57,7 +57,7 @@ export async function getDynamicCourses(): Promise<Course[]> {
       .select("slug, actual_fee, discount_percent, fee, is_active");
 
     const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Supabase Timeout")), 2000)
+      setTimeout(() => reject(new Error("Supabase Timeout")), 10000)
     );
 
     const result: any = await Promise.race([dbPromise, timeoutPromise]);

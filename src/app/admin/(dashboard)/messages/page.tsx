@@ -18,7 +18,7 @@ export default async function AdminMessagesPage() {
       .order("created_at", { ascending: false });
 
     const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Timeout")), 2000)
+      setTimeout(() => reject(new Error("Timeout")), 10000)
     );
 
     const result: any = await Promise.race([dbPromise, timeoutPromise]);
