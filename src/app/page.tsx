@@ -274,9 +274,9 @@ export default function HomePage() {
               <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white to-transparent z-10" />
               <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white to-transparent z-10" />
 
-              <div className="flex w-max group-hover:[animation-play-state:paused]">
+              <div className="flex w-max">
                 {/* Track 1 */}
-                <div className="flex shrink-0 items-center gap-8 pr-8 whitespace-nowrap animate-marquee select-none text-xs font-bold text-slate-700">
+                <div className="flex shrink-0 items-center gap-8 pr-8 whitespace-nowrap animate-marquee group-hover:[animation-play-state:paused] select-none text-xs font-bold text-slate-700">
                   <span className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-amber-500" />
                     <span>100+ Students Impacted</span>
@@ -315,7 +315,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Track 2 (Identical clone for gap-free continuous loop) */}
-                <div className="flex shrink-0 items-center gap-8 pr-8 whitespace-nowrap animate-marquee select-none text-xs font-bold text-slate-700" aria-hidden="true">
+                <div className="flex shrink-0 items-center gap-8 pr-8 whitespace-nowrap animate-marquee group-hover:[animation-play-state:paused] select-none text-xs font-bold text-slate-700" aria-hidden="true">
                   <span className="flex items-center gap-2">
                     <Sparkles className="w-4 h-4 text-amber-500" />
                     <span>100+ Students Impacted</span>

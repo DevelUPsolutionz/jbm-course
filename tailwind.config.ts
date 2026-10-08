@@ -67,6 +67,7 @@ const config: Config = {
         "slide-in-left": "slideInLeft 0.5s ease-out both",
         "slide-in-right": "slideInRight 0.5s ease-out both",
         "scale-in": "scaleIn 0.4s ease-out both",
+        "marquee": "marquee 25s linear infinite",
       },
       keyframes: {
         float: {
@@ -92,6 +93,10 @@ const config: Config = {
         scaleIn: {
           "0%": { opacity: "0", transform: "scale(0.93)" },
           "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-100%)" },
         },
       },
       transitionDelay: {
