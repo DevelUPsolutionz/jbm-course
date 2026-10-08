@@ -266,7 +266,7 @@ export function Header() {
       {/* Matches user hand-drawn sketch with organic curved S-wave contour    */}
       {/* ==================================================================== */}
       <div
-        className={`fixed inset-0 z-50 md:hidden transition-all duration-500 ${
+        className={`fixed inset-0 z-50 lg:hidden transition-all duration-500 ${
           mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       >
