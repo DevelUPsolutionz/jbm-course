@@ -1405,51 +1405,67 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
 
-            {/* Institutions Where We Have Delivered Training Programs */}
-            <div className="mt-12 sm:mt-16 pt-8 sm:pt-10 border-t border-white/15">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 sm:mb-8">
-                <div>
-                  <span className="text-[11px] font-bold tracking-widest text-amber-300 uppercase block mb-1">
-                    Institutional Partnerships & Impact
-                  </span>
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                    Institutions Where We Have Delivered Training Programs
-                  </h3>
-                </div>
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-300 text-xs font-bold w-fit shadow-sm">
-                  <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                  <span>4.8/5 Institutional Rating</span>
-                </div>
+        {/* ================================================================ */}
+        {/* 7B. INSTITUTIONS WHERE WE HAVE DELIVERED TRAINING PROGRAMS        */}
+        {/* ================================================================ */}
+        <section id="delivered-institutions" className="py-14 sm:py-18 bg-gradient-to-b from-slate-50 via-white to-slate-50 border-b border-slate-200/80 relative overflow-hidden">
+          {/* Subtle background ambient glows */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-100/40 rounded-full blur-3xl -translate-y-1/2"></div>
+            <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-maroon-50/40 rounded-full blur-3xl translate-y-1/2"></div>
+          </div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 sm:mb-12">
+              <div>
+                <span className="text-xs font-extrabold uppercase tracking-widest text-maroon-700 bg-maroon-50 px-3.5 py-1.5 rounded-full border border-maroon-200 inline-block mb-3">
+                  INSTITUTIONAL PARTNERSHIPS & IMPACT
+                </span>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+                  Institutions Where We Have Delivered{" "}
+                  <span className="text-maroon-800 font-serif italic">Training Programs</span>
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl leading-relaxed">
+                  Trusted by premier universities, autonomous engineering colleges, and educational institutions across Tamil Nadu.
+                </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-                {INSTITUTIONS_DELIVERED.map((inst, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center justify-between gap-3 p-4 sm:p-4.5 rounded-2xl bg-white/[0.08] hover:bg-white/[0.12] border border-white/15 hover:border-amber-400/40 shadow-lg backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 group"
-                  >
-                    <div className="flex items-start gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400/20 to-amber-500/10 border border-amber-400/30 flex items-center justify-center flex-shrink-0 text-amber-300 group-hover:scale-105 transition-transform">
-                        <GraduationCap className="w-5 h-5" />
-                      </div>
-                      <div className="min-w-0">
-                        <h4 className="text-xs sm:text-sm font-bold text-white leading-snug group-hover:text-amber-200 transition-colors">
-                          {inst.name}
-                        </h4>
-                        <span className="text-[11px] text-slate-300 flex items-center gap-1 mt-0.5 font-medium">
-                          <MapPin className="w-3 h-3 text-amber-400/80 flex-shrink-0" />
-                          <span>{inst.location}</span>
-                        </span>
-                      </div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-50 border border-amber-200/80 text-amber-900 text-xs sm:text-sm font-bold w-fit shadow-sm">
+                <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
+                <span>4.8/5 Overall Institutional Rating</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+              {INSTITUTIONS_DELIVERED.map((inst, idx) => (
+                <div
+                  key={idx}
+                  className="p-5 sm:p-6 rounded-3xl bg-white border border-slate-200/90 hover:border-amber-400/80 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group flex items-center justify-between gap-3.5"
+                >
+                  <div className="flex items-start gap-3.5 min-w-0">
+                    <div className="w-11 h-11 rounded-2xl bg-amber-50 border border-amber-200/60 flex items-center justify-center flex-shrink-0 text-amber-600 group-hover:scale-105 transition-transform group-hover:bg-amber-100">
+                      <GraduationCap className="w-5 h-5" />
                     </div>
-                    <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-amber-400/20 border border-amber-400/35 text-amber-300 text-xs font-extrabold flex-shrink-0">
-                      <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                      <span>{inst.rating.toFixed(1)}/5</span>
+                    <div className="min-w-0">
+                      <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-snug group-hover:text-maroon-800 transition-colors">
+                        {inst.name}
+                      </h3>
+                      <span className="text-xs text-slate-500 flex items-center gap-1 mt-1 font-medium">
+                        <MapPin className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+                        <span>{inst.location}</span>
+                      </span>
                     </div>
                   </div>
-                ))}
-              </div>
+
+                  <div className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-extrabold flex-shrink-0">
+                    <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                    <span>{inst.rating.toFixed(1)}/5</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
