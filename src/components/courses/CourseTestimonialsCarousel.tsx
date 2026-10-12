@@ -14,7 +14,6 @@ export function CourseTestimonialsCarousel({
   courseTitle,
 }: CourseTestimonialsCarouselProps) {
   const [currentPage, setCurrentPage] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   // Chunk testimonials into sets of 3 for desktop
@@ -25,16 +24,16 @@ export function CourseTestimonialsCarousel({
   }
   const totalPages = pages.length;
 
-  // Auto-play timer (slides every 3.5 seconds when not hovered)
+  // Auto-play timer (slides smoothly every 3.5 seconds continuously)
   useEffect(() => {
-    if (totalPages <= 1 || isPaused) return;
+    if (totalPages <= 1) return;
 
     const interval = setInterval(() => {
       setCurrentPage((prev) => (prev + 1) % totalPages);
     }, 3500);
 
     return () => clearInterval(interval);
-  }, [totalPages, isPaused]);
+  }, [totalPages]);
 
   if (!testimonials || testimonials.length === 0) return null;
 
@@ -87,8 +86,6 @@ export function CourseTestimonialsCarousel({
         {/* Carousel Viewport Container */}
         <div
           className="relative"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
