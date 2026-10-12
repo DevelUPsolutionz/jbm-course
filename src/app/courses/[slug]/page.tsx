@@ -24,9 +24,12 @@ import {
   CreditCard,
   ShieldCheck,
   Zap,
+  Star,
+  Quote,
 } from "lucide-react";
 
 import { JsonLd } from "@/components/seo/JsonLd";
+import { COURSE_TESTIMONIALS } from "@/config/testimonials";
 
 interface CoursePageProps {
   params: Promise<{
@@ -465,6 +468,66 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
             </div>
           </div>
         </section>
+
+        {/* Course Learner Testimonials Section */}
+        {COURSE_TESTIMONIALS[course.slug] && COURSE_TESTIMONIALS[course.slug].length > 0 && (
+          <section className="py-12 sm:py-16 bg-gradient-to-b from-white via-slate-50 to-slate-100/60 border-t border-slate-200/80 relative overflow-hidden">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-maroon-50 text-maroon-800 border border-maroon-200 text-xs font-bold uppercase tracking-wider mb-3">
+                  <Sparkles className="w-3.5 h-3.5 text-maroon-800" />
+                  <span>Student Feedback & Experiences</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+                  What Learners Say About <span className="text-maroon-800 font-serif italic">{course.title}</span>
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-600 mt-2">
+                  Real feedback from participants who completed this program
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+                {COURSE_TESTIMONIALS[course.slug].map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="p-6 sm:p-7 rounded-3xl bg-white border border-slate-200/80 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative"
+                  >
+                    <div>
+                      {/* Rating & Quote Icon */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-bold">
+                          <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                          <span>{item.rating.toFixed(1)}/5</span>
+                        </div>
+                        <Quote className="w-6 h-6 text-maroon-200 group-hover:text-maroon-400 transition-colors" />
+                      </div>
+
+                      {/* Exact Review Content */}
+                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed italic mb-6">
+                        &ldquo;{item.content}&rdquo;
+                      </p>
+                    </div>
+
+                    {/* Author & Affiliation */}
+                    <div className="pt-4 border-t border-slate-100 flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-maroon-800 to-maroon-950 text-white font-bold text-sm flex items-center justify-center flex-shrink-0 shadow-sm">
+                        {item.name.charAt(0)}
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="text-sm font-bold text-slate-900 leading-tight">
+                          {item.name}
+                        </h4>
+                        <span className="text-[11px] text-slate-500 line-clamp-1 mt-0.5 font-medium">
+                          {item.affiliation}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
       </main>
 
       <Footer />
