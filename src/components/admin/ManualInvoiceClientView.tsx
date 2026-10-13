@@ -156,11 +156,18 @@ export function ManualInvoiceClientView() {
         downloadBase64PDF(data.pdfBase64, data.fileName || `Invoice_${invoiceNo}.pdf`);
       }
 
-      setSuccessMessage(
-        `Invoice ${data.invoiceNo} generated & downloaded successfully! ${
-          data.emailSent ? "Email with PDF attached dispatched to student." : ""
-        }`
-      );
+      let msg = `Invoice ${data.invoiceNo} generated & downloaded successfully!`;
+      if (data.dbRecorded) {
+        msg += " Recorded in registrations & analytics.";
+      } else if (data.dbError) {
+        msg += ` (DB Notice: ${data.dbError})`;
+      }
+      if (data.emailSent) {
+        msg += " Email with PDF attached sent to student.";
+      } else if (sendEmail && data.emailError) {
+        msg += ` (Email Notice: ${data.emailError})`;
+      }
+      setSuccessMessage(msg);
 
       // Save to recent history
       const newRecord: GeneratedInvoiceRecord = {
@@ -474,7 +481,7 @@ export function ManualInvoiceClientView() {
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin text-white" />
-                    <span>Rendering Canva Template & Generating PDF...</span>
+                    <span>Generating Invoice...</span>
                   </>
                 ) : (
                   <>
@@ -503,7 +510,7 @@ export function ManualInvoiceClientView() {
                 </span>
               </div>
               <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[10px] font-bold">
-                Canva Stamped PDF
+                Official Receipt
               </span>
             </div>
 
@@ -556,10 +563,6 @@ export function ManualInvoiceClientView() {
                 </span>
               </div>
 
-              <div className="mt-3 p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center gap-2 text-[11px] text-slate-300">
-                <span className="text-emerald-400 font-bold">Output:</span>
-                <span className="font-mono text-[10px] text-slate-400 truncate">public/invoice_template.pdf (Canva High-Res)</span>
-              </div>
             </div>
           </div>
 

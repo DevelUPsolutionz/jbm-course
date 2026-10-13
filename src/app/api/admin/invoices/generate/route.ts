@@ -115,6 +115,9 @@ export async function POST(req: NextRequest) {
 
     // 7. Optional Database & Supabase Storage Recording
     const supabase = getAdminClient();
+    let dbRecorded = false;
+    let dbErrorMsg: string | null = null;
+
     if (recordInDb !== false) {
       try {
         // Upload PDF to Supabase Storage
@@ -123,7 +126,13 @@ export async function POST(req: NextRequest) {
           upsert: true,
         });
 
-        // Insert into registrations table so admin analytics & registrations table see this student
+        // Insert into registrations table so admin analytics & registrations table see this student as Paid
+        const courseId = course?.id || "b2222222-2222-2222-2222-222222222222";
+        const courseSlugVal = course?.slug || courseSlug || "english";
+        const referralTag = couponCode ? `[Coupon: ${couponCode.trim()}]` : "[Coupon: DIRECT_OFFLINE]";
+        const offlineNote = `[Offline ${paymentMode || "UPI"} | Ref: ${transactionId || "N/A"}]`;
+        const combinedMessage = `${referralTag} ${offlineNote}`.trim();
+
         const { data: regData, error: regError } = await supabase
           .from("registrations")
           .insert({
@@ -131,33 +140,48 @@ export async function POST(req: NextRequest) {
             full_name: studentName.trim(),
             email: email.trim().toLowerCase(),
             phone: phone.trim(),
-            course_slug: courseSlug || "custom-offline",
+            course_id: courseId,
+            course_slug: courseSlugVal,
             course_title: courseName,
             amount: paidAmount,
-            status: "captured",
-            payment_status: "captured",
-            message: `[Offline UPI Payment: ${paymentMode || "UPI"} | Ref: ${transactionId || "N/A"}]`,
+            currency: "INR",
+            message: combinedMessage,
+            payment_status: "paid",
+            terms_accepted: true,
             receipt_url: fileName,
           })
           .select("id")
           .single();
 
-        if (!regError && regData?.id) {
+        if (regError) {
+          console.error("Supabase registrations insert error:", regError);
+          dbErrorMsg = regError.message;
+        } else if (regData?.id) {
+          dbRecorded = true;
           // Record under payments table
-          await supabase.from("payments").insert({
+          const { error: payError } = await supabase.from("payments").insert({
             registration_id: regData.id,
-            provider_payment_id: transactionId || `TXN_OFFLINE_${Date.now()}`,
+            provider: "offline_upi",
+            provider_order_id: invoiceNo,
+            provider_payment_id: transactionId || invoiceNo,
             amount: paidAmount,
+            currency: "INR",
             status: "captured",
           });
+          if (payError) {
+            console.warn("Supabase payments insert warning:", payError);
+          }
         }
-      } catch (dbErr) {
-        console.warn("Notice: Offline payment DB recording skipped/errored:", dbErr);
+      } catch (dbErr: any) {
+        console.error("Offline payment DB recording error:", dbErr);
+        dbErrorMsg = dbErr?.message || String(dbErr);
       }
     }
 
     // 8. Optional: Send Email to Student with PDF Attached
     let emailSent = false;
+    let emailErrorMsg: string | null = null;
+
     if (sendEmail) {
       try {
         const emailRes = await sendPaymentConfirmedEmail({
@@ -170,8 +194,12 @@ export async function POST(req: NextRequest) {
           receiptBuffer: pdfBuffer,
         });
         emailSent = emailRes.success;
-      } catch (eErr) {
-        console.warn("Notice: Resend email dispatch notice:", eErr);
+        if (!emailRes.success && (emailRes as any).error) {
+          emailErrorMsg = String((emailRes as any).error?.message || (emailRes as any).error);
+        }
+      } catch (eErr: any) {
+        console.error("Resend email dispatch error:", eErr);
+        emailErrorMsg = eErr?.message || String(eErr);
       }
     }
 
@@ -180,7 +208,10 @@ export async function POST(req: NextRequest) {
       success: true,
       invoiceNo,
       fileName,
+      dbRecorded,
+      dbError: dbErrorMsg,
       emailSent,
+      emailError: emailErrorMsg,
       pdfBase64: pdfBuffer.toString("base64"),
       receiptData,
     });
