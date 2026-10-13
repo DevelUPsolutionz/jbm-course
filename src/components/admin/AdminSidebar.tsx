@@ -11,6 +11,7 @@ import {
   ExternalLink,
   Tag,
   MessageSquare,
+  FileText,
   AlertTriangle,
   Menu,
   X,
@@ -47,6 +48,7 @@ export function AdminSidebar() {
     { label: "Registrations", href: "/admin/registrations", icon: Users },
     { label: "Referral Codes", href: "/admin/referrals", icon: Tag },
     { label: "Messages", href: "/admin/messages", icon: MessageSquare },
+    { label: "Manual Invoices", href: "/admin/invoices", icon: FileText },
   ];
 
   return (
