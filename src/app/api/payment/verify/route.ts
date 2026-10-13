@@ -203,12 +203,15 @@ export async function POST(req: NextRequest) {
             ]);
             console.log(`[VERIFY ROUTE] Confirmation email results for ${cleanRef}:`, JSON.stringify(emailResults));
 
-            // Mark registration message as receipt emailed
-            const updatedMsg = `${reg.message || ""} [ReceiptEmailed]`.trim();
-            await supabase
-              .from("registrations")
-              .update({ message: updatedMsg })
-              .eq("id", reg.id);
+            // Mark registration message as receipt emailed ONLY if Resend actually sent the email
+            const studentSuccess = emailResults[0].status === "fulfilled" && (emailResults[0].value as any)?.success;
+            if (studentSuccess) {
+              const updatedMsg = `${reg.message || ""} [ReceiptEmailed]`.trim();
+              await supabase
+                .from("registrations")
+                .update({ message: updatedMsg })
+                .eq("id", reg.id);
+            }
           } catch (emailErr) {
             console.error("Payment confirmation emails dispatch error:", emailErr);
           }

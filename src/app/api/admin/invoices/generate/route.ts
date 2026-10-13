@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateReceiptPDF, ReceiptData } from "@/lib/pdf/generateReceipt";
 import { getAdminClient } from "@/lib/supabase/admin";
-import { sendPaymentConfirmedEmail } from "@/lib/email/send";
+import { sendPaymentConfirmedEmail, sendAdminPaymentReceivedAlert } from "@/lib/email/send";
 import { getCourseBySlug } from "@/config/courses";
 import { getDynamicCourseBySlug } from "@/lib/course-pricing";
 import { ADMIN_COOKIE_NAME, verifyAdminSessionToken } from "@/lib/auth/admin-session";
@@ -178,24 +178,38 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 8. Optional: Send Email to Student with PDF Attached
+    // 8. Optional: Send Email to Student with PDF Attached & Send Admin Alert
     let emailSent = false;
     let emailErrorMsg: string | null = null;
 
     if (sendEmail) {
       try {
-        const emailRes = await sendPaymentConfirmedEmail({
-          fullName: studentName.trim(),
-          email: email.trim().toLowerCase(),
-          courseTitle: courseName,
-          registrationReference: invoiceNo,
-          amount: paidAmount,
-          paymentId: transactionId || invoiceNo,
-          receiptBuffer: pdfBuffer,
-        });
-        emailSent = emailRes.success;
-        if (!emailRes.success && (emailRes as any).error) {
-          emailErrorMsg = String((emailRes as any).error?.message || (emailRes as any).error);
+        const [studentRes, adminRes] = await Promise.allSettled([
+          sendPaymentConfirmedEmail({
+            fullName: studentName.trim(),
+            email: email.trim().toLowerCase(),
+            courseTitle: courseName,
+            registrationReference: invoiceNo,
+            amount: paidAmount,
+            paymentId: transactionId || invoiceNo,
+            receiptBuffer: pdfBuffer,
+          }),
+          sendAdminPaymentReceivedAlert({
+            fullName: studentName.trim(),
+            email: email.trim().toLowerCase(),
+            courseTitle: courseName,
+            registrationReference: invoiceNo,
+            amount: paidAmount,
+            paymentId: transactionId || invoiceNo,
+          }),
+        ]);
+
+        const studentSuccess = studentRes.status === "fulfilled" && studentRes.value.success;
+        emailSent = studentSuccess;
+
+        if (!studentSuccess) {
+          const err = studentRes.status === "fulfilled" ? (studentRes.value as any).error : studentRes.reason;
+          emailErrorMsg = String(err?.message || err || "Failed to dispatch email");
         }
       } catch (eErr: any) {
         console.error("Resend email dispatch error:", eErr);

@@ -3,9 +3,9 @@ import { siteConfig } from "@/config/site";
 import { formatCurrency } from "@/lib/utils";
 
 function getResendClient() {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = (process.env.RESEND_API_KEY || "").trim().replace(/^["']|["']$/g, "");
   if (!apiKey || apiKey === "re_your_resend_api_key") {
-    console.warn("Resend API key is missing. Transactional emails will not be sent.");
+    console.warn("Resend API key is missing. Transactional emails cannot be sent.");
     return null;
   }
   return new Resend(apiKey);
@@ -334,8 +334,8 @@ export async function sendRegistrationReceivedEmail(params: {
   `;
 
   if (!resend) {
-    console.log(`[EMAIL STUB] Registration email simulated for ${params.email} (Ref: ${params.registrationReference})`);
-    return { success: true, mocked: true };
+    console.warn(`[EMAIL ERROR] RESEND_API_KEY is missing on server. Cannot send registration email to ${params.email}`);
+    return { success: false, error: "RESEND_API_KEY environment variable is missing on this server." };
   }
 
   try {
@@ -683,8 +683,8 @@ Admissions & Academic Directorate
 Johanna Bright Mentors`;
 
   if (!resend) {
-    console.log(`[EMAIL STUB] Payment receipt simulated for ${params.email} (Payment ID: ${params.paymentId})`);
-    return { success: true, mocked: true };
+    console.warn(`[EMAIL ERROR] RESEND_API_KEY is missing on server. Cannot send payment receipt to ${params.email}`);
+    return { success: false, error: "RESEND_API_KEY environment variable is missing on this server." };
   }
 
   try {
@@ -775,8 +775,8 @@ export async function sendAdminNewRegistrationAlert(params: {
   `;
 
   if (!resend) {
-    console.log(`[ADMIN EMAIL STUB] New registration alert for ${params.fullName}`);
-    return { success: true, mocked: true };
+    console.warn(`[EMAIL ERROR] RESEND_API_KEY is missing on server. Cannot send admin registration alert for ${params.fullName}`);
+    return { success: false, error: "RESEND_API_KEY environment variable is missing on this server." };
   }
 
   try {
@@ -852,8 +852,8 @@ export async function sendAdminPaymentReceivedAlert(params: {
   `;
 
   if (!resend) {
-    console.log(`[ADMIN EMAIL STUB] Payment received alert for ${params.fullName} (${params.paymentId})`);
-    return { success: true, mocked: true };
+    console.warn(`[EMAIL ERROR] RESEND_API_KEY is missing on server. Cannot send payment received alert for ${params.fullName}`);
+    return { success: false, error: "RESEND_API_KEY environment variable is missing on this server." };
   }
 
   try {
