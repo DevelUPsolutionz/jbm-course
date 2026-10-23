@@ -28,88 +28,84 @@ export async function GET(req: NextRequest) {
     }
 
     const fileName = reg.receipt_url || `JBM_Invoice_${cleanRef}.pdf`;
-    let pdfBuffer: Buffer | null = null;
 
-    // 2. Try fetching existing PDF from Supabase Storage
-    try {
-      const { data: fileData, error: fileErr } = await supabase.storage
-        .from("invoices")
-        .download(fileName);
+    // Always generate dynamically with the latest official Excel template
+    // using the student's existing registration and payment records
+    const capturedPayment = Array.isArray(reg.payments)
+      ? reg.payments.find((p: any) => p.status === "captured") || reg.payments[0]
+      : null;
 
-      if (fileData && !fileErr) {
-        const arrayBuf = await fileData.arrayBuffer();
-        pdfBuffer = Buffer.from(arrayBuf);
-      }
-    } catch (storageErr) {
-      // Proceed to generate on-demand
+    const paidAmount = capturedPayment?.amount !== undefined ? capturedPayment.amount : (reg.amount || 0);
+
+    const isOffline = reg.message && reg.message.includes("[Offline");
+    const paymentMode = isOffline
+      ? (reg.message.match(/\[Offline\s+([^|\]]+)/)?.[1]?.trim() || "Direct UPI / Offline")
+      : "Razorpay Secure Gateway";
+
+    const offlineTxn = reg.message && reg.message.includes("Ref:")
+      ? reg.message.match(/Ref:\s*([^\]]+)/)?.[1]?.trim()
+      : null;
+    const transactionId = offlineTxn || capturedPayment?.provider_payment_id || "TXN_ONLINE_SECURE";
+
+    const dynamicCourse = await getDynamicCourseBySlug(reg.course_slug);
+    const staticCourse = getCourseBySlug(reg.course_slug);
+    const course = dynamicCourse || staticCourse;
+
+    const totalCourseFee = course?.actualFee || (paidAmount > 0 ? paidAmount * 2 : 20000);
+    const discountApplied = Math.max(0, totalCourseFee - paidAmount);
+    const discountPercent = totalCourseFee > 0 ? Math.round((discountApplied / totalCourseFee) * 100) : 0;
+
+    let couponCode = "";
+    if (reg.message && reg.message.includes("[Referral:")) {
+      const match = reg.message.match(/\[Referral:\s*([^\]]+)\]/);
+      if (match) couponCode = match[1];
+    } else if (reg.message && reg.message.includes("[Coupon:")) {
+      const match = reg.message.match(/\[Coupon:\s*([^\]]+)\]/);
+      if (match) couponCode = match[1];
     }
 
-    // 3. If file not in storage, dynamically generate the official PDF on the fly
-    if (!pdfBuffer) {
-      const capturedPayment = Array.isArray(reg.payments)
-        ? reg.payments.find((p: any) => p.status === "captured") || reg.payments[0]
-        : null;
+    const paymentDate = new Date(
+      capturedPayment?.created_at || reg.updated_at || Date.now()
+    ).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      timeZone: "Asia/Kolkata",
+    });
 
-      const paidAmount = capturedPayment?.amount !== undefined ? capturedPayment.amount : reg.amount;
-      const transactionId = capturedPayment?.provider_payment_id || "TXN_ONLINE_SECURE";
+    const currentYear = new Date().getFullYear();
+    const invoiceNo = `JBM-${currentYear}-${cleanRef.replace(/[^a-zA-Z0-9]/g, "").slice(-6).toUpperCase()}`;
 
-      const dynamicCourse = await getDynamicCourseBySlug(reg.course_slug);
-      const staticCourse = getCourseBySlug(reg.course_slug);
-      const course = dynamicCourse || staticCourse;
+    const pdfBuffer = await generateReceiptPDF({
+      invoiceNo,
+      date: paymentDate,
+      studentName: reg.full_name,
+      phone: reg.phone,
+      email: reg.email,
+      courseName: reg.course_title,
+      totalCourseFee,
+      couponCode: couponCode || "N/A",
+      scholarshipDiscount: discountPercent > 0 ? `${discountPercent}% Scholarship` : "Standard Enrollment",
+      discountApplied,
+      finalAmount: paidAmount,
+      amountPaid: paidAmount,
+      paymentMode,
+      transactionId,
+      paymentDate,
+    });
 
-      const totalCourseFee = course?.actualFee || (paidAmount > 0 ? paidAmount * 2 : 20000);
-      const discountApplied = Math.max(0, totalCourseFee - paidAmount);
-      const discountPercent = totalCourseFee > 0 ? Math.round((discountApplied / totalCourseFee) * 100) : 0;
-
-      let couponCode = "";
-      if (reg.message && reg.message.includes("[Referral:")) {
-        const match = reg.message.match(/\[Referral:\s*([^\]]+)\]/);
-        if (match) couponCode = match[1];
-      }
-
-      const paymentDate = new Date(
-        capturedPayment?.created_at || reg.updated_at || Date.now()
-      ).toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-        timeZone: "Asia/Kolkata",
+    // Save/update Supabase Storage & update DB so storage cache always holds new template
+    try {
+      await supabase.storage.from("invoices").upload(fileName, pdfBuffer, {
+        contentType: "application/pdf",
+        upsert: true,
       });
-
-      const currentYear = new Date().getFullYear();
-      const invoiceNo = `JBM-${currentYear}-${cleanRef.replace(/[^a-zA-Z0-9]/g, "").slice(-6).toUpperCase()}`;
-
-      pdfBuffer = await generateReceiptPDF({
-        invoiceNo,
-        date: paymentDate,
-        studentName: reg.full_name,
-        phone: reg.phone,
-        email: reg.email,
-        courseName: reg.course_title,
-        totalCourseFee,
-        couponCode: couponCode || "N/A",
-        scholarshipDiscount: discountPercent > 0 ? `${discountPercent}% Scholarship` : "Standard Enrollment",
-        discountApplied,
-        finalAmount: paidAmount,
-        amountPaid: paidAmount,
-        paymentMode: "Razorpay Secure Gateway",
-        transactionId,
-        paymentDate,
-      });
-
-      // Save to Supabase Storage & update DB for permanent caching
-      try {
-        await supabase.storage.from("invoices").upload(fileName, pdfBuffer, {
-          contentType: "application/pdf",
-          upsert: true,
-        });
-        await supabase
-          .from("registrations")
-          .update({ receipt_url: fileName })
-          .eq("id", reg.id);
-      } catch (uploadErr) {
-        console.warn("Storage upload caching notice:", uploadErr);
-      }
+      await supabase
+        .from("registrations")
+        .update({ receipt_url: fileName })
+        .eq("id", reg.id);
+    } catch (uploadErr) {
+      console.warn("Storage upload caching notice:", uploadErr);
     }
 
     // 4. Return PDF directly with inline view / download headers

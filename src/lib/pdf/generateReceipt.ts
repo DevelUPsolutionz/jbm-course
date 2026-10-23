@@ -85,7 +85,7 @@ function drawFittedText(
 
 // ============================================================
 // MAIN FUNCTION: Generate Vector PDF based on Excel Template
-// 1:1 Cell Layout & Exact Coordinate Mapping
+// 100% 1:1 Pixel & Color Alignment with Excel XML
 // ============================================================
 
 export async function generateReceiptPDF(
@@ -102,21 +102,20 @@ export async function generateReceiptPDF(
   const fontHelveticaBold = await doc.embedFont(StandardFonts.HelveticaBold);
   const fontTimesRomanBold = await doc.embedFont(StandardFonts.TimesRomanBold);
 
-  // 2. Load High-Resolution Template Assets (Logo & Seal)
+  // 2. Load High-Resolution Template Assets (Cropped Logo & Official Seal)
   let logoImg = null;
   let sealImg = null;
 
   try {
-    const logoPath = path.join(process.cwd(), 'public', 'images', 'excel_template', 'logo.png');
-    if (fs.existsSync(logoPath)) {
-      const logoBytes = fs.readFileSync(logoPath);
+    const croppedLogoPath = path.join(process.cwd(), 'public', 'images', 'excel_template', 'logo_cropped.png');
+    const standardLogoPath = path.join(process.cwd(), 'public', 'images', 'excel_template', 'logo.png');
+
+    if (fs.existsSync(croppedLogoPath)) {
+      const logoBytes = fs.readFileSync(croppedLogoPath);
       logoImg = await doc.embedPng(logoBytes);
-    } else {
-      const altLogoPath = path.join(process.cwd(), 'public', 'images', 'jbm-logo.png');
-      if (fs.existsSync(altLogoPath)) {
-        const logoBytes = fs.readFileSync(altLogoPath);
-        logoImg = await doc.embedPng(logoBytes);
-      }
+    } else if (fs.existsSync(standardLogoPath)) {
+      const logoBytes = fs.readFileSync(standardLogoPath);
+      logoImg = await doc.embedPng(logoBytes);
     }
   } catch (err) {
     console.warn('Logo loading notice in invoice generator:', err);
@@ -132,44 +131,41 @@ export async function generateReceiptPDF(
     console.warn('Seal loading notice in invoice generator:', err);
   }
 
-  // 3. Exact Color Palette Derived from the Excel XML Styles
-  const maroon = rgb(0.663, 0.0, 0.0);         // #A90000 - Excel Header & Theme Fill
-  const accentRed = rgb(0.753, 0.0, 0.0);      // #C00000 - Excel Accent Red & Lines
-  const roseFill = rgb(0.988, 0.894, 0.894);   // #FFFCE4E4 - Excel Highlight Fill
+  // 3. Exact Color Palette Extracted from Excel styles.xml
+  const maroon = rgb(0.663, 0.0, 0.0);           // #A90000 - Excel Header Fill & Accent
+  const redBorder = rgb(0.753, 0.0, 0.0);        // #C00000 - Excel Cell Borders & Lines
+  const roseFill = rgb(0.988, 0.894, 0.894);     // #FFFCE4E4 - Excel Highlight Fill
   const grayDisclaimer = rgb(0.949, 0.949, 0.949); // #FFF2F2F2 - Excel Disclaimer Box Fill
-  const tableBorder = rgb(0.81, 0.82, 0.84);  // Clean Table Border
-  const thinRedBorder = rgb(0.85, 0.35, 0.35); // Soft border for highlight rows
-  const labelBg = rgb(0.985, 0.988, 0.992);    // Very soft label tint
-  const textDark = rgb(0.13, 0.13, 0.13);      // #222222 - Text
-  const textMuted = rgb(0.38, 0.38, 0.38);     // Muted Subtitle Text
+  const textDark = rgb(0.13, 0.13, 0.13);        // #222222 - Dark Body Text
+  const textMuted = rgb(0.38, 0.38, 0.38);       // #606060 - Subtitle & Disclaimer Text
   const white = rgb(1, 1, 1);
 
-  // Layout Dimensions (A4 Page: Width 595.28, Margin 34pt, Content Width 527pt)
-  const leftMargin = 34;
-  const contentWidth = 527;
+  // Layout Dimensions (A4 Page: Width 595.28, Margin 32pt, Content Width 531pt)
+  const leftMargin = 32;
+  const contentWidth = 531;
   const toPdfY = (topY: number, h: number = 0) => pageHeight - topY - h;
 
   // ------------------------------------------------------------
   // SECTION 1: HEADER (Rows 1–4 of Excel)
   // ------------------------------------------------------------
 
-  // JBM Logo on top left (Excel Picture 6: ~72x74pt)
+  // JBM Cropped Logo on top left (Emblem only, matching Excel Picture 6)
   if (logoImg) {
     page.drawImage(logoImg, {
-      x: leftMargin + 2,
-      y: toPdfY(28, 66),
-      width: 65,
-      height: 66,
+      x: leftMargin + 6,
+      y: toPdfY(26, 58),
+      width: 68,
+      height: 58,
     });
   }
 
   // Brand Name, Slogan & Subtitle in Center
-  const centerTitleX = leftMargin + 250;
+  const centerTitleX = leftMargin + 252;
   const titleText = 'JOHANNA BRIGHT MENTORS';
   const titleWidth = fontTimesRomanBold.widthOfTextAtSize(titleText, 20);
   page.drawText(titleText, {
     x: centerTitleX - (titleWidth / 2),
-    y: toPdfY(46),
+    y: toPdfY(42),
     size: 20,
     font: fontTimesRomanBold,
     color: textDark,
@@ -179,7 +175,7 @@ export async function generateReceiptPDF(
   const sloganWidth = fontHelveticaBold.widthOfTextAtSize(sloganText, 9.5);
   page.drawText(sloganText, {
     x: centerTitleX - (sloganWidth / 2),
-    y: toPdfY(61),
+    y: toPdfY(58),
     size: 9.5,
     font: fontHelveticaBold,
     color: maroon,
@@ -189,18 +185,18 @@ export async function generateReceiptPDF(
   const subWidth = fontHelvetica.widthOfTextAtSize(subText, 8.8);
   page.drawText(subText, {
     x: centerTitleX - (subWidth / 2),
-    y: toPdfY(76),
+    y: toPdfY(73),
     size: 8.8,
     font: fontHelvetica,
     color: textMuted,
   });
 
-  // Vertical Red Divider Line (Excel Shape 10: x=446, height=58pt)
+  // Vertical Red Divider Line (Excel Shape 10: #C00000)
   page.drawLine({
-    start: { x: 446, y: toPdfY(30) },
-    end: { x: 446, y: toPdfY(88) },
+    start: { x: 446, y: toPdfY(26) },
+    end: { x: 446, y: toPdfY(86) },
     thickness: 1.5,
-    color: accentRed,
+    color: redBorder,
   });
 
   // Right Side Slogans (Learn, Grow, Build, Your Future)
@@ -208,53 +204,53 @@ export async function generateReceiptPDF(
   rightSlogans.forEach((word, idx) => {
     page.drawText(word, {
       x: 456,
-      y: toPdfY(41 + (idx * 13.5)),
+      y: toPdfY(38 + (idx * 13.5)),
       size: 9.5,
       font: fontHelveticaBold,
-      color: accentRed,
+      color: redBorder,
     });
   });
 
-  // Header bottom boundary line
+  // Header bottom boundary line (#C00000)
   page.drawLine({
-    start: { x: leftMargin, y: toPdfY(97) },
-    end: { x: leftMargin + contentWidth, y: toPdfY(97) },
+    start: { x: leftMargin, y: toPdfY(94) },
+    end: { x: leftMargin + contentWidth, y: toPdfY(94) },
     thickness: 0.8,
-    color: tableBorder,
+    color: redBorder,
   });
 
   // ------------------------------------------------------------
   // SECTION 2: INVOICE META BAR (Rows 6–7 of Excel)
   // ------------------------------------------------------------
-  const metaBoxY = 106;
-  const metaHeight = 42;
+  const metaBoxY = 104;
+  const metaHeight = 44;
 
-  // Left Box: PAYMENT INVOICE (Merged A6:D7)
+  // Left Box: PAYMENT INVOICE (Merged A6:D7) with thin red border
   page.drawRectangle({
     x: leftMargin,
     y: toPdfY(metaBoxY, metaHeight),
-    width: 290,
+    width: 295,
     height: metaHeight,
     borderWidth: 0.8,
-    borderColor: tableBorder,
+    borderColor: redBorder,
     color: white,
   });
   const invBadgeText = 'PAYMENT INVOICE';
-  const invBadgeW = fontTimesRomanBold.widthOfTextAtSize(invBadgeText, 16);
+  const invBadgeW = fontTimesRomanBold.widthOfTextAtSize(invBadgeText, 16.5);
   page.drawText(invBadgeText, {
-    x: leftMargin + (145 - (invBadgeW / 2)),
-    y: toPdfY(metaBoxY + 26),
-    size: 16,
+    x: leftMargin + (147.5 - (invBadgeW / 2)),
+    y: toPdfY(metaBoxY + 27.5),
+    size: 16.5,
     font: fontTimesRomanBold,
     color: maroon,
   });
 
-  // Right Box: Invoice Number & Date (E6:F7)
-  const metaRightX = leftMargin + 298;
-  const metaRightW = contentWidth - 298;
-  const metaLabelW = 80;
+  // Right Box: Invoice Number & Date (E6:F7) with thin red borders
+  const metaRightX = leftMargin + 295;
+  const metaRightW = contentWidth - 295;
+  const metaLabelW = 85;
   const metaValW = metaRightW - metaLabelW;
-  const metaRowH = metaHeight / 2; // 21pt per row
+  const metaRowH = metaHeight / 2; // 22pt per row
 
   // Row 1: Invoice No.
   page.drawRectangle({
@@ -264,11 +260,11 @@ export async function generateReceiptPDF(
     height: metaRowH,
     color: roseFill,
     borderWidth: 0.8,
-    borderColor: tableBorder,
+    borderColor: redBorder,
   });
   page.drawText('Invoice No.', {
     x: metaRightX + 10,
-    y: toPdfY(metaBoxY + 14.5),
+    y: toPdfY(metaBoxY + 15),
     size: 9,
     font: fontHelveticaBold,
     color: textDark,
@@ -281,11 +277,11 @@ export async function generateReceiptPDF(
     height: metaRowH,
     color: white,
     borderWidth: 0.8,
-    borderColor: tableBorder,
+    borderColor: redBorder,
   });
   drawFittedText(page, data.invoiceNo || 'JBM-2026-TEST', {
     x: metaRightX + metaLabelW + 10,
-    y: toPdfY(metaBoxY + 14.5),
+    y: toPdfY(metaBoxY + 15),
     size: 9.5,
     font: fontHelveticaBold,
     color: maroon,
@@ -300,11 +296,11 @@ export async function generateReceiptPDF(
     height: metaRowH,
     color: roseFill,
     borderWidth: 0.8,
-    borderColor: tableBorder,
+    borderColor: redBorder,
   });
   page.drawText('Date', {
     x: metaRightX + 10,
-    y: toPdfY(metaBoxY + metaRowH + 14.5),
+    y: toPdfY(metaBoxY + metaRowH + 15),
     size: 9,
     font: fontHelveticaBold,
     color: textDark,
@@ -317,11 +313,11 @@ export async function generateReceiptPDF(
     height: metaRowH,
     color: white,
     borderWidth: 0.8,
-    borderColor: tableBorder,
+    borderColor: redBorder,
   });
   drawFittedText(page, data.date || 'Today', {
     x: metaRightX + metaLabelW + 10,
-    y: toPdfY(metaBoxY + metaRowH + 14.5),
+    y: toPdfY(metaBoxY + metaRowH + 15),
     size: 9,
     font: fontHelveticaBold,
     color: textDark,
@@ -333,7 +329,7 @@ export async function generateReceiptPDF(
   // ------------------------------------------------------------
 
   const drawSectionHeader = (topY: number, title: string, isCentered = false) => {
-    const headerH = 20;
+    const headerH = 21;
     page.drawRectangle({
       x: leftMargin,
       y: toPdfY(topY, headerH),
@@ -347,7 +343,7 @@ export async function generateReceiptPDF(
     const tx = isCentered ? (leftMargin + (contentWidth / 2) - (tw / 2)) : (leftMargin + 12);
     page.drawText(title, {
       x: tx,
-      y: toPdfY(topY + 14),
+      y: toPdfY(topY + 14.5),
       size: 9.5,
       font: fontHelveticaBold,
       color: white,
@@ -366,33 +362,29 @@ export async function generateReceiptPDF(
       valFont?: any;
       valColor?: any;
       valSize?: number;
-      borderColor?: any;
       isCentered?: boolean;
     } = {}
   ) => {
-    const rowH = options.height || 20;
+    const rowH = options.height || 21;
     const labelW = 165;
     const valW = contentWidth - labelW;
     const bg = options.fill || white;
-    const lBg = options.labelFill || labelBg;
+    const lBg = options.labelFill || white;
     const valColor = options.valColor || textDark;
     const valFont = options.valFont || fontHelvetica;
     const valSize = options.valSize || 9;
-    const bColor = options.borderColor || tableBorder;
 
-    // Label Cell
+    // Label Cell (Thin Red Border #C00000)
     page.drawRectangle({
       x: leftMargin,
       y: toPdfY(topY, rowH),
       width: labelW,
       height: rowH,
       color: lBg,
-      borderWidth: 0.6,
-      borderColor: bColor,
+      borderWidth: 0.7,
+      borderColor: redBorder,
     });
-    const labelX = options.isCentered
-      ? (leftMargin + (labelW / 2) - (fontHelvetica.widthOfTextAtSize(label, 9) / 2))
-      : (leftMargin + 12);
+    const labelX = leftMargin + 12;
     page.drawText(label, {
       x: labelX,
       y: toPdfY(topY + (rowH / 2) + 3.5),
@@ -401,15 +393,15 @@ export async function generateReceiptPDF(
       color: textDark,
     });
 
-    // Value Cell
+    // Value Cell (Thin Red Border #C00000)
     page.drawRectangle({
       x: leftMargin + labelW,
       y: toPdfY(topY, rowH),
       width: valW,
       height: rowH,
       color: bg,
-      borderWidth: 0.6,
-      borderColor: bColor,
+      borderWidth: 0.7,
+      borderColor: redBorder,
     });
 
     const displayVal = String(val || '-');
@@ -437,46 +429,45 @@ export async function generateReceiptPDF(
   // ------------------------------------------------------------
   // SECTION 3: STUDENT DETAILS (Rows 9–12 of Excel)
   // ------------------------------------------------------------
-  let currentY = 156;
+  let currentY = 158;
   drawSectionHeader(currentY, 'STUDENT DETAILS');
-  currentY += 20;
+  currentY += 21;
 
   drawTableRow(currentY, 'Name', data.studentName, { valFont: fontHelveticaBold });
-  currentY += 20;
+  currentY += 21;
   drawTableRow(currentY, 'Phone Number', data.phone);
-  currentY += 20;
+  currentY += 21;
   drawTableRow(currentY, 'Email ID', data.email);
-  currentY += 20;
+  currentY += 21;
 
   // ------------------------------------------------------------
   // SECTION 4: COURSE DETAILS (Rows 13–14 of Excel)
   // ------------------------------------------------------------
-  currentY += 8;
+  currentY += 9;
   drawSectionHeader(currentY, 'COURSE DETAILS', true);
-  currentY += 20;
+  currentY += 21;
 
   drawTableRow(currentY, 'Course Name', data.courseName, {
     valFont: fontHelveticaBold,
     valSize: 9.5,
-    isCentered: true,
   });
-  currentY += 20;
+  currentY += 21;
 
   // ------------------------------------------------------------
   // SECTION 5: PAYMENT DETAILS (Rows 15–24 of Excel)
   // ------------------------------------------------------------
-  currentY += 8;
+  currentY += 9;
   drawSectionHeader(currentY, 'PAYMENT DETAILS');
-  currentY += 20;
+  currentY += 21;
 
   drawTableRow(currentY, 'Total Course Fee', formatCurrency(data.totalCourseFee));
-  currentY += 20;
+  currentY += 21;
   drawTableRow(currentY, 'Coupon Code', data.couponCode || 'N/A');
-  currentY += 20;
+  currentY += 21;
   drawTableRow(currentY, 'Scholarship / Discount', data.scholarshipDiscount || 'Standard Enrollment');
-  currentY += 20;
+  currentY += 21;
   drawTableRow(currentY, 'Discount Applied', formatCurrency(data.discountApplied));
-  currentY += 20;
+  currentY += 21;
 
   // Final Amount (Excel Row 20: Rose Fill #FFFCE4E4, Red Bold Text)
   drawTableRow(currentY, 'Final Amount', formatCurrency(data.finalAmount), {
@@ -486,9 +477,8 @@ export async function generateReceiptPDF(
     valFont: fontHelveticaBold,
     valColor: maroon,
     valSize: 10,
-    borderColor: thinRedBorder,
   });
-  currentY += 20;
+  currentY += 21;
 
   // Amount Paid (Excel Row 21: Rose Fill #FFFCE4E4, Red Bold Text)
   drawTableRow(currentY, 'Amount Paid', formatCurrency(data.amountPaid), {
@@ -498,26 +488,29 @@ export async function generateReceiptPDF(
     valFont: fontHelveticaBold,
     valColor: maroon,
     valSize: 10.5,
-    borderColor: thinRedBorder,
   });
-  currentY += 20;
+  currentY += 21;
 
   drawTableRow(currentY, 'Payment Mode', data.paymentMode || 'Online / UPI');
-  currentY += 20;
+  currentY += 21;
   drawTableRow(currentY, 'Transaction ID', data.transactionId || 'N/A');
-  currentY += 20;
+  currentY += 21;
   drawTableRow(currentY, 'Payment Date', data.paymentDate || data.date);
-  currentY += 20;
+  currentY += 21;
+
+  // Store the Y coordinate after Payment Date for Seal Positioning
+  const paymentDateEndY = currentY;
 
   // ------------------------------------------------------------
   // SECTION 6: SUCCESS BANNER (Row 26 of Excel)
   // Excel: Soft solid Rose Fill (#FFFCE4E4), bold crimson red text
   // ------------------------------------------------------------
   currentY += 12;
-  const bannerH = 24;
+  const bannerY = currentY;
+  const bannerH = 25;
   page.drawRectangle({
     x: leftMargin,
-    y: toPdfY(currentY, bannerH),
+    y: toPdfY(bannerY, bannerH),
     width: contentWidth,
     height: bannerH,
     color: roseFill,
@@ -526,7 +519,7 @@ export async function generateReceiptPDF(
   const succMsg = 'PAYMENT RECEIVED SUCCESSFULLY!';
   const succW = fontHelveticaBold.widthOfTextAtSize(succMsg, 11);
   const checkX = leftMargin + (contentWidth / 2) - (succW / 2) - 15;
-  const checkY = toPdfY(currentY + 12);
+  const checkY = toPdfY(bannerY + 12.5);
 
   // Vector checkmark (Clean, sharp, vector geometry)
   page.drawLine({
@@ -544,7 +537,7 @@ export async function generateReceiptPDF(
 
   page.drawText(succMsg, {
     x: leftMargin + (contentWidth / 2) - (succW / 2) + 5,
-    y: toPdfY(currentY + 16.5),
+    y: toPdfY(bannerY + 17),
     size: 11,
     font: fontHelveticaBold,
     color: maroon,
@@ -552,7 +545,7 @@ export async function generateReceiptPDF(
   currentY += bannerH;
 
   // ------------------------------------------------------------
-  // SECTION 7: ACKNOWLEDGEMENT & SEAL (Rows 27–28 of Excel)
+  // SECTION 7: ACKNOWLEDGEMENT (Rows 27–28 of Excel)
   // ------------------------------------------------------------
   currentY += 10;
   const ackBoxY = currentY;
@@ -560,7 +553,7 @@ export async function generateReceiptPDF(
   const ackText1 = 'Thank you for choosing Johanna Bright Mentors.';
   const ackText2 = 'We are excited to have you with us!';
 
-  // Center acknowledgment text (clean Aptos/Helvetica font)
+  // Center acknowledgment text
   page.drawText(ackText1, {
     x: leftMargin + (contentWidth / 2) - (fontHelveticaBold.widthOfTextAtSize(ackText1, 10.5) / 2),
     y: toPdfY(ackBoxY + 14),
@@ -576,23 +569,31 @@ export async function generateReceiptPDF(
     color: textMuted,
   });
 
-  // OFFICIAL SEAL (Excel Anchor: Col E-F, 88pt x 90pt, placed cleanly on right)
-  // Positioned so it NEVER overlaps disclaimer or footer
+  currentY += 46;
+
+  // ------------------------------------------------------------
+  // SECTION 8: OFFICIAL SEAL & STAMP (Excel Row 24–28, Right Side)
+  // Exactly matching Excel Screenshot 2:
+  // Starts right around Payment Date / Banner, ends strictly ABOVE disclaimer!
+  // ------------------------------------------------------------
   if (sealImg) {
     const sealSize = 78;
+    // Positioned horizontally centered in Column E (right side)
+    // Vertically overlapping Payment Date bottom and Banner right side, ending ABOVE disclaimer box
+    const sealX = leftMargin + contentWidth - sealSize - 32;
+    const sealY = bannerY - 18; // Sits across the banner, perfectly above disclaimer
+
     page.drawImage(sealImg, {
-      x: leftMargin + contentWidth - sealSize - 8,
-      y: toPdfY(ackBoxY - 4, sealSize),
+      x: sealX,
+      y: toPdfY(sealY, sealSize),
       width: sealSize,
       height: sealSize,
     });
   }
 
-  currentY += 46;
-
   // ------------------------------------------------------------
-  // SECTION 8: ELECTRONIC DISCLAIMER BOX (Rows 29–30 of Excel)
-  // Excel: #FFF2F2F2 light grey background, centered text
+  // SECTION 9: ELECTRONIC DISCLAIMER BOX (Rows 29–30 of Excel)
+  // Excel: #FFF2F2F2 light grey background, centered text, below seal
   // ------------------------------------------------------------
   const discH = 26;
   page.drawRectangle({
@@ -602,7 +603,7 @@ export async function generateReceiptPDF(
     height: discH,
     color: grayDisclaimer,
     borderWidth: 0.6,
-    borderColor: tableBorder,
+    borderColor: redBorder,
   });
 
   const disc1 = 'This is an electronically generated invoice from Johanna Bright Mentors (JBM).';
@@ -624,10 +625,10 @@ export async function generateReceiptPDF(
   currentY += discH + 10;
 
   // ------------------------------------------------------------
-  // SECTION 9: BOTTOM FOOTER BAR (Row 31 of Excel)
+  // SECTION 10: BOTTOM FOOTER BAR (Row 31 of Excel)
   // Excel: Solid Maroon #A90000 Bar, White Bold Contact Info
   // ------------------------------------------------------------
-  const footerH = 20;
+  const footerH = 21;
   page.drawRectangle({
     x: leftMargin,
     y: toPdfY(currentY, footerH),
@@ -639,7 +640,7 @@ export async function generateReceiptPDF(
   const footerW = fontHelveticaBold.widthOfTextAtSize(footerText, 8.2);
   page.drawText(footerText, {
     x: leftMargin + (contentWidth / 2) - (footerW / 2),
-    y: toPdfY(currentY + 14),
+    y: toPdfY(currentY + 14.5),
     size: 8.2,
     font: fontHelveticaBold,
     color: white,
