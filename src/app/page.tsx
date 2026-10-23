@@ -62,14 +62,54 @@ export default function HomePage() {
   const [courses, setCourses] = React.useState(getAllCourses());
 
   React.useEffect(() => {
-    fetch("/api/courses", { cache: "no-store" })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.courses && Array.isArray(data.courses)) {
+    let isMounted = true;
+
+    // Silent live fetcher with cache-busting timestamp & no-cache headers
+    const fetchFreshCourses = async () => {
+      try {
+        const res = await fetch(`/api/courses?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: {
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+          },
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (isMounted && data.courses && Array.isArray(data.courses)) {
           setCourses(data.courses);
         }
-      })
-      .catch(() => {});
+      } catch {
+        // Silent fallback - keeps current UI stable
+      }
+    };
+
+    // 1. Initial silent fetch immediately on load
+    fetchFreshCourses();
+
+    // 2. Silent background polling every 10 seconds (catches admin updates in real-time)
+    const intervalId = setInterval(fetchFreshCourses, 10000);
+
+    // 3. Tab Focus & Visibility Change:
+    // If user leaves the tab open for days and switches back, instantly fetch latest pricing!
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        fetchFreshCourses();
+      }
+    };
+    const handleFocus = () => {
+      fetchFreshCourses();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      isMounted = false;
+      clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleFocus);
+    };
   }, []);
 
   return (

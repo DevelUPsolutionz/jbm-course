@@ -16,11 +16,8 @@ interface CourseEnrollPageProps {
   }>;
 }
 
-export async function generateStaticParams() {
-  return COURSES.map((course) => ({
-    slug: course.slug,
-  }));
-}
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateMetadata({ params }: CourseEnrollPageProps): Promise<Metadata> {
   const { slug } = await params;

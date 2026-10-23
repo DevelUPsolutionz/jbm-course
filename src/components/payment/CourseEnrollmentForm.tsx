@@ -37,8 +37,48 @@ interface CourseEnrollmentFormProps {
   course: Course;
 }
 
-export function CourseEnrollmentForm({ course }: CourseEnrollmentFormProps) {
+export function CourseEnrollmentForm({ course: initialCourse }: CourseEnrollmentFormProps) {
   const router = useRouter();
+  const [course, setCourse] = useState<Course>(initialCourse);
+
+  // Keep enrollment form price silently synced with latest admin updates in real-time
+  React.useEffect(() => {
+    let isMounted = true;
+    const syncFreshCoursePrice = async () => {
+      try {
+        const res = await fetch(`/api/courses?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: {
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+          },
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (isMounted && data.courses && Array.isArray(data.courses)) {
+          const fresh = data.courses.find((c: Course) => c.slug === initialCourse.slug);
+          if (fresh && (fresh.fee !== course.fee || fresh.actualFee !== course.actualFee)) {
+            setCourse(fresh);
+          }
+        }
+      } catch {
+        // Silent fallback
+      }
+    };
+
+    syncFreshCoursePrice();
+    const interval = setInterval(syncFreshCoursePrice, 10000);
+    const onFocus = () => syncFreshCoursePrice();
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onFocus);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onFocus);
+    };
+  }, [initialCourse.slug, course.fee, course.actualFee]);
 
   const [formData, setFormData] = useState({
     fullName: "",

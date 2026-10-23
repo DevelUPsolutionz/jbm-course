@@ -67,8 +67,46 @@ export function RegistrationForm({ initialCourseSlug }: RegistrationFormProps) {
     userPhone: string;
   } | null>(null);
 
+  const [coursesList, setCoursesList] = useState(COURSES);
+
+  // Silently synchronize live dynamic course fees
+  React.useEffect(() => {
+    let isMounted = true;
+    const syncCourses = async () => {
+      try {
+        const res = await fetch(`/api/courses?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: {
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+          },
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (isMounted && data.courses && Array.isArray(data.courses)) {
+          setCoursesList(data.courses);
+        }
+      } catch {
+        // Silent
+      }
+    };
+
+    syncCourses();
+    const interval = setInterval(syncCourses, 10000);
+    const onFocus = () => syncCourses();
+    window.addEventListener("focus", onFocus);
+    document.addEventListener("visibilitychange", onFocus);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+      window.removeEventListener("focus", onFocus);
+      document.removeEventListener("visibilitychange", onFocus);
+    };
+  }, []);
+
   const selectedCourse =
-    COURSES.find((c) => c.slug === formData.courseSlug) || COURSES[0];
+    coursesList.find((c) => c.slug === formData.courseSlug) || coursesList[0];
 
   const priceCalculation = calculateDiscountedPrice(
     selectedCourse.fee,

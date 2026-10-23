@@ -31,6 +31,10 @@ import {
 import { JsonLd } from "@/components/seo/JsonLd";
 import { COURSE_TESTIMONIALS } from "@/config/testimonials";
 import { CourseTestimonialsCarousel } from "@/components/courses/CourseTestimonialsCarousel";
+import { LiveCoursePricing } from "@/components/courses/LiveCoursePricing";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 interface CoursePageProps {
   params: Promise<{
@@ -210,10 +214,14 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
             {/* Course Hero Details (Centered Layout on Desktop & Mobile) */}
             <div className="w-full max-w-4xl mx-auto space-y-4 sm:space-y-5 text-center">
               <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
-                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-maroon-50 text-maroon-800 border border-maroon-200 shadow-sm">
-                  <Sparkles className="w-3.5 h-3.5 text-maroon-800" />
-                  {course.discountPercent || (course.actualFee > course.fee ? Math.round(((course.actualFee - course.fee) / course.actualFee) * 100) : 50)}% INAUGURAL OFFER
-                </span>
+                <LiveCoursePricing
+                  slug={course.slug}
+                  initialFee={course.fee}
+                  initialActualFee={course.actualFee}
+                  initialDiscountPercent={course.discountPercent}
+                  currency={course.currency}
+                  variant="badge"
+                />
                 <span className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
                   <Clock className="w-3.5 h-3.5 text-maroon-800" />
                   {course.duration}
@@ -413,21 +421,14 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                     />
                   </div>
 
-                  <div>
-                    <span className="text-xs text-slate-500 uppercase font-bold tracking-wider">
-                      Inaugural Discount Fee
-                    </span>
-                    <div className="flex items-baseline gap-2 mt-1">
-                      <span className="text-3xl font-extrabold text-slate-900">
-                        {formatCurrency(course.fee, course.currency)}
-                      </span>
-                      {course.actualFee && (
-                        <span className="text-xs text-slate-400 line-through">
-                          {formatCurrency(course.actualFee, course.currency)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                  <LiveCoursePricing
+                    slug={course.slug}
+                    initialFee={course.fee}
+                    initialActualFee={course.actualFee}
+                    initialDiscountPercent={course.discountPercent}
+                    currency={course.currency}
+                    variant="card"
+                  />
 
                   {/* Referral Notice in Card */}
                   <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center gap-2">
