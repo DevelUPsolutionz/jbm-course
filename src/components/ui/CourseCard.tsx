@@ -31,6 +31,8 @@ export function CourseCard({ course }: CourseCardProps) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
             className="object-contain sm:object-cover transition-transform duration-700 group-hover:scale-[1.03]"
             priority
+            fetchPriority="high"
+            loading="eager"
           />
         </div>
 
