@@ -13,10 +13,21 @@ interface CourseCardProps {
 }
 
 export function CourseCard({ course }: CourseCardProps) {
+  // Preload this course's large hero banner on mouse hover or finger touch
+  // Gives an instant 300ms head start before user click navigation
+  const handlePrefetchBanner = () => {
+    if (typeof window !== "undefined" && course.headerImageUrl) {
+      const img = new window.Image();
+      img.src = course.headerImageUrl;
+    }
+  };
+
   return (
     <Link 
       href={`/courses/${course.slug}`} 
       className="group block"
+      onMouseEnter={handlePrefetchBanner}
+      onTouchStart={handlePrefetchBanner}
     >
       <InteractiveGlowCard
         glowColor="rgba(128, 0, 32, 0.14)"

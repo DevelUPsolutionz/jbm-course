@@ -195,9 +195,18 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
               </Link>
             </div>
 
-            {/* 1. Official Course Page Header Banner (Instant Zero-Delay Loading) */}
+            {/* 1. Official Course Page Header Banner (Instant Zero-Delay & Zero-Flash Loading) */}
             {course.headerImageUrl && (
-              <div className="mb-6 sm:mb-8 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-xl bg-slate-100 group relative">
+              <div className="mb-6 sm:mb-8 w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 shadow-xl bg-slate-100 group relative aspect-[2560/960]">
+                {/* Instant Zero-Flash Backdrop (Uses the already-cached thumbnail from landing page) */}
+                {course.thumbnailUrl && (
+                  <img
+                    src={course.thumbnailUrl}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover filter blur-xs scale-105 opacity-90 pointer-events-none"
+                  />
+                )}
                 <Image
                   src={course.headerImageUrl}
                   alt={`${course.title} Official Course Header Banner`}
@@ -206,7 +215,7 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
                   priority
                   fetchPriority="high"
                   loading="eager"
-                  className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.01]"
+                  className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.01] relative z-10"
                 />
               </div>
             )}

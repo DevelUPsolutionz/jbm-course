@@ -101,8 +101,27 @@ export default function HomePage() {
       fetchFreshCourses();
     };
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("focus", handleFocus);
+    // 4. Background Idle Preload of Course Detail Banners
+    // Quietly caches the large course banners into browser memory while user is on the landing page
+    const preloadCourseBanners = () => {
+      const bannerUrls = [
+        "/images/courses/ai-banner.webp",
+        "/images/courses/english-banner.webp",
+        "/images/courses/cyber-security-banner.webp",
+      ];
+      bannerUrls.forEach((url) => {
+        const img = new window.Image();
+        img.src = url;
+      });
+    };
+
+    if (typeof window !== "undefined") {
+      if ("requestIdleCallback" in window) {
+        (window as any).requestIdleCallback(preloadCourseBanners, { timeout: 2000 });
+      } else {
+        setTimeout(preloadCourseBanners, 800);
+      }
+    }
 
     return () => {
       isMounted = false;
