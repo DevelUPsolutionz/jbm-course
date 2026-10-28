@@ -14,6 +14,7 @@ import { getAllCourses } from "@/config/courses";
 import { siteConfig } from "@/config/site";
 import { FaqSection } from "@/components/ui/FaqSection";
 import { INSTITUTIONS_DELIVERED } from "@/config/testimonials";
+import { StudentVideoStories } from "@/components/testimonials/StudentVideoStories";
 import {
   DoodleMintLoop,
   DoodleStarburst8,
@@ -1020,6 +1021,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Student Video Feedback Stories Section */}
+        <StudentVideoStories />
 
         {/* ================================================================ */}
         {/* 5. OUR LEARNING PHILOSOPHY (PDF Page 3) - Growth Trajectory UI   */}

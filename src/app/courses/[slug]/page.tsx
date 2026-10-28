@@ -31,6 +31,7 @@ import {
 import { JsonLd } from "@/components/seo/JsonLd";
 import { COURSE_TESTIMONIALS } from "@/config/testimonials";
 import { CourseTestimonialsCarousel } from "@/components/courses/CourseTestimonialsCarousel";
+import { StudentVideoStories } from "@/components/testimonials/StudentVideoStories";
 import { LiveCoursePricing } from "@/components/courses/LiveCoursePricing";
 
 export const dynamic = "force-dynamic";
@@ -481,6 +482,17 @@ export default async function CourseDetailPage({ params }: CoursePageProps) {
         </section>
 
         {/* Course Learner Testimonials Carousel (Single Row 3 Cards with Auto-Play & Clickable Dots) */}
+        {/* Real Student Video Reviews for Spoken English */}
+        {course.slug === "english" && (
+          <StudentVideoStories
+            badge="SPOKEN ENGLISH REVIEWS"
+            titlePrefix="Hear Their Spoken English"
+            titleHighlight="Transformation"
+            subtitle="Watch how learners developed natural fluency and speaking confidence through our hands-on mentoring sessions."
+            showBg={false}
+          />
+        )}
+
         {COURSE_TESTIMONIALS[course.slug] && COURSE_TESTIMONIALS[course.slug].length > 0 && (
           <CourseTestimonialsCarousel
             testimonials={COURSE_TESTIMONIALS[course.slug]}
